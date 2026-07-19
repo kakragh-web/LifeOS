@@ -40,8 +40,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    // Once auth state resolves (data or error), the router redirect fires.
-    // We listen here only to trigger a GoRouter re-evaluation.
     ref.listen(authStateProvider, (_, next) {
       debugPrint('[LifeOS Splash] Auth state changed: isLoading=${next.isLoading}, value=${next.valueOrNull}');
       if (!next.isLoading) {
@@ -57,19 +55,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // App icon / logo
-              Container(
+              Image.asset(
+                'assets/images/lifeos_logo.PNG',
                 width: 96,
                 height: 96,
-                decoration: BoxDecoration(
-                  color: cs.primaryContainer,
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: Icon(
-                  Icons.self_improvement_rounded,
-                  size: 52,
-                  color: cs.onPrimaryContainer,
-                ),
+                fit: BoxFit.contain,
               ),
               const SizedBox(height: 24),
               Text(

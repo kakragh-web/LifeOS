@@ -7,6 +7,7 @@ import 'package:lifeos_ai/core/utils/validators.dart';
 import 'package:lifeos_ai/features/auth/providers/auth_provider.dart';
 import 'package:lifeos_ai/shared/widgets/app_button.dart';
 import 'package:lifeos_ai/shared/widgets/app_text_field.dart';
+import 'package:lifeos_ai/shared/widgets/google_sign_in_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -135,14 +136,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(height: 12),
                     _OrDivider(),
-                    const SizedBox(height: 12),
-                    AppButton.outlined(
-                      label: 'Continue with Google',
-                      icon: Icons.g_mobiledata_rounded,
-                      onPressed: isLoading ? null : _signInWithGoogle,
-                      isLoading: isLoading,
-                    ),
-                    const SizedBox(height: 28),
+                     const SizedBox(height: 12),
+                     GoogleSignInButton(
+                       onTap: _signInWithGoogle,
+                       enabled: !isLoading,
+                     ),
+                     const SizedBox(height: 28),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

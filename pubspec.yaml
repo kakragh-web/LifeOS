@@ -37,9 +37,8 @@ dependencies:
   # Navigation
   go_router: ^14.2.7
   # Firebase
-dependency_overrides:
   firebase_core: 2.15.0
-  firebase_auth: 4.4.1
+  firebase_auth: 4.7.2
   # google_sign_in: ^6.2.1  # Temporarily removed for Xcode 14 compatibility
   # Storage
   shared_preferences: ^2.3.1
@@ -52,6 +51,7 @@ dev_dependencies:
   riverpod_generator: ^2.4.3
   custom_lint: ^0.6.4
   riverpod_lint: ^2.3.13
+  flutter_launcher_icons: ^0.13.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

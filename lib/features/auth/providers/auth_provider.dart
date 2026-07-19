@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ import 'package:lifeos_ai/main.dart' show firebaseReadyProvider;
 
 final authRepositoryProvider = Provider<IAuthRepository>((ref) {
   final firebaseReady = ref.watch(firebaseReadyProvider);
+  developer.log('[LifeOS Auth] Repository selected: ${firebaseReady ? 'Firebase' : 'Stub'}');
   return firebaseReady ? FirebaseAuthRepository() : AuthRepository();
 });
 
@@ -29,32 +31,47 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
   Future<AppUser?> build() async => _repo.currentUser;
 
   Future<void> signInWithGoogle() async {
+    developer.log('[LifeOS Auth] signInWithGoogle called');
     state = const AsyncLoading();
     state = await AsyncValue.guard<AppUser?>(() => _repo.signInWithGoogle());
+    if (state.hasError) {
+      developer.log('[LifeOS Auth] signInWithGoogle failed', error: state.error);
+    }
   }
 
   Future<void> signInWithEmail(String email, String password) async {
+    developer.log('[LifeOS Auth] signInWithEmail called for $email');
     state = const AsyncLoading();
     state = await AsyncValue.guard<AppUser?>(
       () => _repo.signInWithEmail(email, password),
     );
+    if (state.hasError) {
+      developer.log('[LifeOS Auth] signInWithEmail failed', error: state.error);
+    }
   }
 
   Future<void> signUpWithEmail(String email, String password, String name) async {
+    developer.log('[LifeOS Auth] signUpWithEmail called for $email');
     state = const AsyncLoading();
     state = await AsyncValue.guard<AppUser?>(
       () => _repo.signUpWithEmail(email, password, name),
     );
+    if (state.hasError) {
+      developer.log('[LifeOS Auth] signUpWithEmail failed', error: state.error);
+    }
   }
 
   Future<void> signOut() async {
+    developer.log('[LifeOS Auth] signOut called');
     state = const AsyncLoading();
     await _repo.signOut();
     state = const AsyncData(null);
   }
 
-  Future<void> sendPasswordResetEmail(String email) =>
-      _repo.sendPasswordResetEmail(email);
+  Future<void> sendPasswordResetEmail(String email) async {
+    developer.log('[LifeOS Auth] sendPasswordResetEmail called for $email');
+    return _repo.sendPasswordResetEmail(email);
+  }
 }
 
 final authNotifierProvider =

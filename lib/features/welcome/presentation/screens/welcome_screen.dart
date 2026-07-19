@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/shared/widgets/app_button.dart';
 
-/// Shown to first-time users (not yet signed in, onboarding not complete).
-/// Presents the app value proposition and routes to login or register.
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -24,26 +22,15 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               const Spacer(flex: 2),
 
-              // Hero illustration area
-              Center(
-                child: Container(
-                  width: size.width * 0.55,
-                  height: size.width * 0.55,
-                  decoration: BoxDecoration(
-                    color: cs.primaryContainer,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.self_improvement_rounded,
-                    size: size.width * 0.28,
-                    color: cs.onPrimaryContainer,
-                  ),
-                ),
+              Image.asset(
+                'assets/images/lifeos_logo.PNG',
+                width: size.width * 0.4,
+                height: size.width * 0.4,
+                fit: BoxFit.contain,
               ),
 
               const Spacer(flex: 2),
 
-              // Headline
               Text(
                 'Take control of\nyour life.',
                 style: tt.displaySmall?.copyWith(
@@ -54,7 +41,6 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Feature highlights
               ..._features.map(
                 (f) => Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -70,7 +56,6 @@ class WelcomeScreen extends StatelessWidget {
 
               const Spacer(flex: 3),
 
-              // CTA buttons
               AppButton(
                 label: 'Get Started',
                 onPressed: () => context.go(AppRoutes.register),

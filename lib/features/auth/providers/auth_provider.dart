@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifeos_ai/features/auth/data/auth_repository.dart';
 import 'package:lifeos_ai/features/auth/data/firebase_auth_repository.dart';
@@ -11,7 +14,12 @@ final authRepositoryProvider = Provider<IAuthRepository>((ref) {
 });
 
 final authStateProvider = StreamProvider<AppUser?>((ref) {
-  return ref.watch(authRepositoryProvider).authStateChanges;
+  final repo = ref.watch(authRepositoryProvider);
+  return repo.authStateChanges
+      .timeout(
+        const Duration(seconds: 2),
+        onTimeout: (sink) => sink.add(null),
+      );
 });
 
 class AuthNotifier extends AsyncNotifier<AppUser?> {

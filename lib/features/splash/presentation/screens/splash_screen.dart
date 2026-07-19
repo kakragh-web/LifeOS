@@ -43,10 +43,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     // Once auth state resolves (data or error), the router redirect fires.
     // We listen here only to trigger a GoRouter re-evaluation.
     ref.listen(authStateProvider, (_, next) {
+      debugPrint('[LifeOS Splash] Auth state changed: isLoading=${next.isLoading}, value=${next.valueOrNull}');
       if (!next.isLoading) {
-        // GoRouter's redirect will handle where to go.
-        // Calling refresh on the router is handled via the refreshListenable.
-        // This listen block intentionally left minimal.
+        debugPrint('[LifeOS Splash] Auth state resolved, router redirect should handle navigation');
       }
     });
 

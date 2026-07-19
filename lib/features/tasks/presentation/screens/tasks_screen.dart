@@ -1,13 +1,532 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lifeos_ai/features/tasks/domain/task.dart';
+import 'package:lifeos_ai/features/tasks/providers/task_providers.dart';
+import 'package:lifeos_ai/shared/widgets/app_text_field.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends ConsumerStatefulWidget {
   const TasksScreen({super.key});
 
   @override
+  ConsumerState<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends ConsumerState<TasksScreen> {
+  TaskPriority _filterPriority = TaskPriority.medium;
+  TaskStatus _filterStatus = TaskStatus.todo;
+  String? _filterCategory;
+  final _searchCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final tasksAsync = ref.watch(tasksProvider);
+    final categories = ref.watch(taskCategoriesProvider);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Tasks')),
-      body: const Center(child: Text('Tasks — coming soon')),
+      appBar: AppBar(
+        title: const Text('Tasks'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_rounded),
+            tooltip: 'Add task',
+            onPressed: () => _showTaskForm(context),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          _Filters(
+            cs: cs,
+            categories: categories,
+            filterPriority: _filterPriority,
+            filterStatus: _filterStatus,
+            filterCategory: _filterCategory,
+            searchCtrl: _searchCtrl,
+            onPriorityChanged: (p) => setState(() => _filterPriority = p),
+            onStatusChanged: (s) => setState(() => _filterStatus = s),
+            onCategoryChanged: (c) => setState(() => _filterCategory = c),
+            onSearchChanged: (_) => setState(() {}),
+          ),
+          Expanded(
+            child: tasksAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('Error: $e')),
+              data: (tasks) {
+                final filtered = _filterTasks(tasks);
+                if (filtered.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.check_circle_outline_rounded,
+                            size: 56, color: cs.onSurfaceVariant),
+                        const SizedBox(height: 16),
+                        Text('No tasks yet',
+                            style: Theme.of(context).textTheme.titleMedium),
+                        const SizedBox(height: 8),
+                        TextButton.icon(
+                          onPressed: () => _showTaskForm(context),
+                          icon: const Icon(Icons.add_rounded),
+                          label: const Text('Create your first task'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  itemCount: filtered.length,
+                  itemBuilder: (_, i) {
+                    final task = filtered[i];
+                    return _TaskTile(
+                      task: task,
+                      onToggleStatus: () =>
+                          _updateStatus(context, task, _nextStatus(task.status)),
+                      onEdit: () => _showTaskForm(context, task: task),
+                      onDelete: () => _confirmDelete(context, task),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  TaskStatus _nextStatus(TaskStatus s) {
+    switch (s) {
+      case TaskStatus.todo:
+        return TaskStatus.inProgress;
+      case TaskStatus.inProgress:
+        return TaskStatus.done;
+      case TaskStatus.done:
+        return TaskStatus.todo;
+    }
+  }
+
+  List<Task> _filterTasks(List<Task> tasks) {
+    final query = _searchCtrl.text.trim().toLowerCase();
+    return tasks.where((t) {
+      if (_filterPriority != TaskPriority.medium &&
+          t.priority != _filterPriority) return false;
+      if (_filterStatus != TaskStatus.todo &&
+          t.status != _filterStatus) return false;
+      if (_filterCategory != null &&
+          _filterCategory!.isNotEmpty &&
+          t.category != _filterCategory) return false;
+      if (query.isNotEmpty &&
+          !t.title.toLowerCase().contains(query) &&
+          !(t.description ?? '').toLowerCase().contains(query)) return false;
+      return true;
+    }).toList();
+  }
+
+  void _showTaskForm(BuildContext context, {Task? task}) {
+    final isEdit = task != null;
+    final titleCtrl = TextEditingController(text: task?.title ?? '');
+    final descCtrl = TextEditingController(text: task?.description ?? '');
+    final catCtrl = TextEditingController(text: task?.category ?? '');
+    final dueCtrl = TextEditingController(
+      text: task?.dueDate != null
+          ? '${task!.dueDate!.year}-${task.dueDate!.month.toString().padLeft(2, '0')}-${task.dueDate!.day.toString().padLeft(2, '0')}'
+          : '',
+    );
+    var priority = task?.priority ?? TaskPriority.medium;
+    var status = task?.status ?? TaskStatus.todo;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(isEdit ? 'Edit Task' : 'New Task'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppTextField(
+                controller: titleCtrl,
+                label: 'Title',
+              ),
+              const SizedBox(height: 12),
+              AppTextField(
+                controller: descCtrl,
+                label: 'Description',
+                maxLines: 3,
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppTextField(
+                      controller: catCtrl,
+                      label: 'Category',
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: DropdownButtonFormField<TaskPriority>(
+                      value: priority,
+                      decoration: const InputDecoration(labelText: 'Priority'),
+                      items: [
+                        DropdownMenuItem(
+                          value: TaskPriority.medium,
+                          child: const Text('Medium'),
+                        ),
+                        ...TaskPriority.values.map(
+                          (p) => DropdownMenuItem(
+                            value: p,
+                            child: Text(p.name.toUpperCase()),
+                          ),
+                        ),
+                      ],
+                      onChanged: (v) => priority = v ?? priority,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppTextField(
+                      controller: dueCtrl,
+                      label: 'Due date (YYYY-MM-DD)',
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: DropdownButtonFormField<TaskStatus>(
+                      value: status,
+                      decoration: const InputDecoration(labelText: 'Status'),
+                      items: [
+                        DropdownMenuItem(
+                          value: TaskStatus.todo,
+                          child: const Text('Todo'),
+                        ),
+                        ...TaskStatus.values.map(
+                          (s) => DropdownMenuItem(
+                            value: s,
+                            child: Text(s.name.toUpperCase()),
+                          ),
+                        ),
+                      ],
+                      onChanged: (v) => status = v ?? status,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final title = titleCtrl.text.trim();
+              if (title.isEmpty) return;
+              final due = dueCtrl.text.trim().isEmpty
+                  ? null
+                  : DateTime.tryParse(dueCtrl.text.trim());
+              final repo = ref.read(taskRepositoryProvider);
+              final now = DateTime.now();
+              final taskModel = Task(
+                id: task?.id ??
+                    '${now.millisecondsSinceEpoch}-${DateTime.now().microsecondsSinceEpoch}',
+                createdAt: task?.createdAt ?? now,
+                updatedAt: now,
+                title: title,
+                description: descCtrl.text.trim().isEmpty
+                    ? null
+                    : descCtrl.text.trim(),
+                priority: priority,
+                status: status,
+                category: catCtrl.text.trim().isEmpty ? null : catCtrl.text.trim(),
+                dueDate: due,
+              );
+              if (isEdit) {
+                await repo.updateTask(taskModel);
+              } else {
+                await repo.createTask(taskModel);
+              }
+              if (mounted) Navigator.pop(context);
+            },
+            child: Text(isEdit ? 'Save' : 'Create'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _updateStatus(BuildContext context, Task task, TaskStatus newStatus) async {
+    await ref
+        .read(taskRepositoryProvider)
+        .updateTask(task.copyWith(status: newStatus, updatedAt: DateTime.now()));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Task updated to ${newStatus.name}')),
+      );
+    }
+  }
+
+  void _confirmDelete(BuildContext context, Task task) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete task?'),
+        content: Text('"${task.title}" will be removed permanently.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              await ref.read(taskRepositoryProvider).deleteTask(task.id);
+              if (mounted) Navigator.pop(context);
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Filters extends StatelessWidget {
+  const _Filters({
+    required this.cs,
+    required this.categories,
+    required this.filterPriority,
+    required this.filterStatus,
+    required this.filterCategory,
+    required this.searchCtrl,
+    required this.onPriorityChanged,
+    required this.onStatusChanged,
+    required this.onCategoryChanged,
+    required this.onSearchChanged,
+  });
+
+  final ColorScheme cs;
+  final List<String> categories;
+  final TaskPriority filterPriority;
+  final TaskStatus filterStatus;
+  final String? filterCategory;
+  final TextEditingController searchCtrl;
+  final ValueChanged<TaskPriority> onPriorityChanged;
+  final ValueChanged<TaskStatus> onStatusChanged;
+  final ValueChanged<String?> onCategoryChanged;
+  final ValueChanged<String> onSearchChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Column(
+        children: [
+          TextField(
+            controller: searchCtrl,
+            decoration: const InputDecoration(
+              hintText: 'Search tasks...',
+              prefixIcon: Icon(Icons.search_rounded),
+            ),
+            onChanged: onSearchChanged,
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<TaskPriority>(
+                  value: filterPriority,
+                  decoration: const InputDecoration(
+                    labelText: 'Priority',
+                    isDense: true,
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      value: TaskPriority.medium,
+                      child: const Text('Any'),
+                    ),
+                    ...TaskPriority.values.map(
+                      (p) => DropdownMenuItem(
+                        value: p,
+                        child: Text(p.name.toUpperCase()),
+                      ),
+                    ),
+                  ],
+                  onChanged: (v) =>
+                      onPriorityChanged(v ?? TaskPriority.medium),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: DropdownButtonFormField<TaskStatus>(
+                  value: filterStatus,
+                  decoration: const InputDecoration(
+                    labelText: 'Status',
+                    isDense: true,
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      value: TaskStatus.todo,
+                      child: const Text('Any'),
+                    ),
+                    ...TaskStatus.values.map(
+                      (s) => DropdownMenuItem(
+                        value: s,
+                        child: Text(s.name.toUpperCase()),
+                      ),
+                    ),
+                  ],
+                  onChanged: (v) =>
+                      onStatusChanged(v ?? TaskStatus.todo),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  value: filterCategory,
+                  decoration: const InputDecoration(
+                    labelText: 'Category',
+                    isDense: true,
+                  ),
+                  items: [
+                    const DropdownMenuItem(value: null, child: Text('Any')),
+                    ...categories
+                        .map((c) => DropdownMenuItem(value: c, child: Text(c))),
+                  ],
+                  onChanged: onCategoryChanged,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TaskTile extends StatelessWidget {
+  const _TaskTile({
+    required this.task,
+    required this.onToggleStatus,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  final Task task;
+  final VoidCallback onToggleStatus;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final priorityColor = switch (task.priority) {
+      TaskPriority.low => cs.tertiary,
+      TaskPriority.medium => cs.primary,
+      TaskPriority.high => cs.error,
+    };
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      child: ListTile(
+        leading: Checkbox(
+          value: task.status == TaskStatus.done,
+          onChanged: (_) => onToggleStatus(),
+        ),
+        title: Text(
+          task.title,
+          style: TextStyle(
+            decoration: task.status == TaskStatus.done
+                ? TextDecoration.lineThrough
+                : null,
+            color: task.status == TaskStatus.done
+                ? cs.onSurfaceVariant
+                : null,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (task.description != null && task.description!.isNotEmpty)
+              Text(task.description!,
+                  maxLines: 1, overflow: TextOverflow.ellipsis),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: priorityColor.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    task.priority.name.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: priorityColor,
+                    ),
+                  ),
+                ),
+                if (task.category != null && task.category!.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: cs.secondaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      task.category!,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: cs.onSecondaryContainer,
+                      ),
+                    ),
+                  ),
+                ],
+                if (task.dueDate != null) ...[
+                  const SizedBox(width: 8),
+                  Icon(Icons.calendar_today_rounded,
+                      size: 14, color: cs.onSurfaceVariant),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${task.dueDate!.year}-${task.dueDate!.month.toString().padLeft(2, '0')}-${task.dueDate!.day.toString().padLeft(2, '0')}',
+                    style: TextStyle(fontSize: 11, color: cs.onSurfaceVariant),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit_rounded),
+              onPressed: onEdit,
+            ),
+            IconButton(
+              icon: Icon(Icons.delete_outline_rounded, color: cs.error),
+              onPressed: onDelete,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

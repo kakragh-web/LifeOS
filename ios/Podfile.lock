@@ -8,7 +8,7 @@ PODS:
     - Firebase/Auth (= 10.7.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.9.0):
+  - firebase_core (2.15.0):
     - Firebase/CoreOnly (= 10.7.0)
     - Flutter
   - FirebaseAuth (10.7.0):
@@ -80,7 +80,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
   firebase_auth: f61391d7bd42ec3ecb111b65863d7231abd5c57f
-  firebase_core: 440cf34983e3ef759b255559126976866f4867f8
+  firebase_core: ed9af6d9b83597a97d5188a7a228adb2099a33be
   FirebaseAuth: dd64c01631df724b09f33e584625775c52f7d71f
   FirebaseCore: e317665b9d744727a97e623edbbed009320afdd7
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
@@ -90,6 +90,6 @@ SPEC CHECKSUMS:
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
 
-PODFILE CHECKSUM: 776dbfcb37f6dc2acb510543982cbc5a7f3b950b
+PODFILE CHECKSUM: 1b8f819762479115fc471d9dc7989d1efbb9f174
 
 COCOAPODS: 1.17.0

@@ -64,35 +64,52 @@ final routerProvider = Provider<GoRouter>((ref) {
 /// Redirect logic — pure function, easy to unit test.
 ///
 /// Rules:
-/// - Splash: always allowed (it's the loading gate).
-/// - Auth loading: stay on splash.
-/// - Not logged in: only welcome/login/register allowed.
+/// - Splash: loading gate, max 2s, then exit to Welcome or Dashboard.
+/// - Auth loading: stay on splash only briefly.
+/// - Not logged in: navigate to Welcome from splash.
 /// - Logged in: redirect away from auth screens to dashboard.
 String? _redirect(_AuthRouterNotifier notifier, GoRouterState state) {
   final authState = notifier.authState;
   final location = state.matchedLocation;
 
-  // While Firebase resolves the auth state, stay on splash.
-  if (authState.isLoading) {
-    return location == AppRoutes.splash ? null : AppRoutes.splash;
-  }
+  debugPrint('[LifeOS Router] Redirect evaluation: location=$location, auth isLoading=${authState.isLoading}, auth value=${authState.valueOrNull}');
 
-  final isLoggedIn = authState.valueOrNull != null;
+  final isOnSplash = location == AppRoutes.splash;
   final isOnAuthFlow = location == AppRoutes.welcome ||
       location == AppRoutes.login ||
       location == AppRoutes.register;
-  final isOnSplash = location == AppRoutes.splash;
+
+  // While auth is loading, only allow splash.
+  if (authState.isLoading) {
+    debugPrint('[LifeOS Router] Auth still loading, staying on splash');
+    return isOnSplash ? null : AppRoutes.splash;
+  }
+
+  final isLoggedIn = authState.valueOrNull != null;
+  debugPrint('[LifeOS Router] Auth resolved: isLoggedIn=$isLoggedIn');
 
   if (!isLoggedIn) {
-    // Unauthenticated: allow auth flow screens, redirect everything else.
-    if (isOnSplash || isOnAuthFlow) return null;
+    // Splash is a loading gate, not a destination.
+    if (isOnSplash) {
+      debugPrint('[LifeOS Router] Not logged in, redirecting splash → welcome');
+      return AppRoutes.welcome;
+    }
+    if (isOnAuthFlow) {
+      debugPrint('[LifeOS Router] On auth flow, allowing navigation');
+      return null;
+    }
+    debugPrint('[LifeOS Router] Not logged in, redirecting to welcome');
     return AppRoutes.welcome;
   }
 
   // Authenticated: redirect away from splash and auth screens.
-  if (isOnSplash || isOnAuthFlow) return AppRoutes.dashboard;
+  if (isOnSplash || isOnAuthFlow) {
+    debugPrint('[LifeOS Router] Logged in, redirecting to dashboard');
+    return AppRoutes.dashboard;
+  }
 
-  return null; // No redirect needed.
+  debugPrint('[LifeOS Router] No redirect needed');
+  return null;
 }
 
 List<RouteBase> _buildRoutes() => [

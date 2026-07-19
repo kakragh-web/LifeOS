@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: f175bc1414e4edf8c5b83372c98eeabecf8353f39c9da423c2cfdf1f1f508788
+      sha256: "5dce45a06d386358334eb1689108db6455d90ceb0d75848d5f4819283d4ee2b8"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.3.4"
   _macros:
     dependency: transitive
     description: dart
@@ -263,7 +263,7 @@ packages:
     source: hosted
     version: "7.0.1"
   firebase_auth:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: firebase_auth
       sha256: e5254a39daab8c5bc76b17f5a161c11a7a97a3718cd314f460e2b4366c850c7d
@@ -274,26 +274,26 @@ packages:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
-      sha256: "5d5f283517ba34afd69ef448cc81ea23bcf8887393bedae4f70f45060b045fb9"
+      sha256: "817f3ceb84ef5e9adaaf50cf7a19255f6ffcdd12c6f9e9aa4cf00fc7f2eb3cfb"
       url: "https://pub.dev"
     source: hosted
-    version: "6.13.0"
+    version: "6.16.1"
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
-      sha256: c631ec90d05c990fe971774ff12e96ee88fc3dd22839d5cab3b04c8693859116
+      sha256: e9044778287f1ff8f9f4cee7e247b03ec87bb8977e0e65ad27dc337e196132e8
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.1"
+    version: "5.6.2"
   firebase_core:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: firebase_core
-      sha256: ed611fb8e67e43ecc7956f242cecca383d87cf71aace27287aa5dd4bdba4ac07
+      sha256: "2e9324f719e90200dc7d3c4f5d2abc26052f9f2b995d3b6626c47a0dfe1c8192"
       url: "https://pub.dev"
     source: hosted
-    version: "2.9.0"
+    version: "2.15.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -413,14 +413,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  intl:
-    dependency: transitive
-    description:
-      name: intl
-      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.17.0"
   io:
     dependency: transitive
     description:
@@ -654,7 +646,7 @@ packages:
     source: hosted
     version: "0.28.0"
   shared_preferences:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: shared_preferences
       sha256: "6e8bf70b7fef813df4e9a36f658ac46d107db4b4cfe1048b477d4e453a8159f5"

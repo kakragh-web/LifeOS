@@ -10,23 +10,27 @@ import 'package:lifeos_ai/shared/providers/theme_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase — catches misconfiguration gracefully.
-  // If firebase_options.dart still has placeholder values, the app
-  // falls back to unauthenticated mode (stub AuthRepository stays active).
+  debugPrint('[LifeOS] Application started');
+  debugPrint('[LifeOS] Flutter binding initialized');
+
   bool firebaseReady = false;
   try {
+    debugPrint('[LifeOS] Firebase initialization started');
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     firebaseReady = true;
-  } catch (_) {
-    // Firebase not yet configured — app runs in preview mode.
-    // Run `flutterfire configure` and populate firebase_options.dart.
-    debugPrint('[LifeOS] Firebase not configured — running in preview mode.');
+    debugPrint('[LifeOS] Firebase initialized successfully');
+  } catch (e) {
+    debugPrint('[LifeOS] Firebase initialization failed: $e');
+    debugPrint('[LifeOS] Development Preview Mode enabled — app will run without Firebase');
   }
 
+  debugPrint('[LifeOS] Initializing storage service');
   final storage = await StorageService.init();
+  debugPrint('[LifeOS] Storage service initialized');
 
+  debugPrint('[LifeOS] Starting app with firebaseReady=$firebaseReady');
   runApp(
     ProviderScope(
       overrides: [

@@ -85,19 +85,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      'Welcome back',
-                      style: tt.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: cs.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Sign in to continue to ${AppConstants.appName}',
-                      style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
-                    ),
-                    const SizedBox(height: 36),
+                     Text(
+                       'Welcome back',
+                       style: tt.headlineMedium?.copyWith(
+                         fontWeight: FontWeight.bold,
+                         color: cs.onSurface,
+                       ),
+                     ),
+                     const SizedBox(height: 8),
+                     Text(
+                       'Sign in to continue to ${AppConstants.appName}',
+                       style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+                     ),
+                     const SizedBox(height: 36),
+                     Image.asset(
+                       'assets/images/lifeos_logo.PNG',
+                       width: 64,
+                       height: 64,
+                       fit: BoxFit.contain,
+                     ),
+                     const SizedBox(height: 36),
                     AppTextField(
                       controller: _emailCtrl,
                       label: 'Email',

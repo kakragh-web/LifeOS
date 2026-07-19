@@ -9,12 +9,15 @@ void main() {
     testWidgets('renders settings options', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
-          child: MaterialApp.router(
+          child: MediaQuery(
+            data: const MediaQueryData(size: Size(420, 800)),
+            child: MaterialApp.router(
             routerConfig: GoRouter(
               initialLocation: '/settings',
               routes: [
                 GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
               ],
+            ),
             ),
           ),
         ),
@@ -30,12 +33,15 @@ void main() {
     testWidgets('shows sign out button', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
-          child: MaterialApp.router(
+          child: MediaQuery(
+            data: const MediaQueryData(size: Size(420, 800)),
+            child: MaterialApp.router(
             routerConfig: GoRouter(
               initialLocation: '/settings',
               routes: [
                 GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
               ],
+            ),
             ),
           ),
         ),

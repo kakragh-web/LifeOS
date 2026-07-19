@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lifeos_ai/features/calendar/domain/calendar_event.dart';
-import 'package:lifeos_ai/features/calendar/domain/i_calendar_repository.dart';
 import 'package:lifeos_ai/features/calendar/data/calendar_repository_impl.dart';
 
 void main() {

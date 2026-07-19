@@ -66,7 +66,7 @@ class SettingsScreen extends ConsumerWidget {
                 final themeMode = v ? ThemeMode.dark : ThemeMode.light;
                 final container = ProviderScope.containerOf(context);
                 final notifier = container.read(themeModeProvider.notifier);
-                notifier.state = themeMode;
+                notifier.setMode(themeMode);
               },
             ),
           ),

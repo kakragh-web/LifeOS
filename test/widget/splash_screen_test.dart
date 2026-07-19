@@ -13,12 +13,15 @@ void main() {
           overrides: [
             firebaseReadyProvider.overrideWithValue(false),
           ],
-          child: MaterialApp.router(
+          child: MediaQuery(
+            data: const MediaQueryData(size: Size(420, 800)),
+            child: MaterialApp.router(
             routerConfig: GoRouter(
               initialLocation: '/',
               routes: [
                 GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
               ],
+            ),
             ),
           ),
         ),
@@ -35,12 +38,15 @@ void main() {
           overrides: [
             firebaseReadyProvider.overrideWithValue(false),
           ],
-          child: MaterialApp.router(
+          child: MediaQuery(
+            data: const MediaQueryData(size: Size(420, 800)),
+            child: MaterialApp.router(
             routerConfig: GoRouter(
               initialLocation: '/',
               routes: [
                 GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
               ],
+            ),
             ),
           ),
         ),

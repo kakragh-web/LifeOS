@@ -7,7 +7,6 @@ import 'package:lifeos_ai/core/utils/validators.dart';
 import 'package:lifeos_ai/features/auth/providers/auth_provider.dart';
 import 'package:lifeos_ai/shared/widgets/app_button.dart';
 import 'package:lifeos_ai/shared/widgets/app_text_field.dart';
-import 'package:lifeos_ai/shared/widgets/google_sign_in_button.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -87,19 +86,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      'Create your account',
-                      style: tt.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: cs.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Join ${AppConstants.appName} and start organizing your life',
-                      style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
-                    ),
-                    const SizedBox(height: 36),
+                     Text(
+                       'Create your account',
+                       style: tt.headlineMedium?.copyWith(
+                         fontWeight: FontWeight.bold,
+                         color: cs.onSurface,
+                       ),
+                     ),
+                     const SizedBox(height: 8),
+                     Text(
+                       'Join ${AppConstants.appName} and start organizing your life',
+                       style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+                     ),
+                     const SizedBox(height: 36),
+                     Image.asset(
+                       'assets/images/lifeos_logo.PNG',
+                       width: 64,
+                       height: 64,
+                       fit: BoxFit.contain,
+                     ),
+                     const SizedBox(height: 36),
                     AppTextField(
                       controller: _nameCtrl,
                       label: 'Full Name',

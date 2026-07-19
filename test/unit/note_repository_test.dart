@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lifeos_ai/features/notes/domain/note.dart';
-import 'package:lifeos_ai/features/notes/domain/i_note_repository.dart';
 import 'package:lifeos_ai/features/notes/data/note_repository_impl.dart';
 
 void main() {

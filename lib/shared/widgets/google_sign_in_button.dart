@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lifeos_ai/features/auth/providers/auth_provider.dart';
 
 class GoogleSignInButton extends ConsumerWidget {
   const GoogleSignInButton({

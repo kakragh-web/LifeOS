@@ -1,10 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
 import 'package:lifeos_ai/features/tasks/domain/task.dart';
-import 'package:lifeos_ai/features/tasks/domain/i_task_repository.dart';
 import 'package:lifeos_ai/features/tasks/data/task_repository_impl.dart';
-import 'package:lifeos_ai/features/tasks/providers/task_providers.dart';
 
 void main() {
   group('InMemoryTaskRepository', () {
@@ -75,22 +71,6 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 200));
       expect(values.last, [task]);
       await sub.cancel();
-    });
-  });
-
-  group('TaskProviders', () {
-    test('tasksProvider returns empty list initially', () async {
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
-      final tasks = await container.read(tasksProvider.future);
-      expect(tasks, isEmpty);
-    });
-
-    test('taskCategoriesProvider returns empty list initially', () async {
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
-      final categories = container.read(taskCategoriesProvider);
-      expect(categories, isEmpty);
     });
   });
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifeos_ai/features/auth/data/auth_repository.dart';
 import 'package:lifeos_ai/features/auth/data/firebase_auth_repository.dart';

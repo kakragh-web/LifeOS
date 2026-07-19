@@ -59,8 +59,8 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           Card(
             child: SwitchListTile(
-              title: const Text('Dark mode'),
-              subtitle: const Text('Use dark color scheme'),
+              title: Semantics(label: 'Dark mode toggle', child: const Text('Dark mode')),
+              subtitle: Semantics(label: 'Use dark color scheme', child: const Text('Use dark color scheme')),
               value: isDark,
               onChanged: (v) {
                 final themeMode = v ? ThemeMode.dark : ThemeMode.light;
@@ -72,46 +72,58 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           Card(
-            child: ListTile(
-              leading: const Icon(Icons.notifications_rounded),
-              title: const Text('Notifications'),
-              subtitle: const Text('Task reminders and alerts'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () {},
+            child: Semantics(
+              label: 'Notifications settings',
+              child: ListTile(
+                leading: const Icon(Icons.notifications_rounded),
+                title: const Text('Notifications'),
+                subtitle: const Text('Task reminders and alerts'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () {},
+              ),
             ),
           ),
           const SizedBox(height: 12),
           Card(
-            child: ListTile(
-              leading: const Icon(Icons.security_rounded),
-              title: const Text('Privacy & Security'),
-              subtitle: const Text('Passcode and biometrics'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () {},
+            child: Semantics(
+              label: 'Privacy and Security settings',
+              child: ListTile(
+                leading: const Icon(Icons.security_rounded),
+                title: const Text('Privacy & Security'),
+                subtitle: const Text('Passcode and biometrics'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () {},
+              ),
             ),
           ),
           const SizedBox(height: 12),
           Card(
-            child: ListTile(
-              leading: const Icon(Icons.info_outline_rounded),
-              title: const Text('About'),
-              subtitle: Text('${AppConstants.appName} v${AppConstants.appVersion}'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () {},
+            child: Semantics(
+              label: 'About LifeOS',
+              child: ListTile(
+                leading: const Icon(Icons.info_outline_rounded),
+                title: const Text('About'),
+                subtitle: Text('${AppConstants.appName} v${AppConstants.appVersion}'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () {},
+              ),
             ),
           ),
           const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: () async {
-              await ref.read(authNotifierProvider.notifier).signOut();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Signed out')),
-                );
-              }
-            },
-            icon: const Icon(Icons.logout_rounded),
-            label: const Text('Sign Out'),
+          Semantics(
+            label: 'Sign out button',
+            child: FilledButton.icon(
+              onPressed: () async {
+                await ref.read(authNotifierProvider.notifier).signOut();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Signed out')),
+                  );
+                }
+              },
+              icon: const Icon(Icons.logout_rounded),
+              label: const Text('Sign Out'),
+            ),
           ),
         ],
       ),

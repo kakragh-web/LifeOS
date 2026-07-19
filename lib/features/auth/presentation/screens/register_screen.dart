@@ -70,9 +70,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       backgroundColor: cs.surface,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => context.go(AppRoutes.welcome),
+        leading: Semantics(
+          label: 'Go back',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.go(AppRoutes.welcome),
+          ),
         ),
       ),
       body: SafeArea(

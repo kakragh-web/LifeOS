@@ -74,7 +74,12 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
           Expanded(
             child: notesAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(
+                child: Semantics(
+                  label: 'Error loading notes',
+                  child: Text('Error: $e'),
+                ),
+              ),
               data: (notes) {
                 final filtered = _filterNotes(notes);
                 if (filtered.isEmpty) {
@@ -82,16 +87,25 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.note_outlined,
-                            size: 56, color: cs.onSurfaceVariant),
+                        Semantics(
+                          label: 'No notes yet icon',
+                          child: Icon(Icons.note_outlined,
+                              size: 56, color: cs.onSurfaceVariant),
+                        ),
                         const SizedBox(height: 16),
-                        Text('No notes yet',
-                            style: Theme.of(context).textTheme.titleMedium),
+                        Semantics(
+                          label: 'No notes yet',
+                          child: Text('No notes yet',
+                              style: Theme.of(context).textTheme.titleMedium),
+                        ),
                         const SizedBox(height: 8),
-                        TextButton.icon(
-                          onPressed: () => _showNoteForm(context),
-                          icon: const Icon(Icons.add_rounded),
-                          label: const Text('Create your first note'),
+                        Semantics(
+                          label: 'Create your first note button',
+                          child: TextButton.icon(
+                            onPressed: () => _showNoteForm(context),
+                            icon: const Icon(Icons.add_rounded),
+                            label: const Text('Create your first note'),
+                          ),
                         ),
                       ],
                     ),

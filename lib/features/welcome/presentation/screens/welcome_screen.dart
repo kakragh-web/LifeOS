@@ -22,21 +22,27 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               const Spacer(flex: 2),
 
-              Image.asset(
-                'assets/images/lifeos_logo.PNG',
-                width: size.width * 0.4,
-                height: size.width * 0.4,
-                fit: BoxFit.contain,
+              Semantics(
+                label: 'LifeOS logo',
+                child: Image.asset(
+                  'assets/images/lifeos_logo.PNG',
+                  width: size.width * 0.4,
+                  height: size.width * 0.4,
+                  fit: BoxFit.contain,
+                ),
               ),
 
               const Spacer(flex: 2),
 
-              Text(
-                'Take control of\nyour life.',
-                style: tt.displaySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: cs.onSurface,
-                  height: 1.15,
+              Semantics(
+                label: 'Take control of your life',
+                child: Text(
+                  'Take control of\nyour life.',
+                  style: tt.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: cs.onSurface,
+                    height: 1.15,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -46,9 +52,15 @@ class WelcomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: [
-                      Icon(f.icon, size: 20, color: cs.primary),
+                      Semantics(
+                        label: '${f.label} icon',
+                        child: Icon(f.icon, size: 20, color: cs.primary),
+                      ),
                       const SizedBox(width: 12),
-                      Text(f.label, style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant)),
+                      Semantics(
+                        label: f.label,
+                        child: Text(f.label, style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant)),
+                      ),
                     ],
                   ),
                 ),
@@ -56,14 +68,20 @@ class WelcomeScreen extends StatelessWidget {
 
               const Spacer(flex: 3),
 
-              AppButton(
-                label: 'Get Started',
-                onPressed: () => context.go(AppRoutes.register),
+              Semantics(
+                label: 'Get Started button',
+                child: AppButton(
+                  label: 'Get Started',
+                  onPressed: () => context.go(AppRoutes.register),
+                ),
               ),
               const SizedBox(height: 12),
-              AppButton.outlined(
-                label: 'I already have an account',
-                onPressed: () => context.go(AppRoutes.login),
+              Semantics(
+                label: 'I already have an account button',
+                child: AppButton.outlined(
+                  label: 'I already have an account',
+                  onPressed: () => context.go(AppRoutes.login),
+                ),
               ),
               const SizedBox(height: 24),
             ],

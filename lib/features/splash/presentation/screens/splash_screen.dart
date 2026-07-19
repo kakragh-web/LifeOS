@@ -55,36 +55,37 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                'assets/images/lifeos_logo.PNG',
-                width: 96,
-                height: 96,
-                fit: BoxFit.contain,
+              Semantics(
+                label: 'LifeOS logo',
+                child: Image.asset(
+                  'assets/images/lifeos_logo.PNG',
+                  width: 96,
+                  height: 96,
+                  fit: BoxFit.contain,
+                ),
               ),
               const SizedBox(height: 24),
-              Text(
-                AppConstants.appName,
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: cs.onSurface,
-                      letterSpacing: -0.5,
-                    ),
+              Semantics(
+                label: 'LifeOS',
+                child: Text(
+                  AppConstants.appName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.5,
+                  ),
+                ),
               ),
               const SizedBox(height: 8),
-              Text(
-                'Your AI-powered life organizer',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurfaceVariant,
-                    ),
+              Semantics(
+                label: 'Your AI-powered life organizer',
+                child: const Text(
+                  'Your AI-powered life organizer',
+                ),
               ),
               const SizedBox(height: 48),
-              SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: cs.primary,
-                ),
+              Semantics(
+                label: 'Loading',
+                child: const CircularProgressIndicator(strokeWidth: 2.5),
               ),
             ],
           ),

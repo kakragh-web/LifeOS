@@ -49,6 +49,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.chevron_left_rounded),
+                  tooltip: 'Previous month',
                   onPressed: () => setState(() {
                     _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month - 1);
                   }),
@@ -59,6 +60,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.chevron_right_rounded),
+                  tooltip: 'Next month',
                   onPressed: () => setState(() {
                     _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1);
                   }),
@@ -82,7 +84,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           Expanded(
             child: eventsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(
+                child: Semantics(
+                  label: 'Error loading events',
+                  child: Text('Error: $e'),
+                ),
+              ),
               data: (events) {
                 final dayEvents = events.where((e) {
                   return e.start.year == selectedDate.year &&
@@ -95,16 +102,25 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.event_outlined,
-                            size: 56, color: cs.onSurfaceVariant),
+                        Semantics(
+                          label: 'No events on this day icon',
+                          child: Icon(Icons.event_outlined,
+                              size: 56, color: cs.onSurfaceVariant),
+                        ),
                         const SizedBox(height: 16),
-                        Text('No events on this day',
-                            style: Theme.of(context).textTheme.titleMedium),
+                        Semantics(
+                          label: 'No events on this day',
+                          child: Text('No events on this day',
+                              style: Theme.of(context).textTheme.titleMedium),
+                        ),
                         const SizedBox(height: 8),
-                        TextButton.icon(
-                          onPressed: () => _showEventForm(context, date: selectedDate),
-                          icon: const Icon(Icons.add_rounded),
-                          label: const Text('Add event'),
+                        Semantics(
+                          label: 'Add event button',
+                          child: TextButton.icon(
+                            onPressed: () => _showEventForm(context, date: selectedDate),
+                            icon: const Icon(Icons.add_rounded),
+                            label: const Text('Add event'),
+                          ),
                         ),
                       ],
                     ),

@@ -57,7 +57,12 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           Expanded(
             child: tasksAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(
+                child: Semantics(
+                  label: 'Error loading tasks',
+                  child: Text('Error: $e'),
+                ),
+              ),
               data: (tasks) {
                 final filtered = _filterTasks(tasks);
                 if (filtered.isEmpty) {
@@ -65,16 +70,25 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check_circle_outline_rounded,
-                            size: 56, color: cs.onSurfaceVariant),
+                        Semantics(
+                          label: 'No tasks yet icon',
+                          child: Icon(Icons.check_circle_outline_rounded,
+                              size: 56, color: cs.onSurfaceVariant),
+                        ),
                         const SizedBox(height: 16),
-                        Text('No tasks yet',
-                            style: Theme.of(context).textTheme.titleMedium),
+                        Semantics(
+                          label: 'No tasks yet',
+                          child: Text('No tasks yet',
+                              style: Theme.of(context).textTheme.titleMedium),
+                        ),
                         const SizedBox(height: 8),
-                        TextButton.icon(
-                          onPressed: () => _showTaskForm(context),
-                          icon: const Icon(Icons.add_rounded),
-                          label: const Text('Create your first task'),
+                        Semantics(
+                          label: 'Create your first task button',
+                          child: TextButton.icon(
+                            onPressed: () => _showTaskForm(context),
+                            icon: const Icon(Icons.add_rounded),
+                            label: const Text('Create your first task'),
+                          ),
                         ),
                       ],
                     ),

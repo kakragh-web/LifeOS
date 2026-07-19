@@ -69,14 +69,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         children: [
           Expanded(
             child: messages.isEmpty && !_isTyping
-                ? _EmptyState(cs: cs)
+                ? Semantics(
+                    label: 'AI Assistant empty state. Ask me anything about your tasks, schedule, or goals.',
+                    child: _EmptyState(cs: cs),
+                  )
                 : ListView.builder(
                     controller: _scroll,
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                     itemCount: messages.length + (_isTyping ? 1 : 0),
                     itemBuilder: (_, i) {
                       if (_isTyping && i == messages.length) {
-                        return const _TypingIndicator();
+                        return Semantics(
+                          label: 'AI is typing',
+                          child: const _TypingIndicator(),
+                        );
                       }
                       return _Bubble(message: messages[i]);
                     },
@@ -99,23 +105,32 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.smart_toy_outlined, size: 56, color: cs.primary),
+          Semantics(
+            label: 'LifeOS AI Assistant icon',
+            child: Icon(Icons.smart_toy_outlined, size: 56, color: cs.primary),
+          ),
           const SizedBox(height: 16),
-          Text(
-            'LifeOS AI',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
+          Semantics(
+            label: 'LifeOS AI',
+            child: Text(
+              'LifeOS AI',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
           ),
           const SizedBox(height: 8),
-          Text(
-            'Ask me anything about your tasks,\nschedule, or goals.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: cs.onSurfaceVariant),
+          Semantics(
+            label: 'Ask me anything about your tasks, schedule, or goals.',
+            child: Text(
+              'Ask me anything about your tasks,\nschedule, or goals.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: cs.onSurfaceVariant),
+            ),
           ),
         ],
       ),
@@ -142,11 +157,13 @@ class _InputBar extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: ctrl,
-                decoration: InputDecoration(
-                  hintText: 'Message LifeOS AI…',
-                  contentPadding:
+              child: Semantics(
+                label: 'Message input field',
+                child: TextField(
+                  controller: ctrl,
+                  decoration: InputDecoration(
+                    hintText: 'Message LifeOS AI…',
+                    contentPadding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
@@ -161,6 +178,7 @@ class _InputBar extends StatelessWidget {
                 minLines: 1,
               ),
             ),
+          ),
             const SizedBox(width: 8),
             FilledButton(
               onPressed: onSend,

@@ -39,7 +39,7 @@ dependencies:
   # Firebase
   firebase_core: 2.15.0
   firebase_auth: 4.7.2
-  # google_sign_in: ^6.2.1  # Temporarily removed for Xcode 14 compatibility
+  google_sign_in: ^6.2.1
   # Storage
   shared_preferences: ^2.3.1
 

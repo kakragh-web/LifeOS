@@ -26,19 +26,22 @@ class DashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('LifeOS'),
         actions: [
-          IconButton(
-            icon: CircleAvatar(
-              radius: 16,
-              backgroundImage: user?.photoUrl != null
-                  ? NetworkImage(user!.photoUrl!)
-                  : null,
-              child: user?.photoUrl == null
-                  ? Text(
-                      user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
-                    )
-                  : null,
+          Semantics(
+            label: 'Open settings',
+            child: IconButton(
+              icon: CircleAvatar(
+                radius: 16,
+                backgroundImage: user?.photoUrl != null
+                    ? NetworkImage(user!.photoUrl!)
+                    : null,
+                child: user?.photoUrl == null
+                    ? Text(
+                        user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
+                      )
+                    : null,
+              ),
+              onPressed: () => context.go(AppRoutes.settings),
             ),
-            onPressed: () => context.go(AppRoutes.settings),
           ),
           const SizedBox(width: 8),
         ],

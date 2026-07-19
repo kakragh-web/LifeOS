@@ -12,12 +12,14 @@ void main() {
           child: MediaQuery(
             data: const MediaQueryData(size: Size(420, 800)),
             child: MaterialApp.router(
-            routerConfig: GoRouter(
-              initialLocation: '/settings',
-              routes: [
-                GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
-              ],
-            ),
+              routerConfig: GoRouter(
+                initialLocation: '/settings',
+                routes: [
+                  GoRoute(
+                      path: '/settings',
+                      builder: (_, __) => const SettingsScreen()),
+                ],
+              ),
             ),
           ),
         ),
@@ -36,12 +38,14 @@ void main() {
           child: MediaQuery(
             data: const MediaQueryData(size: Size(420, 800)),
             child: MaterialApp.router(
-            routerConfig: GoRouter(
-              initialLocation: '/settings',
-              routes: [
-                GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
-              ],
-            ),
+              routerConfig: GoRouter(
+                initialLocation: '/settings',
+                routes: [
+                  GoRoute(
+                      path: '/settings',
+                      builder: (_, __) => const SettingsScreen()),
+                ],
+              ),
             ),
           ),
         ),

@@ -65,8 +65,9 @@ class Task extends BaseModel {
     return Task(
       id: json['id'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt:
-          json['updatedAt'] != null ? DateTime.parse(json['updatedAt'] as String) : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
       title: json['title'] as String,
       description: json['description'] as String?,
       priority: TaskPriority.values.firstWhere(
@@ -78,7 +79,9 @@ class Task extends BaseModel {
         orElse: () => TaskStatus.todo,
       ),
       category: json['category'] as String?,
-      dueDate: json['dueDate'] != null ? DateTime.parse(json['dueDate'] as String) : null,
+      dueDate: json['dueDate'] != null
+          ? DateTime.parse(json['dueDate'] as String)
+          : null,
     );
   }
 }

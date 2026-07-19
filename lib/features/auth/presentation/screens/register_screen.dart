@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/core/utils/error_handler.dart';
+import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/core/utils/validators.dart';
 import 'package:lifeos_ai/features/auth/providers/auth_provider.dart';
 import 'package:lifeos_ai/shared/widgets/app_button.dart';
@@ -81,41 +82,50 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  context.responsive(compact: 24, medium: 32, expanded: 40),
+              vertical: 16,
+            ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
+              constraints:
+                  const BoxConstraints(maxWidth: Breakpoints.maxContentWidth),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                     Text(
-                       'Create your account',
-                       style: tt.headlineMedium?.copyWith(
-                         fontWeight: FontWeight.bold,
-                         color: cs.onSurface,
-                       ),
-                     ),
-                     const SizedBox(height: 8),
-                     Text(
-                       'Join ${AppConstants.appName} and start organizing your life',
-                       style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
-                     ),
-                     const SizedBox(height: 36),
-                     Image.asset(
-                       'assets/images/lifeos_logo.PNG',
-                       width: 64,
-                       height: 64,
-                       fit: BoxFit.contain,
-                     ),
-                     const SizedBox(height: 36),
+                    Text(
+                      'Create your account',
+                      style: tt.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Join ${AppConstants.appName} and start organizing your life',
+                      style:
+                          tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+                    ),
+                    SizedBox(
+                        height: context.responsive(compact: 28, medium: 36)),
+                    Image.asset(
+                      'assets/images/lifeos_logo.PNG',
+                      width: context.responsive(compact: 64, medium: 80),
+                      height: context.responsive(compact: 64, medium: 80),
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(
+                        height: context.responsive(compact: 28, medium: 36)),
                     AppTextField(
                       controller: _nameCtrl,
                       label: 'Full Name',
                       hint: 'Your name',
                       prefixIcon: Icons.person_outline_rounded,
                       textInputAction: TextInputAction.next,
-                      validator: (v) => Validators.minLength(v, 2, field: 'Name'),
+                      validator: (v) =>
+                          Validators.minLength(v, 2, field: 'Name'),
                     ),
                     const SizedBox(height: 16),
                     AppTextField(
@@ -142,8 +152,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
                         ),
-                        onPressed: () =>
-                            setState(() => _obscurePassword = !_obscurePassword),
+                        onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -174,13 +184,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       isLoading: isLoading,
                     ),
                     const SizedBox(height: 28),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
                           'Already have an account? ',
-                          style: tt.bodyMedium?.copyWith(
-                              color: cs.onSurfaceVariant),
+                          style: tt.bodyMedium
+                              ?.copyWith(color: cs.onSurfaceVariant),
                         ),
                         TextButton(
                           onPressed: () => context.go(AppRoutes.login),

@@ -33,7 +33,8 @@ void main() {
         code: 'email-already-in-use',
         message: 'The email address is already in use.',
       );
-      expect(ErrorHandler.friendly(error), 'An account with this email already exists.');
+      expect(ErrorHandler.friendly(error),
+          'An account with this email already exists.');
     });
 
     test('maps FirebaseAuthException weak-password', () {
@@ -41,7 +42,8 @@ void main() {
         code: 'weak-password',
         message: 'Password should be at least 6 characters.',
       );
-      expect(ErrorHandler.friendly(error), 'Password is too weak. Use at least 6 characters.');
+      expect(ErrorHandler.friendly(error),
+          'Password is too weak. Use at least 6 characters.');
     });
 
     test('maps FirebaseAuthException too-many-requests', () {
@@ -49,7 +51,8 @@ void main() {
         code: 'too-many-requests',
         message: 'Too many requests.',
       );
-      expect(ErrorHandler.friendly(error), 'Too many attempts. Please try again later.');
+      expect(ErrorHandler.friendly(error),
+          'Too many attempts. Please try again later.');
     });
 
     test('maps FirebaseAuthException network-request-failed', () {
@@ -57,7 +60,8 @@ void main() {
         code: 'network-request-failed',
         message: 'A network error occurred.',
       );
-      expect(ErrorHandler.friendly(error), 'No internet connection. Please check your network.');
+      expect(ErrorHandler.friendly(error),
+          'No internet connection. Please check your network.');
     });
 
     test('maps FirebaseAuthException operation-not-allowed', () {
@@ -65,7 +69,8 @@ void main() {
         code: 'operation-not-allowed',
         message: 'Email/password accounts are not enabled.',
       );
-      expect(ErrorHandler.friendly(error), 'Email/password sign-in is not enabled in Firebase.');
+      expect(ErrorHandler.friendly(error),
+          'Email/password sign-in is not enabled in Firebase.');
     });
 
     test('maps FirebaseAuthException internal-error', () {
@@ -93,7 +98,8 @@ void main() {
 
     test('maps generic string error containing network exception', () {
       expect(
-        ErrorHandler.friendly(Exception('SocketException: Network is unreachable')),
+        ErrorHandler.friendly(
+            Exception('SocketException: Network is unreachable')),
         'No internet connection. Please check your network.',
       );
     });
@@ -106,7 +112,8 @@ void main() {
     });
 
     test('handles null error gracefully', () {
-      expect(ErrorHandler.friendly(null), 'Something went wrong. Please try again.');
+      expect(ErrorHandler.friendly(null),
+          'Something went wrong. Please try again.');
     });
   });
 }

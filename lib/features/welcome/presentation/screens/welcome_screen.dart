@@ -21,7 +21,6 @@ class WelcomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(flex: 2),
-
               Semantics(
                 label: 'LifeOS logo',
                 child: Image.asset(
@@ -31,9 +30,7 @@ class WelcomeScreen extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-
               const Spacer(flex: 2),
-
               Semantics(
                 label: 'Take control of your life',
                 child: Text(
@@ -46,7 +43,6 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-
               ..._features.map(
                 (f) => Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -59,15 +55,15 @@ class WelcomeScreen extends StatelessWidget {
                       const SizedBox(width: 12),
                       Semantics(
                         label: f.label,
-                        child: Text(f.label, style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant)),
+                        child: Text(f.label,
+                            style: tt.bodyLarge
+                                ?.copyWith(color: cs.onSurfaceVariant)),
                       ),
                     ],
                   ),
                 ),
               ),
-
               const Spacer(flex: 3),
-
               Semantics(
                 label: 'Get Started button',
                 child: AppButton(
@@ -92,7 +88,10 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   static const _features = [
-    (icon: Icons.check_circle_outline_rounded, label: 'Smart task & habit tracking'),
+    (
+      icon: Icons.check_circle_outline_rounded,
+      label: 'Smart task & habit tracking'
+    ),
     (icon: Icons.calendar_month_outlined, label: 'AI-powered daily planner'),
     (icon: Icons.chat_bubble_outline_rounded, label: 'Personal AI life coach'),
   ];

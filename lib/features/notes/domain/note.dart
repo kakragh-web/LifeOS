@@ -56,8 +56,9 @@ class Note extends BaseModel {
     return Note(
       id: json['id'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt:
-          json['updatedAt'] != null ? DateTime.parse(json['updatedAt'] as String) : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
       title: json['title'] as String,
       content: json['content'] as String?,
       pinned: json['pinned'] as bool? ?? false,

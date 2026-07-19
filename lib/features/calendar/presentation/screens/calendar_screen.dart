@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/features/calendar/domain/calendar_event.dart';
 import 'package:lifeos_ai/features/calendar/providers/calendar_providers.dart';
 import 'package:lifeos_ai/shared/widgets/app_text_field.dart';
@@ -26,8 +27,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final eventsAsync = ref.watch(calendarEventsProvider);
     final selectedDate = ref.watch(selectedDateProvider);
 
-    final daysInMonth = DateUtils.getDaysInMonth(_focusedMonth.year, _focusedMonth.month);
-    final firstDayOffset = DateTime(_focusedMonth.year, _focusedMonth.month, 1).weekday % 7;
+    final daysInMonth =
+        DateUtils.getDaysInMonth(_focusedMonth.year, _focusedMonth.month);
+    final firstDayOffset =
+        DateTime(_focusedMonth.year, _focusedMonth.month, 1).weekday % 7;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,108 +43,103 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.chevron_left_rounded),
-                  tooltip: 'Previous month',
-                  onPressed: () => setState(() {
-                    _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month - 1);
-                  }),
-                ),
-                Text(
-                  '${_monthName(_focusedMonth.month)} ${_focusedMonth.year}',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right_rounded),
-                  tooltip: 'Next month',
-                  onPressed: () => setState(() {
-                    _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1);
-                  }),
-                ),
-              ],
-            ),
-          ),
-          _WeekdayHeader(cs: cs),
-          _MonthGrid(
-            cs: cs,
-            daysInMonth: daysInMonth,
-            firstDayOffset: firstDayOffset,
-            focusedMonth: _focusedMonth,
-            selectedDate: selectedDate,
-            onDateSelected: (d) {
-              ref.read(selectedDateProvider.notifier).state = d;
-              setState(() {});
-            },
-          ),
-          const Divider(height: 24),
-          Expanded(
-            child: eventsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(
-                child: Semantics(
-                  label: 'Error loading events',
-                  child: Text('Error: $e'),
+      body: Center(
+        child: ConstrainedBox(
+          constraints:
+              const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: context.horizontalPagePadding, vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.chevron_left_rounded),
+                      tooltip: 'Previous month',
+                      onPressed: () => setState(() {
+                        _focusedMonth = DateTime(
+                            _focusedMonth.year, _focusedMonth.month - 1);
+                      }),
+                    ),
+                    Flexible(
+                      child: Text(
+                        '${_monthName(_focusedMonth.month)} ${_focusedMonth.year}',
+                        style: Theme.of(context).textTheme.titleLarge,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.chevron_right_rounded),
+                      tooltip: 'Next month',
+                      onPressed: () => setState(() {
+                        _focusedMonth = DateTime(
+                            _focusedMonth.year, _focusedMonth.month + 1);
+                      }),
+                    ),
+                  ],
                 ),
               ),
-              data: (events) {
-                final dayEvents = events.where((e) {
-                  return e.start.year == selectedDate.year &&
-                      e.start.month == selectedDate.month &&
-                      e.start.day == selectedDate.day;
-                }).toList()..sort((a, b) => a.start.compareTo(b.start));
-
-                if (dayEvents.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Semantics(
-                          label: 'No events on this day icon',
-                          child: Icon(Icons.event_outlined,
-                              size: 56, color: cs.onSurfaceVariant),
-                        ),
-                        const SizedBox(height: 16),
-                        Semantics(
-                          label: 'No events on this day',
-                          child: Text('No events on this day',
-                              style: Theme.of(context).textTheme.titleMedium),
-                        ),
-                        const SizedBox(height: 8),
-                        Semantics(
-                          label: 'Add event button',
-                          child: TextButton.icon(
-                            onPressed: () => _showEventForm(context, date: selectedDate),
-                            icon: const Icon(Icons.add_rounded),
-                            label: const Text('Add event'),
-                          ),
-                        ),
-                      ],
+              _WeekdayHeader(cs: cs),
+              _MonthGrid(
+                cs: cs,
+                daysInMonth: daysInMonth,
+                firstDayOffset: firstDayOffset,
+                focusedMonth: _focusedMonth,
+                selectedDate: selectedDate,
+                onDateSelected: (d) {
+                  ref.read(selectedDateProvider.notifier).state = d;
+                  setState(() {});
+                },
+              ),
+              const Divider(height: 24),
+              Expanded(
+                child: eventsAsync.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(
+                    child: Semantics(
+                      label: 'Error loading events',
+                      child: Text('Error: $e'),
                     ),
-                  );
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  itemCount: dayEvents.length,
-                  itemBuilder: (_, i) {
-                    final event = dayEvents[i];
-                    return _EventTile(
-                      event: event,
-                      onEdit: () => _showEventForm(context, event: event),
-                      onDelete: () => _confirmDelete(context, event),
+                  ),
+                  data: (events) {
+                    final dayEvents = events.where((e) {
+                      return e.start.year == selectedDate.year &&
+                          e.start.month == selectedDate.month &&
+                          e.start.day == selectedDate.day;
+                    }).toList()
+                      ..sort((a, b) => a.start.compareTo(b.start));
+
+                    if (dayEvents.isEmpty) {
+                      return _EmptyDay(
+                        cs: cs,
+                        onAdd: () =>
+                            _showEventForm(context, date: selectedDate),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: context.horizontalPagePadding,
+                          vertical: 8),
+                      itemCount: dayEvents.length,
+                      itemBuilder: (_, i) {
+                        final event = dayEvents[i];
+                        return _EventTile(
+                          event: event,
+                          onEdit: () => _showEventForm(context, event: event),
+                          onDelete: () => _confirmDelete(context, event),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showEventForm(context, date: selectedDate),
@@ -152,11 +150,22 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   String _monthName(int m) => const [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
       ][m - 1];
 
-  void _showEventForm(BuildContext context, {CalendarEvent? event, DateTime? date}) {
+  void _showEventForm(BuildContext context,
+      {CalendarEvent? event, DateTime? date}) {
     final isEdit = event != null;
     final titleCtrl = TextEditingController(text: event?.title ?? '');
     final descCtrl = TextEditingController(text: event?.description ?? '');
@@ -190,53 +199,71 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       context: context,
       builder: (_) => AlertDialog(
         title: Text(isEdit ? 'Edit Event' : 'New Event'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AppTextField(
-                controller: titleCtrl,
-                label: 'Title',
-              ),
-              const SizedBox(height: 12),
-              AppTextField(
-                controller: descCtrl,
-                label: 'Description',
-                maxLines: 3,
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(child: AppTextField(controller: startDateCtrl, label: 'Start date')),
-                  const SizedBox(width: 8),
-                  Expanded(child: AppTextField(controller: startTimeCtrl, label: 'Start time')),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(child: AppTextField(controller: endDateCtrl, label: 'End date')),
-                  const SizedBox(width: 8),
-                  Expanded(child: AppTextField(controller: endTimeCtrl, label: 'End time')),
-                ],
-              ),
-              const SizedBox(height: 12),
-              SwitchListTile(
-                title: const Text('All day'),
-                value: allDay,
-                onChanged: (v) => setState(() => allDay = v),
-              ),
-            ],
+        content: SizedBox(
+          width: (MediaQuery.sizeOf(context).width - 80)
+              .clamp(0.0, 440.0)
+              .toDouble(),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppTextField(
+                  controller: titleCtrl,
+                  label: 'Title',
+                ),
+                const SizedBox(height: 12),
+                AppTextField(
+                  controller: descCtrl,
+                  label: 'Description',
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                        child: AppTextField(
+                            controller: startDateCtrl, label: 'Start date')),
+                    const SizedBox(width: 8),
+                    Expanded(
+                        child: AppTextField(
+                            controller: startTimeCtrl, label: 'Start time')),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                        child: AppTextField(
+                            controller: endDateCtrl, label: 'End date')),
+                    const SizedBox(width: 8),
+                    Expanded(
+                        child: AppTextField(
+                            controller: endTimeCtrl, label: 'End time')),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('All day'),
+                  value: allDay,
+                  onChanged: (v) => setState(() => allDay = v),
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
           if (isEdit)
             TextButton(
               onPressed: () async {
-                await ref.read(calendarRepositoryProvider).deleteEvent(event.id);
-                if (mounted) Navigator.pop(context);
+                final navigator = Navigator.of(context);
+                await ref
+                    .read(calendarRepositoryProvider)
+                    .deleteEvent(event.id);
+                if (mounted) navigator.pop();
               },
-              child: Text('Delete', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              child: Text('Delete',
+                  style: TextStyle(color: Theme.of(context).colorScheme.error)),
             ),
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -246,17 +273,21 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             onPressed: () async {
               final title = titleCtrl.text.trim();
               if (title.isEmpty) return;
+              final navigator = Navigator.of(context);
               final repo = ref.read(calendarRepositoryProvider);
               final now = DateTime.now();
-              final start = _parseDateTime(startDateCtrl.text, startTimeCtrl.text, allDay);
-              final end = _parseDateTime(endDateCtrl.text, endTimeCtrl.text, allDay);
+              final start = _parseDateTime(
+                  startDateCtrl.text, startTimeCtrl.text, allDay);
+              final end =
+                  _parseDateTime(endDateCtrl.text, endTimeCtrl.text, allDay);
               final eventModel = CalendarEvent(
                 id: event?.id ??
                     '${now.millisecondsSinceEpoch}-${DateTime.now().microsecondsSinceEpoch}',
                 createdAt: event?.createdAt ?? now,
                 updatedAt: now,
                 title: title,
-                description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
+                description:
+                    descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
                 start: start,
                 end: end,
                 allDay: allDay,
@@ -266,7 +297,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               } else {
                 await repo.createEvent(eventModel);
               }
-              if (mounted) Navigator.pop(context);
+              if (mounted) navigator.pop();
             },
             child: Text(isEdit ? 'Save' : 'Create'),
           ),
@@ -284,8 +315,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     );
     if (allDay) return DateTime(date.year, date.month, date.day);
     final timeParts = timeStr.split(':');
-    return DateTime(date.year, date.month, date.day,
-        int.parse(timeParts[0]), int.parse(timeParts[1]));
+    return DateTime(date.year, date.month, date.day, int.parse(timeParts[0]),
+        int.parse(timeParts[1]));
   }
 
   void _confirmDelete(BuildContext context, CalendarEvent event) {
@@ -301,8 +332,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           ),
           FilledButton(
             onPressed: () async {
+              final navigator = Navigator.of(context);
               await ref.read(calendarRepositoryProvider).deleteEvent(event.id);
-              if (mounted) Navigator.pop(context);
+              if (mounted) navigator.pop();
             },
             child: const Text('Delete'),
           ),
@@ -362,31 +394,41 @@ class _MonthGrid extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eventsAsync = ref.watch(calendarEventsProvider);
     final today = DateTime.now();
-    final cells = <Widget>[];
 
-    for (int i = 0; i < firstDayOffset; i++) {
-      cells.add(const Expanded(child: SizedBox()));
-    }
+    // Total cells = leading blanks + days, padded to whole weeks so the grid
+    // renders a clean rectangle on any width.
+    final totalCells = firstDayOffset + daysInMonth;
 
-    for (int day = 1; day <= daysInMonth; day++) {
-      final date = DateTime(focusedMonth.year, focusedMonth.month, day);
-      final isSelected = date.year == selectedDate.year &&
-          date.month == selectedDate.month &&
-          date.day == selectedDate.day;
-      final isToday = date.year == today.year &&
-          date.month == today.month &&
-          date.day == today.day;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          childAspectRatio: 1,
+        ),
+        itemCount: totalCells,
+        itemBuilder: (context, index) {
+          if (index < firstDayOffset) return const SizedBox.shrink();
+          final day = index - firstDayOffset + 1;
+          final date = DateTime(focusedMonth.year, focusedMonth.month, day);
+          final isSelected = date.year == selectedDate.year &&
+              date.month == selectedDate.month &&
+              date.day == selectedDate.day;
+          final isToday = date.year == today.year &&
+              date.month == today.month &&
+              date.day == today.day;
 
-      final events = eventsAsync.value?.where((e) {
-            return e.start.year == date.year &&
-                e.start.month == date.month &&
-                e.start.day == date.day;
-          }).toList() ??
-          const [];
+          final events = eventsAsync.value?.where((e) {
+                return e.start.year == date.year &&
+                    e.start.month == date.month &&
+                    e.start.day == date.day;
+              }).toList() ??
+              const [];
 
-      cells.add(
-        Expanded(
-          child: GestureDetector(
+          return GestureDetector(
             onTap: () => onDateSelected(date),
             child: Container(
               margin: const EdgeInsets.all(4),
@@ -422,8 +464,8 @@ class _MonthGrid extends ConsumerWidget {
                             width: 6,
                             height: 6,
                             margin: const EdgeInsets.symmetric(horizontal: 1),
-                            decoration: const BoxDecoration(
-                              color: Colors.blue,
+                            decoration: BoxDecoration(
+                              color: cs.primary,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -433,18 +475,57 @@ class _MonthGrid extends ConsumerWidget {
                 ],
               ),
             ),
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Wrap(
-        spacing: 0,
-        runSpacing: 0,
-        children: cells,
+          );
+        },
       ),
+    );
+  }
+}
+
+class _EmptyDay extends StatelessWidget {
+  const _EmptyDay({required this.cs, required this.onAdd});
+  final ColorScheme cs;
+  final VoidCallback onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Semantics(
+                    label: 'No events on this day icon',
+                    child: Icon(Icons.event_outlined,
+                        size: 56, color: cs.onSurfaceVariant),
+                  ),
+                  const SizedBox(height: 16),
+                  Semantics(
+                    label: 'No events on this day',
+                    child: Text('No events on this day',
+                        style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                  const SizedBox(height: 8),
+                  Semantics(
+                    label: 'Add event button',
+                    child: TextButton.icon(
+                      onPressed: onAdd,
+                      icon: const Icon(Icons.add_rounded),
+                      label: const Text('Add event'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -468,12 +549,13 @@ class _EventTile extends ConsumerWidget {
       child: ListTile(
         leading: Container(
           width: 4,
+          height: 40,
           decoration: BoxDecoration(
             color: cs.primary,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
-        title: Text(event.title),
+        title: Text(event.title, maxLines: 1, overflow: TextOverflow.ellipsis),
         subtitle: Text(
           '${_formatTime(event.start)} - ${_formatTime(event.end)}${event.allDay ? ' (All day)' : ''}',
         ),

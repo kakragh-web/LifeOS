@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/core/utils/error_handler.dart';
+import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/core/utils/validators.dart';
 import 'package:lifeos_ai/features/auth/providers/auth_provider.dart';
 import 'package:lifeos_ai/shared/widgets/app_button.dart';
@@ -80,34 +81,42 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  context.responsive(compact: 24, medium: 32, expanded: 40),
+              vertical: 16,
+            ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
+              constraints:
+                  const BoxConstraints(maxWidth: Breakpoints.maxContentWidth),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                     Text(
-                       'Welcome back',
-                       style: tt.headlineMedium?.copyWith(
-                         fontWeight: FontWeight.bold,
-                         color: cs.onSurface,
-                       ),
-                     ),
-                     const SizedBox(height: 8),
-                     Text(
-                       'Sign in to continue to ${AppConstants.appName}',
-                       style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
-                     ),
-                     const SizedBox(height: 36),
-                     Image.asset(
-                       'assets/images/lifeos_logo.PNG',
-                       width: 64,
-                       height: 64,
-                       fit: BoxFit.contain,
-                     ),
-                     const SizedBox(height: 36),
+                    Text(
+                      'Welcome back',
+                      style: tt.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Sign in to continue to ${AppConstants.appName}',
+                      style:
+                          tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+                    ),
+                    SizedBox(
+                        height: context.responsive(compact: 28, medium: 36)),
+                    Image.asset(
+                      'assets/images/lifeos_logo.PNG',
+                      width: context.responsive(compact: 64, medium: 80),
+                      height: context.responsive(compact: 64, medium: 80),
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(
+                        height: context.responsive(compact: 28, medium: 36)),
                     AppTextField(
                       controller: _emailCtrl,
                       label: 'Email',
@@ -126,16 +135,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       prefixIcon: Icons.lock_outline_rounded,
                       textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) => _signIn(),
-                      validator: (v) =>
-                          v == null || v.isEmpty ? 'Password is required' : null,
+                      validator: (v) => v == null || v.isEmpty
+                          ? 'Password is required'
+                          : null,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
                         ),
-                        onPressed: () =>
-                            setState(() => _obscurePassword = !_obscurePassword),
+                        onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword),
                       ),
                     ),
                     const SizedBox(height: 28),
@@ -146,19 +156,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(height: 12),
                     _OrDivider(),
-                     const SizedBox(height: 12),
-                     GoogleSignInButton(
-                       onTap: _signInWithGoogle,
-                       enabled: !isLoading,
-                     ),
-                     const SizedBox(height: 28),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: 12),
+                    GoogleSignInButton(
+                      onTap: _signInWithGoogle,
+                      enabled: !isLoading,
+                    ),
+                    const SizedBox(height: 28),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
                           "Don't have an account? ",
-                          style: tt.bodyMedium?.copyWith(
-                              color: cs.onSurfaceVariant),
+                          style: tt.bodyMedium
+                              ?.copyWith(color: cs.onSurfaceVariant),
                         ),
                         TextButton(
                           onPressed: () => context.go(AppRoutes.register),

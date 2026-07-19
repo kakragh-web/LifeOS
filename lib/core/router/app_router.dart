@@ -72,7 +72,8 @@ String? _redirect(_AuthRouterNotifier notifier, GoRouterState state) {
   final authState = notifier.authState;
   final location = state.matchedLocation;
 
-  debugPrint('[LifeOS Router] Redirect evaluation: location=$location, auth isLoading=${authState.isLoading}, auth value=${authState.valueOrNull}');
+  debugPrint(
+      '[LifeOS Router] Redirect evaluation: location=$location, auth isLoading=${authState.isLoading}, auth value=${authState.valueOrNull}');
 
   final isOnSplash = location == AppRoutes.splash;
   final isOnAuthFlow = location == AppRoutes.welcome ||
@@ -114,14 +115,21 @@ String? _redirect(_AuthRouterNotifier notifier, GoRouterState state) {
 
 List<RouteBase> _buildRoutes() => [
       GoRoute(path: AppRoutes.splash, builder: (_, __) => const SplashScreen()),
-      GoRoute(path: AppRoutes.welcome, builder: (_, __) => const WelcomeScreen()),
+      GoRoute(
+          path: AppRoutes.welcome, builder: (_, __) => const WelcomeScreen()),
       GoRoute(path: AppRoutes.login, builder: (_, __) => const LoginScreen()),
-      GoRoute(path: AppRoutes.register, builder: (_, __) => const RegisterScreen()),
-      GoRoute(path: AppRoutes.dashboard, builder: (_, __) => const DashboardScreen()),
-      GoRoute(path: AppRoutes.planner, builder: (_, __) => const PlannerScreen()),
-      GoRoute(path: AppRoutes.calendar, builder: (_, __) => const CalendarScreen()),
+      GoRoute(
+          path: AppRoutes.register, builder: (_, __) => const RegisterScreen()),
+      GoRoute(
+          path: AppRoutes.dashboard,
+          builder: (_, __) => const DashboardScreen()),
+      GoRoute(
+          path: AppRoutes.planner, builder: (_, __) => const PlannerScreen()),
+      GoRoute(
+          path: AppRoutes.calendar, builder: (_, __) => const CalendarScreen()),
       GoRoute(path: AppRoutes.tasks, builder: (_, __) => const TasksScreen()),
       GoRoute(path: AppRoutes.notes, builder: (_, __) => const NotesScreen()),
       GoRoute(path: AppRoutes.chat, builder: (_, __) => const ChatScreen()),
-      GoRoute(path: AppRoutes.settings, builder: (_, __) => const SettingsScreen()),
+      GoRoute(
+          path: AppRoutes.settings, builder: (_, __) => const SettingsScreen()),
     ];

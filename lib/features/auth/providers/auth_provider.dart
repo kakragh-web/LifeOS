@@ -10,17 +10,17 @@ import 'package:lifeos_ai/main.dart' show firebaseReadyProvider;
 
 final authRepositoryProvider = Provider<IAuthRepository>((ref) {
   final firebaseReady = ref.watch(firebaseReadyProvider);
-  developer.log('[LifeOS Auth] Repository selected: ${firebaseReady ? 'Firebase' : 'Stub'}');
+  developer.log(
+      '[LifeOS Auth] Repository selected: ${firebaseReady ? 'Firebase' : 'Stub'}');
   return firebaseReady ? FirebaseAuthRepository() : AuthRepository();
 });
 
 final authStateProvider = StreamProvider<AppUser?>((ref) {
   final repo = ref.watch(authRepositoryProvider);
-  return repo.authStateChanges
-      .timeout(
-        const Duration(seconds: 2),
-        onTimeout: (sink) => sink.add(null),
-      );
+  return repo.authStateChanges.timeout(
+    const Duration(seconds: 2),
+    onTimeout: (sink) => sink.add(null),
+  );
 });
 
 class AuthNotifier extends AsyncNotifier<AppUser?> {
@@ -34,7 +34,8 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
     state = const AsyncLoading();
     state = await AsyncValue.guard<AppUser?>(() => _repo.signInWithGoogle());
     if (state.hasError) {
-      developer.log('[LifeOS Auth] signInWithGoogle failed', error: state.error);
+      developer.log('[LifeOS Auth] signInWithGoogle failed',
+          error: state.error);
     }
   }
 
@@ -49,7 +50,8 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
     }
   }
 
-  Future<void> signUpWithEmail(String email, String password, String name) async {
+  Future<void> signUpWithEmail(
+      String email, String password, String name) async {
     developer.log('[LifeOS Auth] signUpWithEmail called for $email');
     state = const AsyncLoading();
     state = await AsyncValue.guard<AppUser?>(

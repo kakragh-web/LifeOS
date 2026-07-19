@@ -20,13 +20,15 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<AppUser> signInWithGoogle() async {
     developer.log('[LifeOS Auth] Stub signInWithGoogle called');
-    return Future.error('Firebase is not configured. Google Sign-In is unavailable.');
+    return Future.error(
+        'Firebase is not configured. Google Sign-In is unavailable.');
   }
 
   @override
   Future<AppUser> signInWithEmail(String email, String password) async {
     developer.log('[LifeOS Auth] Stub signInWithEmail called for $email');
-    return Future.error('Firebase is not configured. Email sign-in is unavailable.');
+    return Future.error(
+        'Firebase is not configured. Email sign-in is unavailable.');
   }
 
   @override
@@ -36,7 +38,8 @@ class AuthRepository implements IAuthRepository {
     String displayName,
   ) async {
     developer.log('[LifeOS Auth] Stub signUpWithEmail called for $email');
-    return Future.error('Firebase is not configured. Email sign-up is unavailable.');
+    return Future.error(
+        'Firebase is not configured. Email sign-up is unavailable.');
   }
 
   @override
@@ -46,7 +49,9 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
-    developer.log('[LifeOS Auth] Stub sendPasswordResetEmail called for $email');
-    return Future.error('Firebase is not configured. Password reset is unavailable.');
+    developer
+        .log('[LifeOS Auth] Stub sendPasswordResetEmail called for $email');
+    return Future.error(
+        'Firebase is not configured. Password reset is unavailable.');
   }
 }

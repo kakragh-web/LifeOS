@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/features/chat/domain/chat_message.dart';
 import 'package:lifeos_ai/features/chat/providers/chat_provider.dart';
 
@@ -68,27 +69,45 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: messages.isEmpty && !_isTyping
-                ? Semantics(
-                    label: 'AI Assistant empty state. Ask me anything about your tasks, schedule, or goals.',
-                    child: _EmptyState(cs: cs),
-                  )
-                : ListView.builder(
-                    controller: _scroll,
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                    itemCount: messages.length + (_isTyping ? 1 : 0),
-                    itemBuilder: (_, i) {
-                      if (_isTyping && i == messages.length) {
-                        return Semantics(
-                          label: 'AI is typing',
-                          child: const _TypingIndicator(),
-                        );
-                      }
-                      return _Bubble(message: messages[i]);
-                    },
-                  ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                    maxWidth: Breakpoints.maxWideContentWidth),
+                child: messages.isEmpty && !_isTyping
+                    ? Semantics(
+                        label:
+                            'AI Assistant empty state. Ask me anything about your tasks, schedule, or goals.',
+                        child: _EmptyState(cs: cs),
+                      )
+                    : ListView.builder(
+                        controller: _scroll,
+                        padding: EdgeInsets.fromLTRB(
+                          context.horizontalPagePadding,
+                          16,
+                          context.horizontalPagePadding,
+                          8,
+                        ),
+                        itemCount: messages.length + (_isTyping ? 1 : 0),
+                        itemBuilder: (_, i) {
+                          if (_isTyping && i == messages.length) {
+                            return Semantics(
+                              label: 'AI is typing',
+                              child: const _TypingIndicator(),
+                            );
+                          }
+                          return _Bubble(message: messages[i]);
+                        },
+                      ),
+              ),
+            ),
           ),
-          _InputBar(ctrl: _ctrl, onSend: _send),
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                  maxWidth: Breakpoints.maxWideContentWidth),
+              child: _InputBar(ctrl: _ctrl, onSend: _send),
+            ),
+          ),
         ],
       ),
     );
@@ -102,37 +121,41 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Semantics(
-            label: 'LifeOS AI Assistant icon',
-            child: Icon(Icons.smart_toy_outlined, size: 56, color: cs.primary),
-          ),
-          const SizedBox(height: 16),
-          Semantics(
-            label: 'LifeOS AI',
-            child: Text(
-              'LifeOS AI',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Semantics(
+              label: 'LifeOS AI Assistant icon',
+              child:
+                  Icon(Icons.smart_toy_outlined, size: 56, color: cs.primary),
             ),
-          ),
-          const SizedBox(height: 8),
-          Semantics(
-            label: 'Ask me anything about your tasks, schedule, or goals.',
-            child: Text(
-              'Ask me anything about your tasks,\nschedule, or goals.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: cs.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Semantics(
+              label: 'LifeOS AI',
+              child: Text(
+                'LifeOS AI',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Semantics(
+              label: 'Ask me anything about your tasks, schedule, or goals.',
+              child: Text(
+                'Ask me anything about your tasks, schedule, or goals.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: cs.onSurfaceVariant),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -163,22 +186,22 @@ class _InputBar extends StatelessWidget {
                   controller: ctrl,
                   decoration: InputDecoration(
                     hintText: 'Message LifeOS AI…',
-                    contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: cs.surfaceContainerHighest,
                   ),
-                  filled: true,
-                  fillColor: cs.surfaceContainerHighest,
+                  onSubmitted: (_) => onSend(),
+                  textInputAction: TextInputAction.send,
+                  maxLines: 4,
+                  minLines: 1,
                 ),
-                onSubmitted: (_) => onSend(),
-                textInputAction: TextInputAction.send,
-                maxLines: 4,
-                minLines: 1,
               ),
             ),
-          ),
             const SizedBox(width: 8),
             FilledButton(
               onPressed: onSend,
@@ -204,28 +227,36 @@ class _Bubble extends StatelessWidget {
     final isUser = message.role == MessageRole.user;
     final cs = Theme.of(context).colorScheme;
 
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.sizeOf(context).width * 0.75,
-        ),
-        decoration: BoxDecoration(
-          color: isUser ? cs.primary : cs.surfaceContainerHighest,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(18),
-            topRight: const Radius.circular(18),
-            bottomLeft: Radius.circular(isUser ? 18 : 4),
-            bottomRight: Radius.circular(isUser ? 4 : 18),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Cap bubble width relative to the available (already constrained)
+        // width so bubbles stay readable on phones, tablets and desktop.
+        final available = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : context.screenWidth;
+        final maxBubbleWidth = (available * 0.8).clamp(0.0, 560.0);
+        return Align(
+          alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            constraints: BoxConstraints(maxWidth: maxBubbleWidth),
+            decoration: BoxDecoration(
+              color: isUser ? cs.primary : cs.surfaceContainerHighest,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(18),
+                topRight: const Radius.circular(18),
+                bottomLeft: Radius.circular(isUser ? 18 : 4),
+                bottomRight: Radius.circular(isUser ? 4 : 18),
+              ),
+            ),
+            child: Text(
+              message.content,
+              style: TextStyle(color: isUser ? cs.onPrimary : cs.onSurface),
+            ),
           ),
-        ),
-        child: Text(
-          message.content,
-          style: TextStyle(color: isUser ? cs.onPrimary : cs.onSurface),
-        ),
-      ),
+        );
+      },
     );
   }
 }

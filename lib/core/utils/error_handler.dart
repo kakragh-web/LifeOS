@@ -74,7 +74,8 @@ abstract final class ErrorHandler {
     }
 
     // Network
-    if (msg.contains('network-request-failed') || msg.contains('SocketException')) {
+    if (msg.contains('network-request-failed') ||
+        msg.contains('SocketException')) {
       return 'No internet connection. Please check your network.';
     }
 

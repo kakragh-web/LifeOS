@@ -32,7 +32,8 @@ class SettingsScreen extends ConsumerWidget {
                       backgroundColor: cs.primaryContainer,
                       child: user.photoUrl == null
                           ? Text(
-                              user.displayName?.substring(0, 1).toUpperCase() ?? 'U',
+                              user.displayName?.substring(0, 1).toUpperCase() ??
+                                  'U',
                               style: TextStyle(color: cs.onPrimaryContainer),
                             )
                           : null,
@@ -59,8 +60,11 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           Card(
             child: SwitchListTile(
-              title: Semantics(label: 'Dark mode toggle', child: const Text('Dark mode')),
-              subtitle: Semantics(label: 'Use dark color scheme', child: const Text('Use dark color scheme')),
+              title: Semantics(
+                  label: 'Dark mode toggle', child: const Text('Dark mode')),
+              subtitle: Semantics(
+                  label: 'Use dark color scheme',
+                  child: const Text('Use dark color scheme')),
               value: isDark,
               onChanged: (v) {
                 final themeMode = v ? ThemeMode.dark : ThemeMode.light;
@@ -103,7 +107,8 @@ class SettingsScreen extends ConsumerWidget {
               child: ListTile(
                 leading: const Icon(Icons.info_outline_rounded),
                 title: const Text('About'),
-                subtitle: Text('${AppConstants.appName} v${AppConstants.appVersion}'),
+                subtitle: const Text(
+                    '${AppConstants.appName} v${AppConstants.appVersion}'),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () {},
               ),

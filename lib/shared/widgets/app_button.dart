@@ -46,7 +46,8 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveCallback = isLoading ? null : onPressed;
-    final child = _ButtonContent(label: label, icon: icon, isLoading: isLoading);
+    final child =
+        _ButtonContent(label: label, icon: icon, isLoading: isLoading);
 
     return switch (_variant) {
       _Variant.filled => FilledButton(

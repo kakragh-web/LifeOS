@@ -11,7 +11,9 @@ abstract final class Validators {
   static String? password(String? v) {
     if (v == null || v.isEmpty) return 'Password is required';
     if (v.length < 6) return 'Password must be at least 6 characters';
-    if (!RegExp(r'[A-Z]').hasMatch(v)) return 'Include at least one uppercase letter';
+    if (!RegExp(r'[A-Z]').hasMatch(v)) {
+      return 'Include at least one uppercase letter';
+    }
     if (!RegExp(r'[0-9]').hasMatch(v)) return 'Include at least one number';
     return null;
   }
@@ -22,7 +24,9 @@ abstract final class Validators {
   }
 
   static String? minLength(String? v, int min, {String field = 'Value'}) {
-    if (v == null || v.trim().length < min) return '$field must be at least $min characters';
+    if (v == null || v.trim().length < min) {
+      return '$field must be at least $min characters';
+    }
     return null;
   }
 }

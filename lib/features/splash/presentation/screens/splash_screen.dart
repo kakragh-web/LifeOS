@@ -41,9 +41,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final cs = Theme.of(context).colorScheme;
 
     ref.listen(authStateProvider, (_, next) {
-      debugPrint('[LifeOS Splash] Auth state changed: isLoading=${next.isLoading}, value=${next.valueOrNull}');
+      debugPrint(
+          '[LifeOS Splash] Auth state changed: isLoading=${next.isLoading}, value=${next.valueOrNull}');
       if (!next.isLoading) {
-        debugPrint('[LifeOS Splash] Auth state resolved, router redirect should handle navigation');
+        debugPrint(
+            '[LifeOS Splash] Auth state resolved, router redirect should handle navigation');
       }
     });
 
@@ -67,9 +69,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               const SizedBox(height: 24),
               Semantics(
                 label: 'LifeOS',
-                child: Text(
+                child: const Text(
                   AppConstants.appName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     letterSpacing: -0.5,
                   ),

@@ -16,12 +16,12 @@ void main() {
           child: MediaQuery(
             data: const MediaQueryData(size: Size(420, 800)),
             child: MaterialApp.router(
-            routerConfig: GoRouter(
-              initialLocation: '/',
-              routes: [
-                GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
-              ],
-            ),
+              routerConfig: GoRouter(
+                initialLocation: '/',
+                routes: [
+                  GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
+                ],
+              ),
             ),
           ),
         ),
@@ -41,12 +41,12 @@ void main() {
           child: MediaQuery(
             data: const MediaQueryData(size: Size(420, 800)),
             child: MaterialApp.router(
-            routerConfig: GoRouter(
-              initialLocation: '/',
-              routes: [
-                GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
-              ],
-            ),
+              routerConfig: GoRouter(
+                initialLocation: '/',
+                routes: [
+                  GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
+                ],
+              ),
             ),
           ),
         ),

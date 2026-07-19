@@ -26,7 +26,8 @@ class GoogleSignInButton extends ConsumerWidget {
           backgroundColor: cs.surface,
           foregroundColor: Colors.black87,
           side: BorderSide(color: cs.outlineVariant),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         icon: Image.asset(
           'assets/images/google_logo.png',
@@ -34,7 +35,7 @@ class GoogleSignInButton extends ConsumerWidget {
           height: 20,
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
-            return Icon(Icons.g_mobiledata_rounded, size: 20);
+            return const Icon(Icons.g_mobiledata_rounded, size: 20);
           },
         ),
         label: Text(

@@ -61,8 +61,9 @@ class CalendarEvent extends BaseModel {
     return CalendarEvent(
       id: json['id'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt:
-          json['updatedAt'] != null ? DateTime.parse(json['updatedAt'] as String) : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
       title: json['title'] as String,
       description: json['description'] as String?,
       start: DateTime.parse(json['start'] as String),

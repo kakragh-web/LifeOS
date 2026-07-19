@@ -23,7 +23,8 @@ Future<void> main() async {
     debugPrint('[LifeOS] Firebase initialized successfully');
   } catch (e) {
     debugPrint('[LifeOS] Firebase initialization failed: $e');
-    debugPrint('[LifeOS] Development Preview Mode enabled — app will run without Firebase');
+    debugPrint(
+        '[LifeOS] Development Preview Mode enabled — app will run without Firebase');
   }
 
   debugPrint('[LifeOS] Initializing storage service');

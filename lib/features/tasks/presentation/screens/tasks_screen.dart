@@ -398,12 +398,14 @@ class _Filters extends StatelessWidget {
           value: TaskPriority.medium,
           child: Text('Any'),
         ),
-        ...TaskPriority.values.map(
-          (p) => DropdownMenuItem(
-            value: p,
-            child: Text(p.name.toUpperCase()),
-          ),
-        ),
+        ...TaskPriority.values
+            .where((p) => p != TaskPriority.medium)
+            .map(
+              (p) => DropdownMenuItem(
+                value: p,
+                child: Text(p.name.toUpperCase()),
+              ),
+            ),
       ],
       onChanged: (v) => onPriorityChanged(v ?? TaskPriority.medium),
     );
@@ -420,12 +422,14 @@ class _Filters extends StatelessWidget {
           value: TaskStatus.todo,
           child: Text('Any'),
         ),
-        ...TaskStatus.values.map(
-          (s) => DropdownMenuItem(
-            value: s,
-            child: Text(s.name.toUpperCase()),
-          ),
-        ),
+        ...TaskStatus.values
+            .where((s) => s != TaskStatus.todo)
+            .map(
+              (s) => DropdownMenuItem(
+                value: s,
+                child: Text(s.name.toUpperCase()),
+              ),
+            ),
       ],
       onChanged: (v) => onStatusChanged(v ?? TaskStatus.todo),
     );

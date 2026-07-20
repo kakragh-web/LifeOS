@@ -90,3 +90,18 @@ android/key.properties
 # OS / editor
 Thumbs.db
 .vscode/
+
+# ─── DevPost / submission artifacts (optional) ───
+# Screenshots and demo videos are large binary assets; keep them out of source
+# control unless you intentionally want them tracked.
+assets/screenshots/
+*.mov
+*.mp4
+
+# Flutter tooling session / local overrides
+.flutter-plugins
+ios/.symlinks/
+**/Pods/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+

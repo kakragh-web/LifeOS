@@ -1,7 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lifeos_ai/core/theme/app_colors.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
 import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
@@ -42,7 +40,6 @@ class _AnimatedFABState extends State<AnimatedFAB>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotationAnimation;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -68,18 +65,15 @@ class _AnimatedFABState extends State<AnimatedFAB>
   void _handleTapDown(TapDownDetails details) {
     if (widget.onPressed != null) {
       HapticFeedback.mediumImpact();
-      setState(() => _isPressed = true);
       _controller.forward();
     }
   }
 
   void _handleTapUp(TapUpDetails details) {
-    setState(() => _isPressed = false);
     _controller.reverse();
   }
 
   void _handleTapCancel() {
-    setState(() => _isPressed = false);
     _controller.reverse();
   }
 
@@ -100,10 +94,14 @@ class _AnimatedFABState extends State<AnimatedFAB>
     };
 
     final effectiveBackgroundColor = widget.backgroundColor ??
-        (widget.isExtended ? colorScheme.primary : colorScheme.primaryContainer);
+        (widget.isExtended
+            ? colorScheme.primary
+            : colorScheme.primaryContainer);
 
     final effectiveForegroundColor = widget.foregroundColor ??
-        (widget.isExtended ? colorScheme.onPrimary : colorScheme.onPrimaryContainer);
+        (widget.isExtended
+            ? colorScheme.onPrimary
+            : colorScheme.onPrimaryContainer);
 
     return GestureDetector(
       onTapDown: _handleTapDown,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lifeos_ai/core/theme/app_colors.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
-import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
 import 'package:lifeos_ai/core/theme/app_typography.dart';
 
@@ -139,12 +138,12 @@ class AppTheme {
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return IconThemeData(
+            return const IconThemeData(
               color: AppColors.onPrimaryContainer,
               size: AppSpacing.iconMd,
             );
           }
-          return IconThemeData(
+          return const IconThemeData(
             color: AppColors.onSurfaceVariant,
             size: AppSpacing.iconMd,
           );
@@ -165,7 +164,7 @@ class AppTheme {
       ),
 
       // ─── Icon Theme ──────────────────────────────────────────────────
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
         color: AppColors.onSurfaceVariant,
         size: AppSpacing.iconMd,
       ),
@@ -390,12 +389,12 @@ class AppTheme {
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return IconThemeData(
+            return const IconThemeData(
               color: AppColors.onPrimaryContainer,
               size: AppSpacing.iconMd,
             );
           }
-          return IconThemeData(
+          return const IconThemeData(
             color: AppColors.onSurfaceVariant,
             size: AppSpacing.iconMd,
           );
@@ -416,7 +415,7 @@ class AppTheme {
       ),
 
       // ─── Icon Theme ──────────────────────────────────────────────────
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
         color: AppColors.onSurfaceVariant,
         size: AppSpacing.iconMd,
       ),

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeos_ai/core/theme/app_colors.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
@@ -6,6 +7,7 @@ import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
 
 /// Premium frosted glass card with blur effect and layered shadows.
+/// On web, BackdropFilter is disabled for better performance and compatibility.
 class GlassCard extends StatelessWidget {
   const GlassCard({
     super.key,
@@ -16,7 +18,7 @@ class GlassCard extends StatelessWidget {
     this.height,
     this.borderRadius,
     this.blur = 20.0,
-    this.opacity = 0.7,
+    this.opacity = 0.85,
     this.borderWidth = 1.0,
     this.borderColor,
     this.gradient,
@@ -62,6 +64,39 @@ class GlassCard extends StatelessWidget {
           _ => AppShadows.elevation8,
         };
 
+    const bool isWeb = kIsWeb;
+
+    Widget cardContent = Container(
+      padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(effectiveBorderRadius),
+        color: isWeb
+            ? Theme.of(context).colorScheme.surfaceContainerHighest
+            : AppColors.glass.withOpacity(opacity),
+        gradient: isWeb ? null : (gradient ?? AppColors.glassGradient),
+        border: Border.all(
+          color: effectiveBorderColor,
+          width: borderWidth,
+        ),
+      ),
+      child: child,
+    );
+
+    if (!isWeb) {
+      cardContent = BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+        child: Container(
+          padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(effectiveBorderRadius),
+            color: AppColors.glass.withOpacity(opacity),
+            gradient: gradient ?? AppColors.glassGradient,
+          ),
+          child: child,
+        ),
+      );
+    }
+
     Widget card = AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
@@ -70,7 +105,6 @@ class GlassCard extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(effectiveBorderRadius),
-        gradient: gradient ?? AppColors.glassGradient,
         border: Border.all(
           color: effectiveBorderColor,
           width: borderWidth,
@@ -78,17 +112,7 @@ class GlassCard extends StatelessWidget {
         boxShadow: effectiveShadows,
       ),
       clipBehavior: clipBehavior,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(
-          padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(effectiveBorderRadius),
-            color: AppColors.glass.withOpacity(opacity),
-          ),
-          child: child,
-        ),
-      ),
+      child: cardContent,
     );
 
     if (onTap != null || onLongPress != null) {

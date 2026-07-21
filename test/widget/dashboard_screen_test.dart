@@ -15,8 +15,7 @@ void main() {
 
   Widget buildApp() => ProviderScope(
         overrides: [
-          authStateProvider
-              .overrideWith((ref) => Stream<AppUser?>.value(null)),
+          authStateProvider.overrideWith((ref) => Stream<AppUser?>.value(null)),
         ],
         child: MediaQuery(
           data: const MediaQueryData(size: Size(800, 1200)),

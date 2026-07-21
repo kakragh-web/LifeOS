@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lifeos_ai/core/theme/app_colors.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
 import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
@@ -130,7 +129,9 @@ class _ActionTile extends StatelessWidget {
     final theme = Theme.of(context);
     final textColor = action.isDestructive
         ? theme.colorScheme.error
-        : (action.enabled ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant);
+        : (action.enabled
+            ? theme.colorScheme.onSurface
+            : theme.colorScheme.onSurfaceVariant);
 
     return InkWell(
       onTap: action.enabled ? action.onTap : null,

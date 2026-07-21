@@ -6,7 +6,6 @@ import 'package:lifeos_ai/features/notes/domain/note.dart';
 import 'package:lifeos_ai/features/notes/providers/note_providers.dart';
 import 'package:lifeos_ai/shared/widgets/animated_fab.dart';
 import 'package:lifeos_ai/shared/widgets/animated_text_field.dart';
-import 'package:lifeos_ai/shared/widgets/app_bottom_sheet.dart';
 import 'package:lifeos_ai/shared/widgets/app_dialog.dart';
 import 'package:lifeos_ai/shared/widgets/glass_card.dart';
 import 'package:lifeos_ai/shared/widgets/status_chip.dart';
@@ -37,10 +36,12 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface.withOpacity( 0.9),
+        backgroundColor: AppColors.surface.withOpacity(0.9),
         foregroundColor: cs.onSurface,
         elevation: 0,
-        title: Text('Notes', style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
+        title: Text('Notes',
+            style:
+                AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_rounded),
@@ -53,9 +54,14 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
         children: [
           Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
+              constraints: const BoxConstraints(
+                  maxWidth: Breakpoints.maxWideContentWidth),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(context.horizontalPagePadding, AppSpacing.md, context.horizontalPagePadding, AppSpacing.sm),
+                padding: EdgeInsets.fromLTRB(
+                    context.horizontalPagePadding,
+                    AppSpacing.md,
+                    context.horizontalPagePadding,
+                    AppSpacing.sm),
                 child: context.isCompact
                     ? Column(
                         children: [
@@ -71,12 +77,16 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                           DropdownButtonFormField<String?>(
                             value: _filterCategory,
                             isExpanded: true,
-                            decoration: const InputDecoration(labelText: 'Category', isDense: true),
+                            decoration: const InputDecoration(
+                                labelText: 'Category', isDense: true),
                             items: [
-                              const DropdownMenuItem(value: null, child: Text('All')),
-                              ...categories.map((c) => DropdownMenuItem(value: c, child: Text(c))),
+                              const DropdownMenuItem(
+                                  value: null, child: Text('All')),
+                              ...categories.map((c) =>
+                                  DropdownMenuItem(value: c, child: Text(c))),
                             ],
-                            onChanged: (v) => setState(() => _filterCategory = v),
+                            onChanged: (v) =>
+                                setState(() => _filterCategory = v),
                           ),
                         ],
                       )
@@ -98,12 +108,16 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                             child: DropdownButtonFormField<String?>(
                               value: _filterCategory,
                               isExpanded: true,
-                              decoration: const InputDecoration(labelText: 'Category', isDense: true),
+                              decoration: const InputDecoration(
+                                  labelText: 'Category', isDense: true),
                               items: [
-                                const DropdownMenuItem(value: null, child: Text('All')),
-                                ...categories.map((c) => DropdownMenuItem(value: c, child: Text(c))),
+                                const DropdownMenuItem(
+                                    value: null, child: Text('All')),
+                                ...categories.map((c) =>
+                                    DropdownMenuItem(value: c, child: Text(c))),
                               ],
-                              onChanged: (v) => setState(() => _filterCategory = v),
+                              onChanged: (v) =>
+                                  setState(() => _filterCategory = v),
                             ),
                           ),
                         ],
@@ -114,21 +128,28 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
           Expanded(
             child: notesAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e', style: AppTypography.bodyMedium)),
+              error: (e, _) => Center(
+                  child: Text('Error: $e', style: AppTypography.bodyMedium)),
               data: (notes) {
                 final filtered = _filterNotes(notes);
                 if (filtered.isEmpty) {
-                  return _EmptyNotes(cs: cs, onCreate: () => _showNoteForm(context));
+                  return _EmptyNotes(
+                      cs: cs, onCreate: () => _showNoteForm(context));
                 }
                 return Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
+                    constraints: const BoxConstraints(
+                        maxWidth: Breakpoints.maxWideContentWidth),
                     child: ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: context.horizontalPagePadding, vertical: AppSpacing.sm),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: context.horizontalPagePadding,
+                          vertical: AppSpacing.sm),
                       itemCount: filtered.length,
                       itemBuilder: (_, i) {
                         final note = filtered[i];
-                        return _NoteCard(note: note, onTap: () => _showNoteForm(context, note: note));
+                        return _NoteCard(
+                            note: note,
+                            onTap: () => _showNoteForm(context, note: note));
                       },
                     ),
                   ),
@@ -160,8 +181,12 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
     }
     final list = [...pinned, ...others];
     return list.where((n) {
-      if (_filterCategory != null && _filterCategory!.isNotEmpty && n.category != _filterCategory) return false;
-      if (query.isNotEmpty && !n.title.toLowerCase().contains(query) && !(n.content ?? '').toLowerCase().contains(query)) return false;
+      if (_filterCategory != null &&
+          _filterCategory!.isNotEmpty &&
+          n.category != _filterCategory) return false;
+      if (query.isNotEmpty &&
+          !n.title.toLowerCase().contains(query) &&
+          !(n.content ?? '').toLowerCase().contains(query)) return false;
       return true;
     }).toList();
   }
@@ -200,13 +225,17 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
             final repo = ref.read(noteRepositoryProvider);
             final now = DateTime.now();
             final noteModel = Note(
-              id: note?.id ?? '${now.millisecondsSinceEpoch}-${DateTime.now().microsecondsSinceEpoch}',
+              id: note?.id ??
+                  '${now.millisecondsSinceEpoch}-${DateTime.now().microsecondsSinceEpoch}',
               createdAt: note?.createdAt ?? now,
               updatedAt: now,
               title: title,
-              content: contentCtrl.text.trim().isEmpty ? null : contentCtrl.text.trim(),
+              content: contentCtrl.text.trim().isEmpty
+                  ? null
+                  : contentCtrl.text.trim(),
               pinned: pinned,
-              category: catCtrl.text.trim().isEmpty ? null : catCtrl.text.trim(),
+              category:
+                  catCtrl.text.trim().isEmpty ? null : catCtrl.text.trim(),
             );
             if (isEdit) {
               await repo.updateNote(noteModel);
@@ -232,13 +261,14 @@ class _EmptyNotes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.note_outlined, size: 48, color: cs.onSurfaceVariant),
             const SizedBox(height: AppSpacing.md),
-            Text('No notes yet', style: AppTypography.titleMedium),
+            const Text('No notes yet', style: AppTypography.titleMedium),
             const SizedBox(height: AppSpacing.sm),
             TextButton.icon(
               onPressed: onCreate,
@@ -275,7 +305,8 @@ class _NoteCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     note.title,
-                    style: AppTypography.titleSmall.copyWith(fontWeight: FontWeight.w700),
+                    style: AppTypography.titleSmall
+                        .copyWith(fontWeight: FontWeight.w700),
                   ),
                 ),
                 if (note.pinned)
@@ -288,7 +319,8 @@ class _NoteCard extends StatelessWidget {
                 note.content!,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: AppTypography.bodyMedium.copyWith(color: cs.onSurfaceVariant),
+                style: AppTypography.bodyMedium
+                    .copyWith(color: cs.onSurfaceVariant),
               ),
             ],
             const SizedBox(height: AppSpacing.sm),

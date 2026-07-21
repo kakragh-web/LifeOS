@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lifeos_ai/core/theme/app_colors.dart';
@@ -53,8 +52,7 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
     with SingleTickerProviderStateMixin {
   late AnimationController _focusController;
   late Animation<double> _focusAnimation;
-  bool _isFocused = false;
-  bool _hasValue = false;
+  final bool _isFocused = false;
 
   @override
   void initState() {
@@ -67,32 +65,12 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
       parent: _focusController,
       curve: Curves.easeInOut,
     );
-    _hasValue = widget.controller.text.isNotEmpty;
-  }
-
-  @override
-  void didUpdateWidget(AnimatedTextField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _hasValue = widget.controller.text.isNotEmpty;
   }
 
   @override
   void dispose() {
     _focusController.dispose();
     super.dispose();
-  }
-
-  void _handleFocusChange(bool hasFocus) {
-    setState(() {
-      _isFocused = hasFocus;
-      _hasValue = widget.controller.text.isNotEmpty;
-    });
-    if (hasFocus) {
-      _focusController.forward();
-      HapticFeedback.lightImpact();
-    } else {
-      _focusController.reverse();
-    }
   }
 
   @override
@@ -105,7 +83,8 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
       builder: (context, child) {
         final borderColor = _isFocused
             ? colorScheme.primary
-            : colorScheme.outline.withOpacity(0.3 + 0.4 * (1 - _focusAnimation.value));
+            : colorScheme.outline
+                .withOpacity(0.3 + 0.4 * (1 - _focusAnimation.value));
 
         final containerColor = widget.isGlass
             ? AppColors.glass.withOpacity(0.1 + 0.1 * _focusAnimation.value)
@@ -118,9 +97,8 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
               color: borderColor,
               width: _isFocused ? 2 : 1,
             ),
-            boxShadow: _isFocused
-                ? AppShadows.primaryGlow()
-                : AppShadows.elevation1,
+            boxShadow:
+                _isFocused ? AppShadows.primaryGlow() : AppShadows.elevation1,
           ),
           child: TextFormField(
             controller: widget.controller,
@@ -134,16 +112,17 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
             autofillHints: widget.autofillHints,
             inputFormatters: widget.inputFormatters,
             onChanged: (value) {
-              setState(() => _hasValue = value.isNotEmpty);
+              setState(() {});
               widget.onChanged?.call(value);
             },
             decoration: InputDecoration(
               labelText: widget.label,
               hintText: widget.hint,
               prefixIcon: widget.prefixIcon != null
-                  ? Icon(widget.prefixIcon, color: _isFocused
-                      ? colorScheme.primary
-                      : colorScheme.onSurfaceVariant)
+                  ? Icon(widget.prefixIcon,
+                      color: _isFocused
+                          ? colorScheme.primary
+                          : colorScheme.onSurfaceVariant)
                   : null,
               suffixIcon: widget.suffixIcon,
               filled: true,
@@ -170,7 +149,9 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
               ),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: AppSpacing.lg,
-                vertical: widget.maxLines > 1 ? AppSpacing.md : AppSpacing.buttonHeight / 2,
+                vertical: widget.maxLines > 1
+                    ? AppSpacing.md
+                    : AppSpacing.buttonHeight / 2,
               ),
             ),
             onTapOutside: (event) {

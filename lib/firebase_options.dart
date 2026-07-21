@@ -64,8 +64,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '775605373720',
     projectId: 'lifeos-d47eb',
     storageBucket: 'lifeos-d47eb.firebasestorage.app',
-    androidClientId: '775605373720-vno9eu6ughijtbct8qe0hol39q485d7f.apps.googleusercontent.com',
-    iosClientId: '775605373720-4peonqf3gqm1f1keuuelrbe8fs2dpjil.apps.googleusercontent.com',
+    androidClientId:
+        '775605373720-vno9eu6ughijtbct8qe0hol39q485d7f.apps.googleusercontent.com',
+    iosClientId:
+        '775605373720-4peonqf3gqm1f1keuuelrbe8fs2dpjil.apps.googleusercontent.com',
     iosBundleId: 'com.lifeos.ai',
   );
 
@@ -75,8 +77,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '775605373720',
     projectId: 'lifeos-d47eb',
     storageBucket: 'lifeos-d47eb.firebasestorage.app',
-    androidClientId: '775605373720-vno9eu6ughijtbct8qe0hol39q485d7f.apps.googleusercontent.com',
-    iosClientId: '775605373720-4peonqf3gqm1f1keuuelrbe8fs2dpjil.apps.googleusercontent.com',
+    androidClientId:
+        '775605373720-vno9eu6ughijtbct8qe0hol39q485d7f.apps.googleusercontent.com',
+    iosClientId:
+        '775605373720-4peonqf3gqm1f1keuuelrbe8fs2dpjil.apps.googleusercontent.com',
     iosBundleId: 'com.lifeos.ai',
   );
 

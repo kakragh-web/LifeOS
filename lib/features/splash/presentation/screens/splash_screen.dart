@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifeos_ai/core/constants/app_constants.dart';
@@ -68,8 +67,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   Text(
                     AppConstants.appName,
                     style: AppTypography.headlineMedium.copyWith(
-                      color: colorScheme.onBackground,
                       fontWeight: FontWeight.w700,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -117,10 +116,10 @@ class _LogoImage extends StatelessWidget {
     return Container(
       width: 96,
       height: 96,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
-              boxShadow: AppShadows.primaryGlow(),
-            ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: AppShadows.primaryGlow(),
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28),
         child: Image.asset(

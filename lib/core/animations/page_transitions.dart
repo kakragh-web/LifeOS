@@ -5,12 +5,6 @@ import 'package:flutter/material.dart';
 class PageTransitions {
   PageTransitions._();
 
-  // ─── Transition Durations ──────────────────────────────────────────
-  static const Duration _defaultDuration = Duration(milliseconds: 300);
-  static const Duration _fastDuration = Duration(milliseconds: 200);
-  static const Duration _slowDuration = Duration(milliseconds: 400);
-
-  // ─── Page Transitions (return MaterialPage) ─────────────────────────
   static MaterialPage<T> fade<T>({
     required Widget child,
     LocalKey? key,

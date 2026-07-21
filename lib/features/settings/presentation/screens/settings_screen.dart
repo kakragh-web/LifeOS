@@ -8,7 +8,6 @@ import 'package:lifeos_ai/shared/widgets/animated_button.dart';
 import 'package:lifeos_ai/shared/widgets/app_dialog.dart';
 import 'package:lifeos_ai/shared/widgets/avatar.dart';
 import 'package:lifeos_ai/shared/widgets/glass_card.dart';
-import 'package:lifeos_ai/shared/widgets/status_chip.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -22,16 +21,17 @@ class SettingsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface.withOpacity( 0.9),
+        backgroundColor: AppColors.surface.withOpacity(0.9),
         foregroundColor: cs.onSurface,
         elevation: 0,
-        title: Text('Settings', style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
+        title: Text('Settings',
+            style:
+                AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
-          if (user != null)
-            _ProfileCard(user: user, cs: cs),
+          if (user != null) _ProfileCard(user: user, cs: cs),
           const SizedBox(height: AppSpacing.sectionSpacing),
           _SettingsSection(
             title: 'Appearance',
@@ -125,12 +125,14 @@ class _ProfileCard extends StatelessWidget {
               children: [
                 Text(
                   user.displayName ?? 'User',
-                  style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w700),
+                  style: AppTypography.titleMedium
+                      .copyWith(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   user.email,
-                  style: AppTypography.bodyMedium.copyWith(color: cs.onSurfaceVariant),
+                  style: AppTypography.bodyMedium
+                      .copyWith(color: cs.onSurfaceVariant),
                 ),
               ],
             ),
@@ -154,7 +156,8 @@ class _SettingsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: AppSpacing.sm, bottom: AppSpacing.sm),
+          padding:
+              const EdgeInsets.only(left: AppSpacing.sm, bottom: AppSpacing.sm),
           child: Text(
             title,
             style: AppTypography.labelSmall.copyWith(
@@ -191,7 +194,9 @@ class _ThemeToggle extends StatelessWidget {
         final notifier = container.read(themeModeProvider.notifier);
         notifier.setMode(themeMode);
       },
-      secondary: Icon(isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded, color: cs.primary),
+      secondary: Icon(
+          isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+          color: cs.primary),
     );
   }
 }
@@ -223,8 +228,10 @@ class _SettingsTile extends StatelessWidget {
         ),
         child: Icon(icon, color: cs.onPrimaryContainer, size: 20),
       ),
-      title: Text(title, style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.w500)),
-      subtitle: Text(subtitle, style: AppTypography.bodySmall.copyWith(color: cs.onSurfaceVariant)),
+      title: Text(title,
+          style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.w500)),
+      subtitle: Text(subtitle,
+          style: AppTypography.bodySmall.copyWith(color: cs.onSurfaceVariant)),
       trailing: Icon(Icons.chevron_right_rounded, color: cs.onSurfaceVariant),
       onTap: onTap,
     );

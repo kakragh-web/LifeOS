@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lifeos_ai/core/theme/app_colors.dart';
@@ -38,13 +37,13 @@ class AnimatedButton extends StatefulWidget {
 }
 
 enum ButtonVariant { filled, outlined, text, glass }
+
 enum ButtonSize { small, medium, large }
 
 class _AnimatedButtonState extends State<AnimatedButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -67,26 +66,22 @@ class _AnimatedButtonState extends State<AnimatedButton>
   void _handleTapDown(TapDownDetails details) {
     if (widget.onPressed != null && widget.isEnabled) {
       HapticFeedback.lightImpact();
-      setState(() => _isPressed = true);
       _controller.forward();
     }
   }
 
   void _handleTapUp(TapUpDetails details) {
-    setState(() => _isPressed = false);
     _controller.reverse();
   }
 
   void _handleTapCancel() {
-    setState(() => _isPressed = false);
     _controller.reverse();
   }
 
   @override
   Widget build(BuildContext context) {
-    final effectiveCallback = widget.isEnabled && !widget.isLoading
-        ? widget.onPressed
-        : null;
+    final effectiveCallback =
+        widget.isEnabled && !widget.isLoading ? widget.onPressed : null;
 
     return GestureDetector(
       onTapDown: _handleTapDown,
@@ -124,7 +119,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
     final effectivePadding = switch (widget.size) {
       ButtonSize.small => const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      ButtonSize.medium => const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      ButtonSize.medium =>
+        const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       ButtonSize.large => const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
     };
 

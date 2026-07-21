@@ -113,7 +113,9 @@ class AppShadows {
       ];
 
   // ─── Shadow Helpers ────────────────────────────────────────────────
-  static List<BoxShadow> colored(Color color, {double blur = 12, double spread = -4}) => [
+  static List<BoxShadow> colored(Color color,
+          {double blur = 12, double spread = -4}) =>
+      [
         BoxShadow(
           color: color.withOpacity(0.3),
           offset: const Offset(0, 0),

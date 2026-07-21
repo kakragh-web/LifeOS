@@ -29,7 +29,7 @@ class WelcomeScreen extends StatelessWidget {
                 'Take control of\nyour life.',
                 style: AppTypography.displaySmall.copyWith(
                   fontWeight: FontWeight.w800,
-                  color: colorScheme.onBackground,
+                  color: colorScheme.onSurface,
                   height: 1.1,
                 ),
                 textAlign: TextAlign.center,
@@ -55,9 +55,9 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(flex: 3),
-              _GetStartedButton(context: context),
+              _getStartedButton(context: context),
               const SizedBox(height: AppSpacing.md),
-              _SignInLink(context: context),
+              _signInLink(context: context),
               const SizedBox(height: AppSpacing.xxl),
             ],
           ),
@@ -75,7 +75,7 @@ class WelcomeScreen extends StatelessWidget {
     return colors[index % colors.length];
   }
 
-  Widget _GetStartedButton({required BuildContext context}) {
+  Widget _getStartedButton({required BuildContext context}) {
     return AnimatedButton(
       label: 'Get Started',
       onPressed: () => context.go(AppRoutes.register),
@@ -85,7 +85,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _SignInLink({required BuildContext context}) {
+  Widget _signInLink({required BuildContext context}) {
     final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -111,9 +111,21 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   static const _features = [
-    (index: 0, icon: Icons.check_circle_outline_rounded, label: 'Smart task & habit tracking'),
-    (index: 1, icon: Icons.calendar_month_outlined, label: 'AI-powered daily planner'),
-    (index: 2, icon: Icons.chat_bubble_outline_rounded, label: 'Personal AI life coach'),
+    (
+      index: 0,
+      icon: Icons.check_circle_outline_rounded,
+      label: 'Smart task & habit tracking'
+    ),
+    (
+      index: 1,
+      icon: Icons.calendar_month_outlined,
+      label: 'AI-powered daily planner'
+    ),
+    (
+      index: 2,
+      icon: Icons.chat_bubble_outline_rounded,
+      label: 'Personal AI life coach'
+    ),
   ];
 }
 

@@ -61,8 +61,7 @@ void main() {
       await tester.enterText(textFields.at(2), 'Password1');
       await tester.enterText(textFields.at(3), 'Password1');
 
-      await tester
-          .tap(find.text('Create Account'));
+      await tester.tap(find.text('Create Account'));
       await tester.pumpAndSettle();
 
       expect(find.text('Enter a valid email address'), findsOneWidget);

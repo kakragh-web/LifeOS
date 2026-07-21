@@ -5,10 +5,8 @@ import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/features/calendar/domain/calendar_event.dart';
 import 'package:lifeos_ai/features/calendar/providers/calendar_providers.dart';
 import 'package:lifeos_ai/shared/widgets/animated_fab.dart';
-import 'package:lifeos_ai/shared/widgets/app_bottom_sheet.dart';
 import 'package:lifeos_ai/shared/widgets/app_dialog.dart';
 import 'package:lifeos_ai/shared/widgets/glass_card.dart';
-import 'package:lifeos_ai/shared/widgets/status_chip.dart';
 
 class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
@@ -32,16 +30,20 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final eventsAsync = ref.watch(calendarEventsProvider);
     final selectedDate = ref.watch(selectedDateProvider);
 
-    final daysInMonth = DateUtils.getDaysInMonth(_focusedMonth.year, _focusedMonth.month);
-    final firstDayOffset = DateTime(_focusedMonth.year, _focusedMonth.month, 1).weekday % 7;
+    final daysInMonth =
+        DateUtils.getDaysInMonth(_focusedMonth.year, _focusedMonth.month);
+    final firstDayOffset =
+        DateTime(_focusedMonth.year, _focusedMonth.month, 1).weekday % 7;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface.withOpacity( 0.9),
+        backgroundColor: AppColors.surface.withOpacity(0.9),
         foregroundColor: cs.onSurface,
         elevation: 0,
-        title: Text('Calendar', style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
+        title: Text('Calendar',
+            style:
+                AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_rounded),
@@ -52,11 +54,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       ),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
+          constraints:
+              const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: context.horizontalPagePadding, vertical: AppSpacing.md),
+                padding: EdgeInsets.symmetric(
+                    horizontal: context.horizontalPagePadding,
+                    vertical: AppSpacing.md),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -64,13 +69,15 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       icon: const Icon(Icons.chevron_left_rounded),
                       tooltip: 'Previous month',
                       onPressed: () => setState(() {
-                        _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month - 1);
+                        _focusedMonth = DateTime(
+                            _focusedMonth.year, _focusedMonth.month - 1);
                       }),
                     ),
                     Flexible(
                       child: Text(
                         '${_monthName(_focusedMonth.month)} ${_focusedMonth.year}',
-                        style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w600),
+                        style: AppTypography.titleMedium
+                            .copyWith(fontWeight: FontWeight.w600),
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                       ),
@@ -79,7 +86,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       icon: const Icon(Icons.chevron_right_rounded),
                       tooltip: 'Next month',
                       onPressed: () => setState(() {
-                        _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1);
+                        _focusedMonth = DateTime(
+                            _focusedMonth.year, _focusedMonth.month + 1);
                       }),
                     ),
                   ],
@@ -100,7 +108,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               const Divider(height: 24),
               Expanded(
                 child: eventsAsync.when(
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Center(
                     child: Text('Error: $e', style: AppTypography.bodyMedium),
                   ),
@@ -115,11 +124,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     if (dayEvents.isEmpty) {
                       return _EmptyDay(
                         cs: cs,
-                        onAdd: () => _showEventForm(context, date: selectedDate),
+                        onAdd: () =>
+                            _showEventForm(context, date: selectedDate),
                       );
                     }
                     return ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: context.horizontalPagePadding, vertical: AppSpacing.sm),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: context.horizontalPagePadding,
+                          vertical: AppSpacing.sm),
                       itemCount: dayEvents.length,
                       itemBuilder: (_, i) {
                         final event = dayEvents[i];
@@ -147,11 +159,22 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   String _monthName(int m) => const [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
       ][m - 1];
 
-  void _showEventForm(BuildContext context, {CalendarEvent? event, DateTime? date}) {
+  void _showEventForm(BuildContext context,
+      {CalendarEvent? event, DateTime? date}) {
     final isEdit = event != null;
     final titleCtrl = TextEditingController(text: event?.title ?? '');
     final descCtrl = TextEditingController(text: event?.description ?? '');
@@ -207,14 +230,18 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             final navigator = Navigator.of(context);
             final repo = ref.read(calendarRepositoryProvider);
             final now = DateTime.now();
-            final start = _parseDateTime(startDateCtrl.text, startTimeCtrl.text, allDay);
-            final end = _parseDateTime(endDateCtrl.text, endTimeCtrl.text, allDay);
+            final start =
+                _parseDateTime(startDateCtrl.text, startTimeCtrl.text, allDay);
+            final end =
+                _parseDateTime(endDateCtrl.text, endTimeCtrl.text, allDay);
             final eventModel = CalendarEvent(
-              id: event?.id ?? '${now.millisecondsSinceEpoch}-${DateTime.now().microsecondsSinceEpoch}',
+              id: event?.id ??
+                  '${now.millisecondsSinceEpoch}-${DateTime.now().microsecondsSinceEpoch}',
               createdAt: event?.createdAt ?? now,
               updatedAt: now,
               title: title,
-              description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
+              description:
+                  descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
               start: start,
               end: end,
               allDay: allDay,
@@ -248,10 +275,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   DateTime _parseDateTime(String dateStr, String timeStr, bool allDay) {
     final dateParts = dateStr.split('-');
-    final date = DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]), int.parse(dateParts[2]));
+    final date = DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]),
+        int.parse(dateParts[2]));
     if (allDay) return DateTime(date.year, date.month, date.day);
     final timeParts = timeStr.split(':');
-    return DateTime(date.year, date.month, date.day, int.parse(timeParts[0]), int.parse(timeParts[1]));
+    return DateTime(date.year, date.month, date.day, int.parse(timeParts[0]),
+        int.parse(timeParts[1]));
   }
 }
 
@@ -265,17 +294,19 @@ class _WeekdayHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
-        children: days.map((d) => Expanded(
-          child: Center(
-            child: Text(
-              d,
-              style: AppTypography.labelSmall.copyWith(
-                fontWeight: FontWeight.w700,
-                color: cs.onSurfaceVariant,
-              ),
-            ),
-          ),
-        )).toList(),
+        children: days
+            .map((d) => Expanded(
+                  child: Center(
+                    child: Text(
+                      d,
+                      style: AppTypography.labelSmall.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: cs.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
@@ -330,7 +361,8 @@ class _MonthGrid extends ConsumerWidget {
                 return e.start.year == date.year &&
                     e.start.month == date.month &&
                     e.start.day == date.day;
-              }).toList() ?? const [];
+              }).toList() ??
+              const [];
 
           return GestureDetector(
             onTap: () => onDateSelected(date),
@@ -401,14 +433,17 @@ class _EmptyDay extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.event_outlined, size: 48, color: cs.onSurfaceVariant),
+                  Icon(Icons.event_outlined,
+                      size: 48, color: cs.onSurfaceVariant),
                   const SizedBox(height: AppSpacing.md),
-                  Text('No events on this day', style: AppTypography.titleMedium),
+                  const Text('No events on this day',
+                      style: AppTypography.titleMedium),
                   const SizedBox(height: AppSpacing.sm),
                   TextButton.icon(
                     onPressed: onAdd,

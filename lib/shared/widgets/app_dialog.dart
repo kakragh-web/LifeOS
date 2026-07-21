@@ -22,8 +22,8 @@ class AppDialog {
     HapticFeedback.lightImpact();
 
     final theme = Theme.of(context);
-    final effectiveBackgroundColor = backgroundColor ??
-        theme.colorScheme.surface.withOpacity(0.95);
+    final effectiveBackgroundColor =
+        backgroundColor ?? theme.colorScheme.surface.withOpacity(0.95);
 
     return showDialog<T>(
       context: context,

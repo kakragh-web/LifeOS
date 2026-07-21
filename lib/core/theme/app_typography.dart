@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'app_spacing.dart';
 
 /// Premium typography scale for LifeOS.
 /// Built on Material 3 type scale with custom refinements.

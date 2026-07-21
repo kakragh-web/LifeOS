@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lifeos_ai/core/theme/app_colors.dart';
-import 'package:lifeos_ai/core/theme/app_radius.dart';
 import 'package:lifeos_ai/core/theme/app_shadows.dart';
-import 'package:lifeos_ai/core/theme/app_spacing.dart';
 
 /// Avatar component with multiple variants and status indicators.
 class AppAvatar extends StatelessWidget {
@@ -39,8 +36,8 @@ class AppAvatar extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     final effectiveSize = _getSize();
-    final effectiveBackgroundColor = backgroundColor ??
-        _getInitialsColor(name ?? '?', colorScheme);
+    final effectiveBackgroundColor =
+        backgroundColor ?? _getInitialsColor(name ?? '?', colorScheme);
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onPrimary;
 
     final avatar = GestureDetector(
@@ -84,7 +81,8 @@ class AppAvatar extends StatelessWidget {
     return avatar;
   }
 
-  Widget? _buildContent(BuildContext context, double size, Color foregroundColor) {
+  Widget? _buildContent(
+      BuildContext context, double size, Color foregroundColor) {
     if (imageUrl != null) {
       return ClipOval(
         child: Image.network(
@@ -160,7 +158,8 @@ class AppAvatar extends StatelessWidget {
       colorScheme.primaryContainer,
       colorScheme.secondaryContainer,
     ];
-    final index = initials.codeUnits.fold(0, (sum, char) => sum + char) % colors.length;
+    final index =
+        initials.codeUnits.fold(0, (sum, char) => sum + char) % colors.length;
     return colors[index];
   }
 }
@@ -202,4 +201,5 @@ class _StatusIndicator extends StatelessWidget {
 }
 
 enum AvatarSize { xSmall, small, medium, large, xLarge }
+
 enum AvatarStatus { online, busy, away, offline }

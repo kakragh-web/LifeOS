@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lifeos_ai/core/theme/app_colors.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
-import 'package:lifeos_ai/core/theme/app_spacing.dart';
 
 /// Badge component for notifications, counts, and status indicators.
 class AppBadge extends StatelessWidget {

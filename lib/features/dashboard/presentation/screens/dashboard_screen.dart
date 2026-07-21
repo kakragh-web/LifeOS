@@ -5,8 +5,6 @@ import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/core/theme/design_system.dart';
 import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/features/auth/providers/auth_provider.dart';
-import 'package:lifeos_ai/shared/widgets/animated_fab.dart';
-import 'package:lifeos_ai/shared/widgets/app_bottom_sheet.dart';
 import 'package:lifeos_ai/shared/widgets/avatar.dart';
 import 'package:lifeos_ai/shared/widgets/glass_card.dart';
 
@@ -56,13 +54,14 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authStateProvider).valueOrNull;
     final cs = Theme.of(context).colorScheme;
-    final crossAxisCount = context.responsive(compact: 2, medium: 3, expanded: 4);
+    final crossAxisCount =
+        context.responsive(compact: 2, medium: 3, expanded: 4);
     final horizontalPadding = context.horizontalPagePadding;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface.withOpacity( 0.9),
+        backgroundColor: AppColors.surface.withOpacity(0.9),
         foregroundColor: cs.onSurface,
         elevation: 0,
         centerTitle: false,
@@ -94,8 +93,8 @@ class DashboardScreen extends ConsumerWidget {
                 constraints: const BoxConstraints(
                     maxWidth: Breakpoints.maxWideContentWidth),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      horizontalPadding + 4, AppSpacing.xl, horizontalPadding + 4, AppSpacing.lg),
+                  padding: EdgeInsets.fromLTRB(horizontalPadding + 4,
+                      AppSpacing.xl, horizontalPadding + 4, AppSpacing.lg),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -120,7 +119,8 @@ class DashboardScreen extends ConsumerWidget {
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: AppSpacing.lg),
+            padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding, vertical: AppSpacing.lg),
             sliver: SliverToBoxAdapter(
               child: Center(
                 child: ConstrainedBox(

@@ -153,13 +153,10 @@ void main() {
     });
 
     test('persists the selected mode to storage', () async {
-      await container
-          .read(themeModeProvider.notifier)
-          .setMode(ThemeMode.dark);
+      await container.read(themeModeProvider.notifier).setMode(ThemeMode.dark);
       // Rebuild a container sharing the same prefs to confirm persistence.
-      final stored = container
-          .read(storageServiceProvider)
-          .getString('theme_mode');
+      final stored =
+          container.read(storageServiceProvider).getString('theme_mode');
       expect(stored, 'dark');
     });
   });

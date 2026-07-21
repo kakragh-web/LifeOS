@@ -58,15 +58,19 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface.withOpacity( 0.9),
+        backgroundColor: AppColors.surface.withOpacity(0.9),
         foregroundColor: cs.onSurface,
         elevation: 0,
-        title: Text('AI Assistant', style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
+        title: Text('AI Assistant',
+            style:
+                AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_outline_rounded),
             tooltip: 'Clear chat',
-            onPressed: messages.isEmpty ? null : () => ref.read(chatMessagesProvider.notifier).clear(),
+            onPressed: messages.isEmpty
+                ? null
+                : () => ref.read(chatMessagesProvider.notifier).clear(),
           ),
         ],
       ),
@@ -75,12 +79,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           Expanded(
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
+                constraints: const BoxConstraints(
+                    maxWidth: Breakpoints.maxWideContentWidth),
                 child: messages.isEmpty && !_isTyping
                     ? _EmptyState(cs: cs)
                     : ListView.builder(
                         controller: _scroll,
-                        padding: EdgeInsets.fromLTRB(context.horizontalPagePadding, 16, context.horizontalPagePadding, 8),
+                        padding: EdgeInsets.fromLTRB(
+                            context.horizontalPagePadding,
+                            16,
+                            context.horizontalPagePadding,
+                            8),
                         itemCount: messages.length + (_isTyping ? 1 : 0),
                         itemBuilder: (_, i) {
                           if (_isTyping && i == messages.length) {
@@ -94,7 +103,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
+              constraints: const BoxConstraints(
+                  maxWidth: Breakpoints.maxWideContentWidth),
               child: _InputBar(ctrl: _ctrl, onSend: _send),
             ),
           ),
@@ -124,15 +134,19 @@ class _EmptyState extends StatelessWidget {
                 color: cs.primaryContainer,
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: Icon(Icons.smart_toy_outlined, size: 40, color: cs.onPrimaryContainer),
+              child: Icon(Icons.smart_toy_outlined,
+                  size: 40, color: cs.onPrimaryContainer),
             ),
             const SizedBox(height: AppSpacing.lg),
-            Text('LifeOS AI', style: AppTypography.headlineSmall.copyWith(fontWeight: FontWeight.w700)),
+            Text('LifeOS AI',
+                style: AppTypography.headlineSmall
+                    .copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.sm),
             Text(
               'Ask me anything about your tasks, schedule, or goals.',
               textAlign: TextAlign.center,
-              style: AppTypography.bodyMedium.copyWith(color: cs.onSurfaceVariant),
+              style:
+                  AppTypography.bodyMedium.copyWith(color: cs.onSurfaceVariant),
             ),
           ],
         ),
@@ -152,23 +166,28 @@ class _InputBar extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(16, 8, 16, MediaQuery.viewInsetsOf(context).bottom + 8),
+        padding: EdgeInsets.fromLTRB(
+            16, 8, 16, MediaQuery.viewInsetsOf(context).bottom + 8),
         child: Row(
           children: [
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: cs.surfaceContainerHighest.withOpacity( 0.6),
+                  color: cs.surfaceContainerHighest.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: cs.outlineVariant.withOpacity( 0.3)),
+                  border: Border.all(color: cs.outlineVariant.withOpacity(0.3)),
                 ),
                 child: TextField(
                   controller: ctrl,
                   decoration: InputDecoration(
                     hintText: 'Message LifeOS AI…',
-                    hintStyle: AppTypography.bodyMedium.copyWith(color: cs.onSurfaceVariant),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
+                    hintStyle: AppTypography.bodyMedium
+                        .copyWith(color: cs.onSurfaceVariant),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none),
                   ),
                   onSubmitted: (_) => onSend(),
                   textInputAction: TextInputAction.send,
@@ -206,8 +225,10 @@ class _Bubble extends StatelessWidget {
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
-        constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.75),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.75),
         decoration: BoxDecoration(
           color: isUser ? cs.primary : cs.surfaceContainerHighest,
           borderRadius: BorderRadius.only(
@@ -219,7 +240,8 @@ class _Bubble extends StatelessWidget {
         ),
         child: Text(
           message.content,
-          style: AppTypography.bodyMedium.copyWith(color: isUser ? cs.onPrimary : cs.onSurface),
+          style: AppTypography.bodyMedium
+              .copyWith(color: isUser ? cs.onPrimary : cs.onSurface),
         ),
       ),
     );
@@ -233,13 +255,16 @@ class _TypingIndicator extends StatefulWidget {
   State<_TypingIndicator> createState() => _TypingIndicatorState();
 }
 
-class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerProviderStateMixin {
+class _TypingIndicatorState extends State<_TypingIndicator>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 900), vsync: this)..repeat();
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 900), vsync: this)
+      ..repeat();
   }
 
   @override
@@ -278,7 +303,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
                 height: 7,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: cs.onSurfaceVariant.withOpacity( 0.3 + opacity * 0.7),
+                  color: cs.onSurfaceVariant.withOpacity(0.3 + opacity * 0.7),
                 ),
               );
             }),

@@ -158,8 +158,7 @@ void main() {
           )).thenAnswer((_) async => buildCredential(user));
       when(() => mockAuth.currentUser).thenReturn(user);
 
-      final result =
-          await repo.signUpWithEmail('a@b.com', 'secret', 'Ada');
+      final result = await repo.signUpWithEmail('a@b.com', 'secret', 'Ada');
       expect(result.email, 'a@b.com');
       expect(result.displayName, 'Ada');
       verify(() => user.updateDisplayName('Ada')).called(1);
@@ -179,8 +178,7 @@ void main() {
           )).thenAnswer((_) async {});
 
       await repo.sendPasswordResetEmail('a@b.com');
-      verify(() => mockAuth.sendPasswordResetEmail(email: 'a@b.com'))
-          .called(1);
+      verify(() => mockAuth.sendPasswordResetEmail(email: 'a@b.com')).called(1);
     });
 
     test('currentUser maps the signed-in user', () {

@@ -35,19 +35,10 @@ class StatusChip extends StatelessWidget {
 
     final effectiveBackgroundColor = switch (variant) {
       ChipVariant.filled => backgroundColor ??
-          (isSelected
-              ? colorScheme.primary
-              : colorScheme.secondaryContainer),
+          (isSelected ? colorScheme.primary : colorScheme.secondaryContainer),
       ChipVariant.outlined => Colors.transparent,
-      ChipVariant.elevated => backgroundColor ??
-          colorScheme.surfaceContainerHighest,
-    };
-
-    final effectiveForegroundColor = switch (variant) {
-      ChipVariant.filled => foregroundColor ??
-          (isSelected ? colorScheme.onPrimary : colorScheme.onSecondaryContainer),
-      ChipVariant.outlined => foregroundColor ?? colorScheme.onSurfaceVariant,
-      ChipVariant.elevated => foregroundColor ?? colorScheme.onSurface,
+      ChipVariant.elevated =>
+        backgroundColor ?? colorScheme.surfaceContainerHighest,
     };
 
     final effectiveBorderColor = switch (variant) {
@@ -67,9 +58,8 @@ class StatusChip extends StatelessWidget {
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
       ),
-      labelPadding: icon != null
-          ? const EdgeInsets.only(left: AppSpacing.xs)
-          : null,
+      labelPadding:
+          icon != null ? const EdgeInsets.only(left: AppSpacing.xs) : null,
       onDeleted: onDeleted,
       elevation: variant == ChipVariant.elevated ? 1 : 0,
       shape: RoundedRectangleBorder(

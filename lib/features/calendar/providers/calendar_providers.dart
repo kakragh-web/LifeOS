@@ -38,8 +38,8 @@ final calendarEventsForMonthProvider =
     Provider.family<List<CalendarEvent>, DateTime>((ref, month) {
   final eventsAsync = ref.watch(calendarEventsProvider);
   return eventsAsync.valueOrNull
-          ?.where((e) =>
-              e.start.year == month.year && e.start.month == month.month)
+          ?.where(
+              (e) => e.start.year == month.year && e.start.month == month.month)
           .toList() ??
       const [];
 });

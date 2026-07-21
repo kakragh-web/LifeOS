@@ -73,11 +73,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         child: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
-              horizontal: context.responsive(compact: 24, medium: 32, expanded: 40),
+              horizontal:
+                  context.responsive(compact: 24, medium: 32, expanded: 40),
               vertical: 16,
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: Breakpoints.maxContentWidth),
+              constraints:
+                  const BoxConstraints(maxWidth: Breakpoints.maxContentWidth),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -106,7 +108,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       hint: 'Your name',
                       prefixIcon: Icons.person_outline_rounded,
                       textInputAction: TextInputAction.next,
-                      validator: (v) => Validators.minLength(v, 2, field: 'Name'),
+                      validator: (v) =>
+                          Validators.minLength(v, 2, field: 'Name'),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AnimatedTextField(
@@ -133,7 +136,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
                         ),
-                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                        onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
@@ -153,7 +157,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
                         ),
-                        onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                        onPressed: () =>
+                            setState(() => _obscureConfirm = !_obscureConfirm),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sectionSpacing),
@@ -207,7 +212,8 @@ class _BackButton extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: IconButton(
         onPressed: () => context.go(AppRoutes.welcome),
-        icon: Icon(Icons.arrow_back_rounded, color: Theme.of(context).colorScheme.onSurface),
+        icon: Icon(Icons.arrow_back_rounded,
+            color: Theme.of(context).colorScheme.onSurface),
       ),
     );
   }

@@ -38,8 +38,8 @@ class StaggeredAnimations {
     for (int i = 0; i < itemCount; i++) {
       final start = i / itemCount;
       final end = (i + 1) / itemCount;
-      final animation = Tween(begin: Offset(0, beginY), end: Offset.zero)
-          .animate(
+      final animation =
+          Tween(begin: Offset(0, beginY), end: Offset.zero).animate(
         CurvedAnimation(
           parent: controller,
           curve: Interval(start, end, curve: curve),

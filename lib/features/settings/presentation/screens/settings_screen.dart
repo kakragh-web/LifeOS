@@ -65,8 +65,8 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               _SettingsTile(
                 icon: Icons.info_outline_rounded,
-                title: 'About',
-                subtitle: '${AppConstants.appName} v${AppConstants.appVersion}',
+                title: AppConstants.appName,
+                subtitle: 'Version ${AppConstants.appVersion} • Powered by AI',
                 onTap: () {},
                 cs: cs,
               ),

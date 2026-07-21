@@ -124,23 +124,29 @@ class _EmptyState extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: cs.primaryContainer,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Icon(Icons.smart_toy_outlined,
-                  size: 40, color: cs.onPrimaryContainer),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            Text('LifeOS AI',
-                style: AppTypography.headlineSmall
-                    .copyWith(fontWeight: FontWeight.w700)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: AppShadows.primaryGlow(),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.asset(
+                      'assets/images/lifeos_logo.png',
+                      fit: BoxFit.contain,
+                      filterQuality: FilterQuality.high,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Text(AppConstants.appName,
+                    style: AppTypography.headlineSmall
+                        .copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.sm),
             Text(
               'Ask me anything about your tasks, schedule, or goals.',

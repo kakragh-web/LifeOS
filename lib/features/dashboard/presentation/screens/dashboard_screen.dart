@@ -77,9 +77,9 @@ class DashboardScreen extends ConsumerWidget {
                 name: user?.displayName,
                 imageUrl: user?.photoUrl,
                 size: AvatarSize.small,
-                onTap: () => context.go(AppRoutes.settings),
+                onTap: () => context.push(AppRoutes.settings),
               ),
-              onPressed: () => context.go(AppRoutes.settings),
+              onPressed: () => context.push(AppRoutes.settings),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -173,7 +173,7 @@ class _FeatureGlassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return GlassCard(
-      onTap: () => context.go(route),
+      onTap: () => context.push(route),
       elevation: 1,
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(

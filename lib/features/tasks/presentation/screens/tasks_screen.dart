@@ -256,13 +256,27 @@ class _EmptyTasks extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.check_circle_outline_rounded,
-                size: 48, color: cs.onSurfaceVariant),
-            const SizedBox(height: AppSpacing.md),
-            const Text('No tasks yet', style: AppTypography.titleMedium),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: AppShadows.primaryGlow(),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.asset(
+                      'assets/images/lifeos_logo.png',
+                      fit: BoxFit.contain,
+                      filterQuality: FilterQuality.high,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                const Text('No tasks yet', style: AppTypography.titleMedium),
             const SizedBox(height: AppSpacing.sm),
             TextButton.icon(
               onPressed: onCreate,

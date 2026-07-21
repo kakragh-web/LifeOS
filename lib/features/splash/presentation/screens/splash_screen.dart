@@ -23,7 +23,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 2000),
     )..forward();
 
     _fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
@@ -118,15 +118,19 @@ class _LogoImage extends StatelessWidget {
       height: 96,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
-        boxShadow: AppShadows.primaryGlow(),
+        boxShadow: [
+          AppShadows.primaryGlow(),
+          AppShadows.elevation4,
+        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28),
         child: Image.asset(
-          'assets/images/lifeos_logo.PNG',
+          'assets/images/lifeos_logo.png',
           width: 96,
           height: 96,
           fit: BoxFit.contain,
+          filterQuality: FilterQuality.high,
         ),
       ),
     );

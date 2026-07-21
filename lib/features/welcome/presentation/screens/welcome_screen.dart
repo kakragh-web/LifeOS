@@ -148,25 +148,32 @@ class _BrandHero extends StatelessWidget {
         elevation: 3,
         blur: 24,
         opacity: 0.85,
-        child: Column(
-          children: [
-            Container(
-              width: size.width * 0.25,
-              height: size.width * 0.25,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: AppShadows.primaryGlow(),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(28),
-                child: Image.asset(
-                  'assets/images/lifeos_logo.PNG',
-                  fit: BoxFit.contain,
+          child: Column(
+            children: [
+              Hero(
+                tag: 'lifeos-logo',
+                child: Container(
+                  width: size.width * 0.25,
+                  height: size.width * 0.25,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      AppShadows.primaryGlow(),
+                      AppShadows.elevation4,
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: Image.asset(
+                      'assets/images/lifeos_logo.png',
+                      fit: BoxFit.contain,
+                      filterQuality: FilterQuality.high,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
       ),
     );
   }

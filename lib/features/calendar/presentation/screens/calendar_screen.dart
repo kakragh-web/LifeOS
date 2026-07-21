@@ -435,14 +435,28 @@ class _EmptyDay extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.event_outlined,
-                      size: 48, color: cs.onSurfaceVariant),
-                  const SizedBox(height: AppSpacing.md),
-                  const Text('No events on this day',
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: AppShadows.primaryGlow(),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: Image.asset(
+                            'assets/images/lifeos_logo.png',
+                            fit: BoxFit.contain,
+                            filterQuality: FilterQuality.high,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      const Text('No events on this day',
                       style: AppTypography.titleMedium),
                   const SizedBox(height: AppSpacing.sm),
                   TextButton.icon(

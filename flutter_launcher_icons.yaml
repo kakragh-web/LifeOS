@@ -2,14 +2,16 @@ flutter_icons:
   android: true
   ios: true
   macos: true
-  image_path: "assets/images/lifeos_logo.PNG"
+  image_path: "assets/images/lifeos_logo.png"
   min_sdk_android: 23
+  adaptive_icon_foreground: "assets/images/lifeos_logo.png"
+  adaptive_icon_background: "#FFFFFF"
   web:
     generate: true
-    image_path: "assets/images/lifeos_logo.PNG"
-    background_color: "#6750A4"
-    theme_color: "#6750A4"
+    image_path: "assets/images/lifeos_logo.png"
+    background_color: "#FFFFFF"
+    theme_color: "#FFFFFF"
   windows:
     generate: true
-    image_path: "assets/images/lifeos_logo.PNG"
+    image_path: "assets/images/lifeos_logo.png"
   remove_alpha_ios: true

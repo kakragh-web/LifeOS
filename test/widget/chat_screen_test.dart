@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:lifeos_ai/features/chat/presentation/screens/chat_screen.dart';
+import 'package:lifeos_ai/shared/widgets/animated_button.dart';
 import '../helpers/asset_mocks.dart';
 
 void main() {
@@ -41,8 +42,7 @@ void main() {
     testWidgets('send button is present', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
-      expect(find.widgetWithIcon(FilledButton, Icons.send_rounded),
-          findsOneWidget);
+      expect(find.byType(AnimatedButton), findsOneWidget);
     });
   });
 }

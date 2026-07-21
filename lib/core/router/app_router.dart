@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lifeos_ai/core/animations/page_transitions.dart';
 import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/features/auth/domain/app_user.dart';
 import 'package:lifeos_ai/features/auth/providers/auth_provider.dart';
@@ -114,22 +115,69 @@ String? _redirect(_AuthRouterNotifier notifier, GoRouterState state) {
 }
 
 List<RouteBase> _buildRoutes() => [
-      GoRoute(path: AppRoutes.splash, builder: (_, __) => const SplashScreen()),
       GoRoute(
-          path: AppRoutes.welcome, builder: (_, __) => const WelcomeScreen()),
-      GoRoute(path: AppRoutes.login, builder: (_, __) => const LoginScreen()),
+        path: AppRoutes.splash,
+        builder: (_, __) => const SplashScreen(),
+      ),
       GoRoute(
-          path: AppRoutes.register, builder: (_, __) => const RegisterScreen()),
+        path: AppRoutes.welcome,
+        builder: (_, __) => const WelcomeScreen(),
+      ),
       GoRoute(
-          path: AppRoutes.dashboard,
-          builder: (_, __) => const DashboardScreen()),
+        path: AppRoutes.login,
+        builder: (_, __) => const LoginScreen(),
+      ),
       GoRoute(
-          path: AppRoutes.planner, builder: (_, __) => const PlannerScreen()),
+        path: AppRoutes.register,
+        builder: (_, __) => const RegisterScreen(),
+      ),
       GoRoute(
-          path: AppRoutes.calendar, builder: (_, __) => const CalendarScreen()),
-      GoRoute(path: AppRoutes.tasks, builder: (_, __) => const TasksScreen()),
-      GoRoute(path: AppRoutes.notes, builder: (_, __) => const NotesScreen()),
-      GoRoute(path: AppRoutes.chat, builder: (_, __) => const ChatScreen()),
+        path: AppRoutes.dashboard,
+        builder: (_, __) => const DashboardScreen(),
+        pageBuilder: (context, state) => PageTransitions.fadeThrough(
+          child: const DashboardScreen(),
+        ),
+      ),
       GoRoute(
-          path: AppRoutes.settings, builder: (_, __) => const SettingsScreen()),
+        path: AppRoutes.planner,
+        builder: (_, __) => const PlannerScreen(),
+        pageBuilder: (context, state) => PageTransitions.slideFromRight(
+          child: const PlannerScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.calendar,
+        builder: (_, __) => const CalendarScreen(),
+        pageBuilder: (context, state) => PageTransitions.slideFromRight(
+          child: const CalendarScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.tasks,
+        builder: (_, __) => const TasksScreen(),
+        pageBuilder: (context, state) => PageTransitions.slideFromRight(
+          child: const TasksScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.notes,
+        builder: (_, __) => const NotesScreen(),
+        pageBuilder: (context, state) => PageTransitions.slideFromRight(
+          child: const NotesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.chat,
+        builder: (_, __) => const ChatScreen(),
+        pageBuilder: (context, state) => PageTransitions.slideFromRight(
+          child: const ChatScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (_, __) => const SettingsScreen(),
+        pageBuilder: (context, state) => PageTransitions.slideFromRight(
+          child: const SettingsScreen(),
+        ),
+      ),
     ];

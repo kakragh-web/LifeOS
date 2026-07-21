@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lifeos_ai/features/tasks/domain/i_task_repository.dart';
 import 'package:lifeos_ai/features/tasks/data/task_repository_impl.dart';
+import 'package:lifeos_ai/features/tasks/domain/i_task_repository.dart';
 import 'package:lifeos_ai/features/tasks/domain/task.dart';
 
 final taskRepositoryProvider = Provider<ITaskRepository>((ref) {
@@ -12,7 +12,7 @@ final tasksProvider = StreamProvider<List<Task>>((ref) {
   return repo.watchTasks();
 });
 
-final taskCategoriesProvider = Provider<List<String>>((ref) {
+final taskCategoriesProvider = Provider.autoDispose<List<String>>((ref) {
   final tasks = ref.watch(tasksProvider).value ?? const <Task>[];
   final cats = <String>{};
   for (final t in tasks) {

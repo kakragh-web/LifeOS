@@ -9,7 +9,7 @@ Your AI-powered life organizer. Manage tasks, notes, calendar events, and get pe
 - **Calendar** — Monthly view with agenda, event creation, and day navigation
 - **AI Chat** — Personal AI life coach for contextual assistance
 - **Dashboard** — Beautiful overview of your productivity at a glance
-- **Dark Mode** — Full light/dark theme support
+- **Dark Mode** — Full light/dark theme support with Material 3 dynamic color
 - **Cross-Platform** — iOS, Android, Web, Windows, macOS
 
 ## Tech Stack
@@ -18,15 +18,35 @@ Your AI-powered life organizer. Manage tasks, notes, calendar events, and get pe
 - **Riverpod** — State management
 - **GoRouter** — Navigation and routing
 - **Firebase** — Authentication and backend
-- **Material 3** — Modern design system
+- **Material 3** — Modern design system with glassmorphism
+
+## Design System
+
+LifeOS features a premium design system built on Material 3:
+
+- **AppColors** — Consistent color palette with semantic colors
+- **AppTypography** — Premium typography scale
+- **AppSpacing** — 4pt grid spacing system
+- **AppRadius** — Border radius tokens
+- **AppShadows** — Layered shadow system
+- **GlassCard** — Frosted glass card component
+- **AnimatedButton** — Button with haptic feedback
+- **AnimatedTextField** — Text field with focus animations
+- **AnimatedFAB** — Animated floating action button
+- **AppBottomSheet** — Premium bottom sheet
+- **AppDialog** — Glass effect dialog
+- **StatusChip** — Status indicator chips
+- **AppBadge** — Notification badges
+- **AppAvatar** — Avatar with status indicators
 
 ## Getting Started
 
 ### Prerequisites
 
-- Flutter SDK (3.5.2 or higher)
-- Dart SDK (3.5.2 or higher)
-- Firebase project configured
+- Flutter SDK (3.24.0 or higher)
+- Dart SDK (3.5.0 or higher)
+- Firebase project configured (optional for preview mode)
+- Git, GitHub CLI (`gh`), and Vercel CLI (for deployment)
 
 ### Installation
 
@@ -41,10 +61,13 @@ cd LifeOS
 flutter pub get
 ```
 
-3. Configure Firebase:
+3. Configure Firebase (optional):
 ```bash
+# Activate FlutterFire CLI
 dart pub global activate flutterfire_cli
-flutterfire configure
+
+# Configure Firebase for your project
+flutterfire configure --project=your-project-id
 ```
 
 4. Run the app:
@@ -57,26 +80,26 @@ flutter run
 ```
 lib/
 ├── core/
-│   ├── constants/
-│   ├── firebase/
-│   ├── router/
-│   ├── services/
-│   └── theme/
+│   ├── animations/          # Page transitions, staggered animations
+│   ├── constants/           # App constants and routes
+│   ├── firebase/            # Firebase configuration
+│   ├── router/              # GoRouter configuration
+│   ├── services/            # Storage and other services
+│   └── theme/               # Design system (colors, typography, spacing, widgets)
 ├── features/
-│   ├── auth/
-│   ├── calendar/
-│   ├── chat/
-│   ├── dashboard/
-│   ├── notes/
-│   ├── planner/
-│   ├── settings/
-│   ├── splash/
-│   ├── tasks/
-│   └── welcome/
+│   ├── auth/                # Authentication (login, register)
+│   ├── calendar/            # Calendar screen and providers
+│   ├── chat/                # AI chat interface
+│   ├── dashboard/           # Home dashboard
+│   ├── notes/               # Notes management
+│   ├── planner/             # Daily planner
+│   ├── settings/            # App settings
+│   ├── splash/              # Splash screen
+│   ├── tasks/               # Task management
+│   └── welcome/             # Welcome/onboarding
 └── shared/
-    ├── models/
-    ├── providers/
-    └── widgets/
+    ├── providers/           # Shared Riverpod providers
+    └── widgets/             # Reusable UI components
 ```
 
 ## Architecture
@@ -89,103 +112,135 @@ LifeOS follows Clean Architecture principles with a feature-based folder structu
 
 State management is handled by **Riverpod** with a clear separation between UI and business logic.
 
-## Screenshots
+## CLI Tools
 
-> Screenshots will be added here. Placeholder list of captures to include:
+### Firebase CLI
+```bash
+# Install
+npm install -g firebase-tools
 
-| Screen | Description |
-| ------ | ----------- |
-| Splash | LifeOS logo with fade-in and loader |
-| Welcome | Entry screen with sign-in / sign-up CTAs |
-| Login | Email/password + Google sign-in |
-| Register | Account creation form with validation |
-| Dashboard | Feature cards grid (light & dark) |
-| Tasks | Task list with priority chips and filters |
-| Notes | Note cards with pinning and categories |
-| Calendar | Monthly grid with event detail |
-| AI Chat | Conversation with the assistant |
-| Settings | Theme toggle, notifications, sign-out |
+# Login
+firebase login
 
-_Add images under `assets/screenshots/` and reference them above._
+# Initialize project
+firebase init
+```
 
-## Demo Video
+### FlutterFire CLI
+```bash
+# Activate
+dart pub global activate flutterfire_cli
 
-> A 2–3 minute demo walkthrough is available here: _[insert YouTube / DevPost demo link]_
+# Configure
+flutterfire configure --project=your-project-id
+```
 
-Highlights to capture: auth redirect flow, creating tasks/notes/events, asking the AI assistant
-about your tasks and schedule, and toggling dark mode.
+### GitHub CLI
+```bash
+# Install
+brew install gh
+
+# Login
+gh auth login
+
+# Common commands
+gh repo view
+gh issue list
+gh pr create
+```
+
+### Vercel CLI
+```bash
+# Install
+npm install -g vercel
+
+# Login
+vercel login
+
+# Deploy
+vercel --prod
+```
+
+## Development
+
+### Code Generation
+```bash
+# Run code generation (if using code_gen packages)
+dart run build_runner build
+
+# Watch mode
+dart run build_runner watch
+```
+
+### Linting
+```bash
+flutter analyze
+```
+
+### Testing
+```bash
+# Run all tests
+flutter test
+
+# Run with coverage
+flutter test --coverage
+```
+
+### Formatting
+```bash
+# Format code
+dart format lib/ test/
+
+# Check formatting
+dart format lib/ test/ --set-exit-if-changed
+```
 
 ## Deployment
 
-LifeOS targets iOS, Android, Web, Windows, macOS, and Linux from a single codebase.
-
-### Prerequisites
-
-- Flutter SDK **3.5.2+** and Dart SDK **3.5.2+**
-- A Firebase project (required only for real authentication/backend)
-- Platform toolchains: Xcode (iOS/macOS), Android SDK (Android), Visual Studio (Windows)
-
-### 1. Firebase setup (optional but recommended)
-
+### Web (Vercel)
 ```bash
-dart pub global activate flutterfire_cli
-flutterfire configure
+# Build web
+flutter build web --release
+
+# Deploy with Vercel
+vercel --prod
 ```
 
-This generates `lib/core/firebase/firebase_options.dart`. The committed version contains only
-placeholders so the app still runs in **Preview Mode** without Firebase.
-
-### 2. Install & run
-
+### Android
 ```bash
-flutter pub get
-flutter run
+# Build APK
+flutter build apk --release
+
+# Build App Bundle
+flutter build appbundle --release
 ```
 
 ### iOS
-
 ```bash
-flutter build ios
-# Open build/ios/Runner.xcworkspace in Xcode to archive and distribute.
+# Build iOS
+flutter build ios --release
+
+# Open in Xcode for archiving
+open build/ios/Runner.xcworkspace
 ```
 
-Requirements: a valid Apple Developer signing certificate and Bundle ID.
+## Environment Variables
 
-### Android
+Create a `.env` file in the root directory (git-ignored):
 
-```bash
-flutter build appbundle   # upload to Google Play
-# or
-flutter build apk         # side-load / direct distribution
-```
-
-Signing uses `android/key.properties` + `upload-keystore.jks` (both git-ignored).
-
-### Web
-
-```bash
-flutter build web
-# Serve build/web with any static host (Firebase Hosting, Netlify, Vercel, etc.)
-```
-
-### Desktop (Windows / macOS / Linux)
-
-```bash
-flutter build windows
-flutter build macos
-flutter build linux
-```
-
-## Testing
-
-```bash
-flutter test      # runs the full suite (unit + widget)
-flutter analyze   # static analysis / lints
+```env
+FIREBASE_API_KEY=your-api-key
+FIREBASE_APP_ID=your-app-id
+FIREBASE_PROJECT_ID=your-project-id
 ```
 
 ## Contributing
 
-Contributions are welcome! Please read our contributing guidelines before submitting a pull request.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 

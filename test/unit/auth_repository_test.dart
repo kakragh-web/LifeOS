@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lifeos_ai/features/auth/data/auth_repository.dart';
 import 'package:lifeos_ai/features/auth/data/firebase_auth_repository.dart';
 import 'package:lifeos_ai/features/auth/domain/app_user.dart';
@@ -12,8 +11,6 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 class MockUser extends Mock implements User {}
 
 class MockUserCredential extends Mock implements UserCredential {}
-
-class MockGoogleSignIn extends Mock implements GoogleSignIn {}
 
 /// A fake [IAuthRepository] that records calls and returns canned results.
 /// Used to exercise the provider layer without Firebase.
@@ -54,7 +51,7 @@ class FakeAuthRepository implements IAuthRepository {
 
   @override
   Future<AppUser> signInWithGoogle() async =>
-      AppUser(uid: 'g1', email: 'g@example.com');
+      const AppUser(uid: 'g1', email: 'g@example.com');
 
   @override
   Future<void> signOut() async => signOutCalled = true;
@@ -113,13 +110,11 @@ void main() {
 
   group('FirebaseAuthRepository (mocked FirebaseAuth)', () {
     late MockFirebaseAuth mockAuth;
-    late MockGoogleSignIn mockGoogle;
     late FirebaseAuthRepository repo;
 
     setUp(() {
       mockAuth = MockFirebaseAuth();
-      mockGoogle = MockGoogleSignIn();
-      repo = FirebaseAuthRepository(auth: mockAuth, googleSignIn: mockGoogle);
+      repo = FirebaseAuthRepository(auth: mockAuth);
     });
 
     MockUser buildUser({String uid = 'u1', String email = 'a@b.com'}) {
@@ -171,13 +166,11 @@ void main() {
       verify(() => user.reload()).called(1);
     });
 
-    test('signOut calls auth.signOut and googleSignIn.signOut', () async {
+    test('signOut calls auth.signOut', () async {
       when(() => mockAuth.signOut()).thenAnswer((_) async {});
-      when(() => mockGoogle.signOut()).thenAnswer((_) async => null);
 
       await repo.signOut();
       verify(() => mockAuth.signOut()).called(1);
-      verify(() => mockGoogle.signOut()).called(1);
     });
 
     test('sendPasswordResetEmail forwards the email', () async {

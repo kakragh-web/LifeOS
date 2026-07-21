@@ -39,7 +39,8 @@ dependencies:
   # Firebase
   firebase_core: 2.15.0
   firebase_auth: 4.7.2
-  google_sign_in: ^6.2.1
+  # google_sign_in requires Xcode 15+ due to iOS SDK conflicts
+  # google_sign_in: 6.2.1
   # Storage
   shared_preferences: ^2.3.1
 

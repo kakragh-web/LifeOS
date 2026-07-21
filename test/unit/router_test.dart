@@ -26,7 +26,7 @@ WidgetHarness makeApp(
 
   // Allow Image.asset (used by splash/welcome/register screens) to resolve and
   // provide an empty binary asset manifest so lookups don't crash.
-  final manifestCodec = StandardMessageCodec();
+  final manifestCodec = const StandardMessageCodec();
   final Object? encodedManifest = manifestCodec.encodeMessage(<Object?, Object?>{});
   final emptyManifest = encodedManifest as ByteData;
   // 1x1 transparent PNG so image decoding succeeds.
@@ -88,7 +88,7 @@ void main() {
     testWidgets('authenticated user at splash → dashboard', (tester) async {
       final harness = makeApp(
         tester,
-        AsyncData<AppUser?>(AppUser(uid: 'u1', email: 'a@b.com')),
+        const AsyncData<AppUser?>(AppUser(uid: 'u1', email: 'a@b.com')),
       );
       await tester.pumpWidget(harness.build());
       await tester.pumpAndSettle();
@@ -99,7 +99,7 @@ void main() {
     testWidgets('authenticated user on login → dashboard', (tester) async {
       final harness = makeApp(
         tester,
-        AsyncData<AppUser?>(AppUser(uid: 'u1', email: 'a@b.com')),
+        const AsyncData<AppUser?>(AppUser(uid: 'u1', email: 'a@b.com')),
       );
       await tester.pumpWidget(harness.build());
       await tester.pumpAndSettle();

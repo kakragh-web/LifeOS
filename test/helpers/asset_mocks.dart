@@ -14,7 +14,7 @@ final Uint8List transparentPng = Uint8List.fromList(<int>[
 /// Encodes an empty asset manifest using the same codec Flutter uses to read
 /// `AssetManifest.bin`. Without this, Image.asset crashes with "Message
 /// corrupted" because the test asset handler returns raw PNG bytes.
-final ByteData emptyAssetManifest = (StandardMessageCodec()
+final ByteData emptyAssetManifest = (const StandardMessageCodec()
         .encodeMessage(<Object?, Object?>{})) as ByteData;
 
 /// Installs a mock asset bundle so Image.asset and asset-manifest lookups

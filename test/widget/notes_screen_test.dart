@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lifeos_ai/features/notes/domain/note.dart';
 import 'package:lifeos_ai/features/notes/providers/note_providers.dart';
 import 'package:lifeos_ai/features/notes/presentation/screens/notes_screen.dart';
+import 'package:lifeos_ai/shared/widgets/animated_fab.dart';
 import '../helpers/asset_mocks.dart';
 
 void main() {
@@ -44,7 +45,7 @@ void main() {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
       expect(find.text('New Note'), findsOneWidget);
-      expect(find.byType(FloatingActionButton), findsOneWidget);
+      expect(find.byType(AnimatedFAB), findsOneWidget);
     });
   });
 }

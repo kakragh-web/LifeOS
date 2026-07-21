@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lifeos_ai/core/theme/design_system.dart';
 import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/features/chat/domain/chat_message.dart';
 import 'package:lifeos_ai/features/chat/providers/chat_provider.dart';
+import 'package:lifeos_ai/shared/widgets/animated_button.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -54,15 +56,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('AI Assistant'),
+        backgroundColor: AppColors.surface.withOpacity( 0.9),
+        foregroundColor: cs.onSurface,
+        elevation: 0,
+        title: Text('AI Assistant', style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_outline_rounded),
             tooltip: 'Clear chat',
-            onPressed: messages.isEmpty
-                ? null
-                : () => ref.read(chatMessagesProvider.notifier).clear(),
+            onPressed: messages.isEmpty ? null : () => ref.read(chatMessagesProvider.notifier).clear(),
           ),
         ],
       ),
@@ -71,29 +75,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           Expanded(
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                    maxWidth: Breakpoints.maxWideContentWidth),
+                constraints: const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
                 child: messages.isEmpty && !_isTyping
-                    ? Semantics(
-                        label:
-                            'AI Assistant empty state. Ask me anything about your tasks, schedule, or goals.',
-                        child: _EmptyState(cs: cs),
-                      )
+                    ? _EmptyState(cs: cs)
                     : ListView.builder(
                         controller: _scroll,
-                        padding: EdgeInsets.fromLTRB(
-                          context.horizontalPagePadding,
-                          16,
-                          context.horizontalPagePadding,
-                          8,
-                        ),
+                        padding: EdgeInsets.fromLTRB(context.horizontalPagePadding, 16, context.horizontalPagePadding, 8),
                         itemCount: messages.length + (_isTyping ? 1 : 0),
                         itemBuilder: (_, i) {
                           if (_isTyping && i == messages.length) {
-                            return Semantics(
-                              label: 'AI is typing',
-                              child: const _TypingIndicator(),
-                            );
+                            return const _TypingIndicator();
                           }
                           return _Bubble(message: messages[i]);
                         },
@@ -103,8 +94,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: Breakpoints.maxWideContentWidth),
+              constraints: const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
               child: _InputBar(ctrl: _ctrl, onSend: _send),
             ),
           ),
@@ -116,43 +106,33 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
 class _EmptyState extends StatelessWidget {
   const _EmptyState({required this.cs});
+
   final ColorScheme cs;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Semantics(
-              label: 'LifeOS AI Assistant icon',
-              child:
-                  Icon(Icons.smart_toy_outlined, size: 56, color: cs.primary),
-            ),
-            const SizedBox(height: 16),
-            Semantics(
-              label: 'LifeOS AI',
-              child: Text(
-                'LifeOS AI',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: cs.primaryContainer,
+                borderRadius: BorderRadius.circular(24),
               ),
+              child: Icon(Icons.smart_toy_outlined, size: 40, color: cs.onPrimaryContainer),
             ),
-            const SizedBox(height: 8),
-            Semantics(
-              label: 'Ask me anything about your tasks, schedule, or goals.',
-              child: Text(
-                'Ask me anything about your tasks, schedule, or goals.',
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: cs.onSurfaceVariant),
-              ),
+            const SizedBox(height: AppSpacing.lg),
+            Text('LifeOS AI', style: AppTypography.headlineSmall.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Ask me anything about your tasks, schedule, or goals.',
+              textAlign: TextAlign.center,
+              style: AppTypography.bodyMedium.copyWith(color: cs.onSurfaceVariant),
             ),
           ],
         ),
@@ -163,6 +143,7 @@ class _EmptyState extends StatelessWidget {
 
 class _InputBar extends StatelessWidget {
   const _InputBar({required this.ctrl, required this.onSend});
+
   final TextEditingController ctrl;
   final VoidCallback onSend;
 
@@ -171,29 +152,23 @@ class _InputBar extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          16,
-          8,
-          16,
-          MediaQuery.viewInsetsOf(context).bottom + 8,
-        ),
+        padding: EdgeInsets.fromLTRB(16, 8, 16, MediaQuery.viewInsetsOf(context).bottom + 8),
         child: Row(
           children: [
             Expanded(
-              child: Semantics(
-                label: 'Message input field',
+              child: Container(
+                decoration: BoxDecoration(
+                  color: cs.surfaceContainerHighest.withOpacity( 0.6),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: cs.outlineVariant.withOpacity( 0.3)),
+                ),
                 child: TextField(
                   controller: ctrl,
                   decoration: InputDecoration(
                     hintText: 'Message LifeOS AI…',
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: cs.surfaceContainerHighest,
+                    hintStyle: AppTypography.bodyMedium.copyWith(color: cs.onSurfaceVariant),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
                   ),
                   onSubmitted: (_) => onSend(),
                   textInputAction: TextInputAction.send,
@@ -202,14 +177,13 @@ class _InputBar extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
-            FilledButton(
+            const SizedBox(width: AppSpacing.sm),
+            AnimatedButton(
+              icon: Icons.send_rounded,
+              label: '',
               onPressed: onSend,
-              style: FilledButton.styleFrom(
-                shape: const CircleBorder(),
-                padding: const EdgeInsets.all(14),
-              ),
-              child: const Icon(Icons.send_rounded, size: 20),
+              variant: ButtonVariant.filled,
+              size: ButtonSize.small,
             ),
           ],
         ),
@@ -220,6 +194,7 @@ class _InputBar extends StatelessWidget {
 
 class _Bubble extends StatelessWidget {
   const _Bubble({required this.message});
+
   final ChatMessage message;
 
   @override
@@ -227,36 +202,26 @@ class _Bubble extends StatelessWidget {
     final isUser = message.role == MessageRole.user;
     final cs = Theme.of(context).colorScheme;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Cap bubble width relative to the available (already constrained)
-        // width so bubbles stay readable on phones, tablets and desktop.
-        final available = constraints.maxWidth.isFinite
-            ? constraints.maxWidth
-            : context.screenWidth;
-        final maxBubbleWidth = (available * 0.8).clamp(0.0, 560.0);
-        return Align(
-          alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            constraints: BoxConstraints(maxWidth: maxBubbleWidth),
-            decoration: BoxDecoration(
-              color: isUser ? cs.primary : cs.surfaceContainerHighest,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(18),
-                topRight: const Radius.circular(18),
-                bottomLeft: Radius.circular(isUser ? 18 : 4),
-                bottomRight: Radius.circular(isUser ? 4 : 18),
-              ),
-            ),
-            child: Text(
-              message.content,
-              style: TextStyle(color: isUser ? cs.onPrimary : cs.onSurface),
-            ),
+    return Align(
+      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+        constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.75),
+        decoration: BoxDecoration(
+          color: isUser ? cs.primary : cs.surfaceContainerHighest,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(18),
+            topRight: const Radius.circular(18),
+            bottomLeft: Radius.circular(isUser ? 18 : 4),
+            bottomRight: Radius.circular(isUser ? 4 : 18),
           ),
-        );
-      },
+        ),
+        child: Text(
+          message.content,
+          style: AppTypography.bodyMedium.copyWith(color: isUser ? cs.onPrimary : cs.onSurface),
+        ),
+      ),
     );
   }
 }
@@ -268,17 +233,13 @@ class _TypingIndicator extends StatefulWidget {
   State<_TypingIndicator> createState() => _TypingIndicatorState();
 }
 
-class _TypingIndicatorState extends State<_TypingIndicator>
-    with SingleTickerProviderStateMixin {
+class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    )..repeat();
+    _controller = AnimationController(duration: const Duration(milliseconds: 900), vsync: this)..repeat();
   }
 
   @override
@@ -293,7 +254,7 @@ class _TypingIndicatorState extends State<_TypingIndicator>
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
+        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: cs.surfaceContainerHighest,
@@ -317,7 +278,7 @@ class _TypingIndicatorState extends State<_TypingIndicator>
                 height: 7,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: cs.onSurfaceVariant.withOpacity(0.3 + opacity * 0.7),
+                  color: cs.onSurfaceVariant.withOpacity( 0.3 + opacity * 0.7),
                 ),
               );
             }),

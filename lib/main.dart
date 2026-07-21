@@ -57,8 +57,8 @@ class LifeOsApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'LifeOS',
-      theme: appTheme,
-      darkTheme: appDarkTheme,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
       routerConfig: router,
       debugShowCheckedModeBanner: false,

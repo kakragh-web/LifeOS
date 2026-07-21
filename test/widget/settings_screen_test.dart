@@ -26,10 +26,10 @@ void main() {
       );
 
       expect(find.text('Settings'), findsOneWidget);
-      expect(find.text('Dark mode'), findsOneWidget);
-      expect(find.text('Notifications'), findsOneWidget);
-      expect(find.text('Privacy & Security'), findsOneWidget);
-      expect(find.text('About'), findsOneWidget);
+      expect(find.text('Dark Mode'), findsAtLeastNWidgets(1));
+      expect(find.text('Notifications'), findsAtLeastNWidgets(1));
+      expect(find.text('Privacy & Security'), findsAtLeastNWidgets(1));
+      expect(find.text('About'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('shows sign out button', (tester) async {

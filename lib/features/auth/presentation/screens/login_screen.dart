@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lifeos_ai/core/constants/app_constants.dart';
+import 'package:lifeos_ai/core/theme/design_system.dart';
 import 'package:lifeos_ai/core/utils/error_handler.dart';
 import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/core/utils/validators.dart';
 import 'package:lifeos_ai/features/auth/providers/auth_provider.dart';
-import 'package:lifeos_ai/shared/widgets/app_button.dart';
-import 'package:lifeos_ai/shared/widgets/app_text_field.dart';
+import 'package:lifeos_ai/shared/widgets/animated_button.dart';
+import 'package:lifeos_ai/shared/widgets/animated_text_field.dart';
 import 'package:lifeos_ai/shared/widgets/google_sign_in_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -59,7 +60,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
     final cs = Theme.of(context).colorScheme;
-    final tt = Theme.of(context).textTheme;
     final isLoading = authState.isLoading;
 
     ref.listen(authNotifierProvider, (_, next) {
@@ -67,57 +67,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     return Scaffold(
-      backgroundColor: cs.surface,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: Semantics(
-          label: 'Go back',
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () => context.go(AppRoutes.welcome),
-          ),
-        ),
-      ),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
-              horizontal:
-                  context.responsive(compact: 24, medium: 32, expanded: 40),
+              horizontal: context.responsive(compact: 24, medium: 32, expanded: 40),
               vertical: 16,
             ),
             child: ConstrainedBox(
-              constraints:
-                  const BoxConstraints(maxWidth: Breakpoints.maxContentWidth),
+              constraints: const BoxConstraints(maxWidth: Breakpoints.maxContentWidth),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
+                    _BackButton(context: context),
+                    const SizedBox(height: AppSpacing.screenVerticalSpacing),
+                     Text(
                       'Welcome back',
-                      style: tt.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                      style: AppTypography.headlineMedium.copyWith(
+                        fontWeight: FontWeight.w800,
                         color: cs.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       'Sign in to continue to ${AppConstants.appName}',
-                      style:
-                          tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
                     ),
-                    SizedBox(
-                        height: context.responsive(compact: 28, medium: 36)),
-                    Image.asset(
-                      'assets/images/lifeos_logo.PNG',
-                      width: context.responsive(compact: 64, medium: 80),
-                      height: context.responsive(compact: 64, medium: 80),
-                      fit: BoxFit.contain,
-                    ),
-                    SizedBox(
-                        height: context.responsive(compact: 28, medium: 36)),
-                    AppTextField(
+                    const SizedBox(height: AppSpacing.sectionSpacing),
+                    AnimatedTextField(
                       controller: _emailCtrl,
                       label: 'Email',
                       hint: 'you@example.com',
@@ -126,8 +108,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       textInputAction: TextInputAction.next,
                       validator: Validators.email,
                     ),
-                    const SizedBox(height: 16),
-                    AppTextField(
+                    const SizedBox(height: AppSpacing.lg),
+                    AnimatedTextField(
                       controller: _passCtrl,
                       label: 'Password',
                       hint: '••••••••',
@@ -144,36 +126,42 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
                         ),
-                        onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword),
+                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),
                     ),
-                    const SizedBox(height: 28),
-                    AppButton(
+                    const SizedBox(height: AppSpacing.lg),
+                    AnimatedButton(
                       label: 'Sign In',
                       onPressed: isLoading ? null : _signIn,
                       isLoading: isLoading,
+                      variant: ButtonVariant.filled,
                     ),
-                    const SizedBox(height: 12),
-                    _OrDivider(),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.lg),
+                    const _OrDivider(),
+                    const SizedBox(height: AppSpacing.lg),
                     GoogleSignInButton(
                       onTap: _signInWithGoogle,
                       enabled: !isLoading,
                     ),
-                    const SizedBox(height: 28),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
+                    const SizedBox(height: AppSpacing.sectionSpacing),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "Don't have an account? ",
-                          style: tt.bodyMedium
-                              ?.copyWith(color: cs.onSurfaceVariant),
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: cs.onSurfaceVariant,
+                          ),
                         ),
                         TextButton(
                           onPressed: () => context.go(AppRoutes.register),
-                          child: const Text('Sign Up'),
+                          child: Text(
+                            'Sign Up',
+                            style: AppTypography.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: cs.primary,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -188,7 +176,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 }
 
+class _BackButton extends StatelessWidget {
+  const _BackButton({required this.context});
+
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: IconButton(
+        onPressed: () => context.go(AppRoutes.welcome),
+        icon: Icon(Icons.arrow_back_rounded, color: Theme.of(context).colorScheme.onSurface),
+      ),
+    );
+  }
+}
+
 class _OrDivider extends StatelessWidget {
+  const _OrDivider();
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -196,13 +203,10 @@ class _OrDivider extends StatelessWidget {
       children: [
         Expanded(child: Divider(color: cs.outlineVariant)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           child: Text(
             'or',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: cs.onSurfaceVariant),
+            style: AppTypography.bodySmall.copyWith(color: cs.onSurfaceVariant),
           ),
         ),
         Expanded(child: Divider(color: cs.outlineVariant)),

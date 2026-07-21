@@ -45,7 +45,7 @@ class FakeAuthRepository implements IAuthRepository {
 
   @override
   Future<AppUser> signInWithGoogle() async =>
-      AppUser(uid: 'g1', email: 'g@example.com');
+      const AppUser(uid: 'g1', email: 'g@example.com');
 
   @override
   Future<void> signOut() async => signOutCalled = true;
@@ -94,7 +94,7 @@ void main() {
     });
 
     test('signOut clears the user', () async {
-      fakeRepo.currentUserValue = AppUser(uid: 'u1', email: 'a@b.com');
+      fakeRepo.currentUserValue = const AppUser(uid: 'u1', email: 'a@b.com');
       await container.read(authNotifierProvider.notifier).signOut();
 
       final state = container.read(authNotifierProvider);

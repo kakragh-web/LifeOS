@@ -9,7 +9,7 @@ import 'package:lifeos_ai/features/auth/domain/i_auth_repository.dart';
 import 'package:lifeos_ai/main.dart' show firebaseReadyProvider;
 
 final authRepositoryProvider = Provider<IAuthRepository>((ref) {
-  final firebaseReady = ref.watch(firebaseReadyProvider);
+  final firebaseReady = ref.read(firebaseReadyProvider);
   developer.log(
       '[LifeOS Auth] Repository selected: ${firebaseReady ? 'Firebase' : 'Stub'}');
   return firebaseReady ? FirebaseAuthRepository() : AuthRepository();
@@ -17,10 +17,7 @@ final authRepositoryProvider = Provider<IAuthRepository>((ref) {
 
 final authStateProvider = StreamProvider<AppUser?>((ref) {
   final repo = ref.watch(authRepositoryProvider);
-  return repo.authStateChanges.timeout(
-    const Duration(seconds: 2),
-    onTimeout: (sink) => sink.add(null),
-  );
+  return repo.authStateChanges;
 });
 
 class AuthNotifier extends AsyncNotifier<AppUser?> {
@@ -64,7 +61,6 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
 
   Future<void> signOut() async {
     developer.log('[LifeOS Auth] signOut called');
-    state = const AsyncLoading();
     await _repo.signOut();
     state = const AsyncData(null);
   }

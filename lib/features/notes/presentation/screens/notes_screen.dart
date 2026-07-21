@@ -183,10 +183,14 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
     return list.where((n) {
       if (_filterCategory != null &&
           _filterCategory!.isNotEmpty &&
-          n.category != _filterCategory) return false;
+          n.category != _filterCategory) {
+        return false;
+      }
       if (query.isNotEmpty &&
           !n.title.toLowerCase().contains(query) &&
-          !(n.content ?? '').toLowerCase().contains(query)) return false;
+          !(n.content ?? '').toLowerCase().contains(query)) {
+        return false;
+      }
       return true;
     }).toList();
   }

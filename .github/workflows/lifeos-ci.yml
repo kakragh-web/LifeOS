@@ -94,10 +94,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - uses: subosito/flutter-action@v2
+      - name: Download web build
+        uses: actions/download-artifact@v4
         with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
+          name: web-build
+          path: build/web
       
       - name: Install Vercel CLI
         run: npm install -g vercel
@@ -108,8 +109,8 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       
-      - name: Build and deploy
-        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy prebuilt web
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

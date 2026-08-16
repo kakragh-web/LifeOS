@@ -130,7 +130,8 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: AppRadius.textFieldRadius,
-                borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                borderSide:
+                    const BorderSide(color: AppColors.primary, width: 2),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: AppRadius.textFieldRadius,

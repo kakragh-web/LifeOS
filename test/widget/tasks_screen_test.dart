@@ -32,8 +32,7 @@ void main() {
               initialLocation: '/tasks',
               routes: [
                 GoRoute(
-                    path: '/tasks',
-                    builder: (_, __) => const TasksScreen()),
+                    path: '/tasks', builder: (_, __) => const TasksScreen()),
               ],
             ),
           ),

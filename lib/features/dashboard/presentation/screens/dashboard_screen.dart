@@ -19,11 +19,19 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final _destinations = <({IconData icon, String label, String route})>[
     (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
-    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
+    (
+      icon: Icons.check_circle_outline_rounded,
+      label: 'Tasks',
+      route: AppRoutes.tasks
+    ),
     (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
     (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
     (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
-    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+    (
+      icon: Icons.settings_outlined,
+      label: 'Settings',
+      route: AppRoutes.settings
+    ),
   ];
 
   @override
@@ -64,12 +72,42 @@ class _DashboardBody extends ConsumerWidget {
   final AppUser? user;
 
   static const _features = [
-    (icon: Icons.calendar_today_outlined, label: 'Planner', route: AppRoutes.planner, color: AppColors.primary),
-    (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar, color: AppColors.secondary),
-    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks, color: AppColors.tertiary),
-    (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes, color: AppColors.primaryContainer),
-    (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat, color: AppColors.secondaryContainer),
-    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings, color: AppColors.tertiaryContainer),
+    (
+      icon: Icons.calendar_today_outlined,
+      label: 'Planner',
+      route: AppRoutes.planner,
+      color: AppColors.primary
+    ),
+    (
+      icon: Icons.event_outlined,
+      label: 'Calendar',
+      route: AppRoutes.calendar,
+      color: AppColors.secondary
+    ),
+    (
+      icon: Icons.check_circle_outline_rounded,
+      label: 'Tasks',
+      route: AppRoutes.tasks,
+      color: AppColors.tertiary
+    ),
+    (
+      icon: Icons.note_outlined,
+      label: 'Notes',
+      route: AppRoutes.notes,
+      color: AppColors.primaryContainer
+    ),
+    (
+      icon: Icons.smart_toy_outlined,
+      label: 'AI Chat',
+      route: AppRoutes.chat,
+      color: AppColors.secondaryContainer
+    ),
+    (
+      icon: Icons.settings_outlined,
+      label: 'Settings',
+      route: AppRoutes.settings,
+      color: AppColors.tertiaryContainer
+    ),
   ];
 
   @override

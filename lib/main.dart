@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifeos_ai/firebase_options.dart';
@@ -16,15 +17,22 @@ Future<void> main() async {
   bool firebaseReady = false;
   try {
     debugPrint('[LifeOS] Firebase initialization started');
+    debugPrint('[LifeOS] Platform: $defaultTargetPlatform');
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     firebaseReady = true;
     debugPrint('[LifeOS] Firebase initialized successfully');
+    debugPrint('[LifeOS] Firebase apps: ${Firebase.apps.map((a) => a.name).toList()}');
   } catch (e) {
     debugPrint('[LifeOS] Firebase initialization failed: $e');
     debugPrint(
         '[LifeOS] Development Preview Mode enabled — app will run without Firebase');
+    if (kDebugMode) {
+      debugPrint('[LifeOS] Firebase initialization error details:');
+      debugPrint('  Type: ${e.runtimeType}');
+      debugPrint('  Message: $e');
+    }
   }
 
   debugPrint('[LifeOS] Initializing storage service');

@@ -179,13 +179,13 @@ class _BrandHero extends StatelessWidget {
                   ),
                 ),
               ),
-             ],
-           ),
-         ),
-       ),
-     );
-   }
- }
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class _FeatureDot extends StatelessWidget {
   const _FeatureDot({required this.color});

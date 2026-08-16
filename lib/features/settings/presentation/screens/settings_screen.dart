@@ -36,17 +36,37 @@ class SettingsScreen extends ConsumerWidget {
         context.push(route);
       },
       destinations: const [
-        (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
-        (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
-        (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
+        (
+          icon: Icons.dashboard_outlined,
+          label: 'Home',
+          route: AppRoutes.dashboard
+        ),
+        (
+          icon: Icons.check_circle_outline_rounded,
+          label: 'Tasks',
+          route: AppRoutes.tasks
+        ),
+        (
+          icon: Icons.event_outlined,
+          label: 'Calendar',
+          route: AppRoutes.calendar
+        ),
         (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
-        (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
-        (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+        (
+          icon: Icons.smart_toy_outlined,
+          label: 'AI Chat',
+          route: AppRoutes.chat
+        ),
+        (
+          icon: Icons.settings_outlined,
+          label: 'Settings',
+          route: AppRoutes.settings
+        ),
       ],
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-              maxWidth: Breakpoints.maxWideContentWidth),
+          constraints:
+              const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
           child: ListView(
             padding: EdgeInsets.symmetric(
               horizontal: context.horizontalPagePadding,
@@ -59,7 +79,8 @@ class SettingsScreen extends ConsumerWidget {
                   final confirmed = await AppDialog.showConfirm(
                     context: context,
                     title: 'Sign out?',
-                    message: 'You will need to sign in again to access your data.',
+                    message:
+                        'You will need to sign in again to access your data.',
                     confirmText: 'Sign Out',
                     isDestructive: true,
                   );
@@ -110,7 +131,8 @@ class SettingsScreen extends ConsumerWidget {
                   _SettingsTile(
                     icon: Icons.info_outline_rounded,
                     title: AppConstants.appName,
-                    subtitle: 'Version ${AppConstants.appVersion} • Powered by AI',
+                    subtitle:
+                        'Version ${AppConstants.appVersion} • Powered by AI',
                     onTap: () {},
                     cs: cs,
                   ),
@@ -123,7 +145,8 @@ class SettingsScreen extends ConsumerWidget {
                   final confirmed = await AppDialog.showConfirm(
                     context: context,
                     title: 'Sign out?',
-                    message: 'You will need to sign in again to access your data.',
+                    message:
+                        'You will need to sign in again to access your data.',
                     confirmText: 'Sign Out',
                     isDestructive: true,
                   );

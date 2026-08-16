@@ -21,11 +21,19 @@ class NotesScreen extends ConsumerStatefulWidget {
 class _NotesScreenState extends ConsumerState<NotesScreen> {
   final _destinations = <({IconData icon, String label, String route})>[
     (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
-    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
+    (
+      icon: Icons.check_circle_outline_rounded,
+      label: 'Tasks',
+      route: AppRoutes.tasks
+    ),
     (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
     (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
     (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
-    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+    (
+      icon: Icons.settings_outlined,
+      label: 'Settings',
+      route: AppRoutes.settings
+    ),
   ];
 
   final _searchCtrl = TextEditingController();
@@ -146,14 +154,11 @@ class _NotesBody extends ConsumerWidget {
       children: [
         Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-                maxWidth: Breakpoints.maxWideContentWidth),
+            constraints:
+                const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                  context.horizontalPagePadding,
-                  AppSpacing.md,
-                  context.horizontalPagePadding,
-                  AppSpacing.sm),
+              padding: EdgeInsets.fromLTRB(context.horizontalPagePadding,
+                  AppSpacing.md, context.horizontalPagePadding, AppSpacing.sm),
               child: context.isCompact
                   ? Column(
                       children: [
@@ -222,8 +227,7 @@ class _NotesBody extends ConsumerWidget {
             data: (notes) {
               final filtered = _filterNotes(notes);
               if (filtered.isEmpty) {
-                return _EmptyNotes(
-                    cs: cs, onCreate: onCreateNote);
+                return _EmptyNotes(cs: cs, onCreate: onCreateNote);
               }
               return Center(
                 child: ConstrainedBox(
@@ -389,7 +393,8 @@ class _NoteCard extends StatelessWidget {
                       variant: ChipVariant.elevated,
                     ),
                   const Spacer(),
-                  Text(_formatDate(note.createdAt), style: AppTypography.caption),
+                  Text(_formatDate(note.createdAt),
+                      style: AppTypography.caption),
                 ],
               ),
             ],

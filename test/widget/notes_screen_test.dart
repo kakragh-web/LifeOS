@@ -26,8 +26,7 @@ void main() {
               initialLocation: '/notes',
               routes: [
                 GoRoute(
-                    path: '/notes',
-                    builder: (_, __) => const NotesScreen()),
+                    path: '/notes', builder: (_, __) => const NotesScreen()),
               ],
             ),
           ),

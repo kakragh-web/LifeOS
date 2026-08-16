@@ -50,12 +50,12 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-      
+
       final exception = tester.takeException();
       if (exception != null) {
         fail('Widget build threw exception: $exception');
       }
-      
+
       expect(find.text('Sign Out'), findsOneWidget);
     });
   });

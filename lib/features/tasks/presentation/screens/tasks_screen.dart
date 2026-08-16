@@ -21,11 +21,19 @@ class TasksScreen extends ConsumerStatefulWidget {
 class _TasksScreenState extends ConsumerState<TasksScreen> {
   final _destinations = <({IconData icon, String label, String route})>[
     (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
-    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
+    (
+      icon: Icons.check_circle_outline_rounded,
+      label: 'Tasks',
+      route: AppRoutes.tasks
+    ),
     (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
     (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
     (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
-    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+    (
+      icon: Icons.settings_outlined,
+      label: 'Settings',
+      route: AppRoutes.settings
+    ),
   ];
 
   TaskPriority _filterPriority = TaskPriority.medium;
@@ -151,7 +159,8 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     );
   }
 
-  void _updateStatus(BuildContext context, Task task, TaskStatus newStatus) async {
+  void _updateStatus(
+      BuildContext context, Task task, TaskStatus newStatus) async {
     final messenger = ScaffoldMessenger.of(context);
     await ref.read(taskRepositoryProvider).updateTask(
         task.copyWith(status: newStatus, updatedAt: DateTime.now()));
@@ -416,13 +425,13 @@ class _Filters extends StatelessWidget {
               AppSpacing.md, context.horizontalPagePadding, AppSpacing.sm),
           child: Column(
             children: [
-                AnimatedTextField(
-                  controller: searchCtrl,
-                  label: 'Search',
-                  hint: 'Search tasks...',
-                  prefixIcon: Icons.search_rounded,
-                  onChanged: onSearchChanged,
-                ),
+              AnimatedTextField(
+                controller: searchCtrl,
+                label: 'Search',
+                hint: 'Search tasks...',
+                prefixIcon: Icons.search_rounded,
+                onChanged: onSearchChanged,
+              ),
               const SizedBox(height: AppSpacing.sm),
               if (context.isCompact)
                 Column(

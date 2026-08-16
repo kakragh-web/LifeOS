@@ -19,11 +19,19 @@ class CalendarScreen extends ConsumerStatefulWidget {
 class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   final _destinations = <({IconData icon, String label, String route})>[
     (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
-    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
+    (
+      icon: Icons.check_circle_outline_rounded,
+      label: 'Tasks',
+      route: AppRoutes.tasks
+    ),
     (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
     (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
     (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
-    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+    (
+      icon: Icons.settings_outlined,
+      label: 'Settings',
+      route: AppRoutes.settings
+    ),
   ];
 
   late DateTime _focusedMonth;
@@ -181,7 +189,8 @@ class _CalendarBody extends ConsumerWidget {
 
   final DateTime focusedMonth;
   final ValueChanged<DateTime> onFocusedMonthChanged;
-  final void Function(BuildContext, {CalendarEvent? event, DateTime? date}) onShowEventForm;
+  final void Function(BuildContext, {CalendarEvent? event, DateTime? date})
+      onShowEventForm;
   final void Function(BuildContext, CalendarEvent) onConfirmDelete;
 
   @override
@@ -207,8 +216,8 @@ class _CalendarBody extends ConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.chevron_left_rounded),
                 tooltip: 'Previous month',
-                onPressed: () => onFocusedMonthChanged(DateTime(
-                    focusedMonth.year, focusedMonth.month - 1)),
+                onPressed: () => onFocusedMonthChanged(
+                    DateTime(focusedMonth.year, focusedMonth.month - 1)),
               ),
               Flexible(
                 child: Text(
@@ -222,8 +231,8 @@ class _CalendarBody extends ConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.chevron_right_rounded),
                 tooltip: 'Next month',
-                onPressed: () => onFocusedMonthChanged(DateTime(
-                    focusedMonth.year, focusedMonth.month + 1)),
+                onPressed: () => onFocusedMonthChanged(
+                    DateTime(focusedMonth.year, focusedMonth.month + 1)),
               ),
             ],
           ),
@@ -242,8 +251,7 @@ class _CalendarBody extends ConsumerWidget {
         const Divider(height: 24),
         Expanded(
           child: eventsAsync.when(
-            loading: () =>
-                const Center(child: CircularProgressIndicator()),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => Center(
               child: Text('Unable to load events. Please try again.',
                   style: AppTypography.bodyMedium),

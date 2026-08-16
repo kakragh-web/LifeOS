@@ -67,8 +67,10 @@ class ResponsiveShell extends ConsumerWidget {
               },
               labelType: NavigationRailLabelType.all,
               backgroundColor: AppColors.surface,
-              indicatorColor:
-                  Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+              indicatorColor: Theme.of(context)
+                  .colorScheme
+                  .primaryContainer
+                  .withOpacity(0.5),
             ),
             const VerticalDivider(thickness: 1, width: 1),
             Expanded(child: content),

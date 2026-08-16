@@ -17,8 +17,8 @@ class AppBottomSheet {
   }) {
     HapticFeedback.lightImpact();
 
-    final effectiveBackgroundColor = backgroundColor ??
-        Theme.of(context).colorScheme.surface;
+    final effectiveBackgroundColor =
+        backgroundColor ?? Theme.of(context).colorScheme.surface;
 
     return showModalBottomSheet<T>(
       context: context,

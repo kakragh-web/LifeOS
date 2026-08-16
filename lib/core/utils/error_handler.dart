@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 /// Maps raw exception messages (Firebase, network, etc.) to user-friendly strings.
 abstract final class ErrorHandler {
@@ -77,6 +78,11 @@ abstract final class ErrorHandler {
     if (msg.contains('network-request-failed') ||
         msg.contains('SocketException')) {
       return 'No internet connection. Please check your network.';
+    }
+
+    // In debug mode, show the actual error code for unknown errors
+    if (kDebugMode && code != null) {
+      return 'Authentication failed [code: $code]';
     }
 
     return 'Something went wrong. Please try again.';

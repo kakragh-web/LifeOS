@@ -19,11 +19,19 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _destinations = <({IconData icon, String label, String route})>[
     (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
-    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
+    (
+      icon: Icons.check_circle_outline_rounded,
+      label: 'Tasks',
+      route: AppRoutes.tasks
+    ),
     (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
     (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
     (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
-    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+    (
+      icon: Icons.settings_outlined,
+      label: 'Settings',
+      route: AppRoutes.settings
+    ),
   ];
 
   final _ctrl = TextEditingController();
@@ -140,8 +148,8 @@ class _ChatBody extends StatelessWidget {
         ),
         Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-                maxWidth: Breakpoints.maxWideContentWidth),
+            constraints:
+                const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
             child: _InputBar(ctrl: ctrl, onSend: onSend),
           ),
         ),

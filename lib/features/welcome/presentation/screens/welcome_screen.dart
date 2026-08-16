@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/core/theme/design_system.dart';
 import 'package:lifeos_ai/shared/widgets/animated_button.dart';
-import 'package:lifeos_ai/shared/widgets/glass_card.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -136,6 +135,7 @@ class _BrandHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
       duration: const Duration(milliseconds: 800),
@@ -143,11 +143,18 @@ class _BrandHero extends StatelessWidget {
       builder: (context, value, child) {
         return Transform.scale(scale: value, child: child);
       },
-      child: GlassCard(
-        padding: const EdgeInsets.all(AppSpacing.xxl),
+      child: Card(
         elevation: 3,
-        blur: 24,
-        opacity: 0.85,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.card),
+          side: BorderSide(
+            color: cs.outlineVariant.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        color: AppColors.surfaceContainerHighest,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           child: Column(
             children: [
               Hero(
@@ -158,8 +165,8 @@ class _BrandHero extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [
-                      AppShadows.primaryGlow(),
-                      AppShadows.elevation4,
+                      ...AppShadows.primaryGlow(),
+                      ...AppShadows.elevation4,
                     ],
                   ),
                   child: ClipRRect(
@@ -172,12 +179,13 @@ class _BrandHero extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
-      ),
-    );
-  }
-}
+             ],
+           ),
+         ),
+       ),
+     );
+   }
+ }
 
 class _FeatureDot extends StatelessWidget {
   const _FeatureDot({required this.color});

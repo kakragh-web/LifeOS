@@ -9,4 +9,5 @@ export 'avatar.dart';
 export 'badge.dart';
 export 'glass_card.dart';
 export 'google_sign_in_button.dart';
+export 'responsive_scaffold.dart';
 export 'status_chip.dart';

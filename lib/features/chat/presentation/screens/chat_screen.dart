@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/core/theme/design_system.dart';
 import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/features/chat/domain/chat_message.dart';
 import 'package:lifeos_ai/features/chat/providers/chat_provider.dart';
 import 'package:lifeos_ai/shared/widgets/animated_button.dart';
+import 'package:lifeos_ai/shared/widgets/responsive_scaffold.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -14,6 +17,15 @@ class ChatScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
+  final _destinations = <({IconData icon, String label, String route})>[
+    (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
+    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
+    (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
+    (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
+    (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
+    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+  ];
+
   final _ctrl = TextEditingController();
   final _scroll = ScrollController();
   bool _isTyping = false;
@@ -52,64 +64,88 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final messages = ref.watch(chatMessagesProvider);
+    return ResponsiveShell(
+      title: 'AI Assistant',
+      currentIndex: 4,
+      onDestinationSelected: (index) {
+        final route = _destinations[index].route;
+        context.push(route);
+      },
+      destinations: _destinations,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.delete_outline_rounded),
+          tooltip: 'Clear chat',
+          onPressed: ref.watch(chatMessagesProvider).isEmpty
+              ? null
+              : () => ref.read(chatMessagesProvider.notifier).clear(),
+        ),
+      ],
+      body: _ChatBody(
+        ctrl: _ctrl,
+        scroll: _scroll,
+        onSend: _send,
+        isTyping: _isTyping,
+        messages: ref.watch(chatMessagesProvider),
+      ),
+    );
+  }
+}
+
+class _ChatBody extends StatelessWidget {
+  const _ChatBody({
+    required this.ctrl,
+    required this.scroll,
+    required this.onSend,
+    required this.isTyping,
+    required this.messages,
+  });
+
+  final TextEditingController ctrl;
+  final ScrollController scroll;
+  final VoidCallback onSend;
+  final bool isTyping;
+  final List<ChatMessage> messages;
+
+  @override
+  Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface.withOpacity(0.9),
-        foregroundColor: cs.onSurface,
-        elevation: 0,
-        title: Text('AI Assistant',
-            style:
-                AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete_outline_rounded),
-            tooltip: 'Clear chat',
-            onPressed: messages.isEmpty
-                ? null
-                : () => ref.read(chatMessagesProvider.notifier).clear(),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                    maxWidth: Breakpoints.maxWideContentWidth),
-                child: messages.isEmpty && !_isTyping
-                    ? _EmptyState(cs: cs)
-                    : ListView.builder(
-                        controller: _scroll,
-                        padding: EdgeInsets.fromLTRB(
-                            context.horizontalPagePadding,
-                            16,
-                            context.horizontalPagePadding,
-                            8),
-                        itemCount: messages.length + (_isTyping ? 1 : 0),
-                        itemBuilder: (_, i) {
-                          if (_isTyping && i == messages.length) {
-                            return const _TypingIndicator();
-                          }
-                          return _Bubble(message: messages[i]);
-                        },
-                      ),
-              ),
-            ),
-          ),
-          Center(
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(
                   maxWidth: Breakpoints.maxWideContentWidth),
-              child: _InputBar(ctrl: _ctrl, onSend: _send),
+              child: messages.isEmpty && !isTyping
+                  ? _EmptyState(cs: cs)
+                  : ListView.builder(
+                      controller: scroll,
+                      padding: EdgeInsets.fromLTRB(
+                          context.horizontalPagePadding,
+                          16,
+                          context.horizontalPagePadding,
+                          8),
+                      itemCount: messages.length + (isTyping ? 1 : 0),
+                      itemBuilder: (_, i) {
+                        if (isTyping && i == messages.length) {
+                          return const _TypingIndicator();
+                        }
+                        return _Bubble(message: messages[i]);
+                      },
+                    ),
             ),
           ),
-        ],
-      ),
+        ),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+                maxWidth: Breakpoints.maxWideContentWidth),
+            child: _InputBar(ctrl: ctrl, onSend: onSend),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -124,29 +160,29 @@ class _EmptyState extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: AppShadows.primaryGlow(),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Image.asset(
-                      'assets/images/lifeos_logo.png',
-                      fit: BoxFit.contain,
-                      filterQuality: FilterQuality.high,
-                    ),
-                  ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: AppShadows.primaryGlow(),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Image.asset(
+                  'assets/images/lifeos_logo.png',
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                Text(AppConstants.appName,
-                    style: AppTypography.headlineSmall
-                        .copyWith(fontWeight: FontWeight.w700)),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(AppConstants.appName,
+                style: AppTypography.headlineSmall
+                    .copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.sm),
             Text(
               'Ask me anything about your tasks, schedule, or goals.',
@@ -179,7 +215,7 @@ class _InputBar extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: cs.surfaceContainerHighest.withOpacity(0.6),
+                  color: AppColors.surfaceContainerHighest.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(color: cs.outlineVariant.withOpacity(0.3)),
                 ),
@@ -236,7 +272,7 @@ class _Bubble extends StatelessWidget {
         constraints:
             BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.75),
         decoration: BoxDecoration(
-          color: isUser ? cs.primary : cs.surfaceContainerHighest,
+          color: isUser ? cs.primary : AppColors.surfaceContainerHighest,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(18),
             topRight: const Radius.circular(18),
@@ -287,9 +323,9 @@ class _TypingIndicatorState extends State<_TypingIndicator>
       child: Container(
         margin: const EdgeInsets.only(bottom: AppSpacing.sm),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: cs.surfaceContainerHighest,
-          borderRadius: const BorderRadius.only(
+        decoration: const BoxDecoration(
+          color: AppColors.surfaceContainerHighest,
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(18),
             topRight: Radius.circular(18),
             bottomRight: Radius.circular(18),

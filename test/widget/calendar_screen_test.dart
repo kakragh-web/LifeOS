@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lifeos_ai/features/calendar/domain/calendar_event.dart';
 import 'package:lifeos_ai/features/calendar/providers/calendar_providers.dart';
 import 'package:lifeos_ai/features/calendar/presentation/screens/calendar_screen.dart';
@@ -20,9 +21,16 @@ void main() {
         ],
         child: MediaQuery(
           data: const MediaQueryData(size: Size(800, 1200)),
-          child: MaterialApp(
+          child: MaterialApp.router(
             theme: ThemeData(useMaterial3: true),
-            home: const Scaffold(body: CalendarScreen()),
+            routerConfig: GoRouter(
+              initialLocation: '/calendar',
+              routes: [
+                GoRoute(
+                    path: '/calendar',
+                    builder: (_, __) => const CalendarScreen()),
+              ],
+            ),
           ),
         ),
       );
@@ -31,7 +39,7 @@ void main() {
     testWidgets('shows the app bar title', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
-      expect(find.text('Calendar'), findsOneWidget);
+      expect(find.text('Calendar'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('renders the weekday header', (tester) async {

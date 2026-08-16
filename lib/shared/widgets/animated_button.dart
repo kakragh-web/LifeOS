@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lifeos_ai/core/theme/app_colors.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
-import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
 
-/// Animated button with haptic feedback and smooth transitions.
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
     super.key,
@@ -36,7 +34,7 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-enum ButtonVariant { filled, outlined, text, glass }
+enum ButtonVariant { filled, outlined, text }
 
 enum ButtonSize { small, medium, large }
 
@@ -102,7 +100,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
   Widget _buildButton(BuildContext context, VoidCallback? onPressed) {
     final theme = Theme.of(context);
     final isFilled = widget.variant == ButtonVariant.filled;
-    final isGlass = widget.variant == ButtonVariant.glass;
     final isOutlined = widget.variant == ButtonVariant.outlined;
 
     final effectiveHeight = switch (widget.size) {
@@ -132,19 +129,11 @@ class _AnimatedButtonState extends State<AnimatedButton>
     if (isFilled) {
       backgroundColor = onPressed != null
           ? theme.colorScheme.primary
-          : theme.colorScheme.surfaceContainerHighest;
+          : AppColors.surfaceContainerHighest;
       foregroundColor = onPressed != null
           ? theme.colorScheme.onPrimary
           : theme.colorScheme.onSurfaceVariant;
       overlayColor = theme.colorScheme.primary.withOpacity(0.2);
-    } else if (isGlass) {
-      backgroundColor = AppColors.glass.withOpacity(0.15);
-      foregroundColor = theme.colorScheme.onSurface;
-      side = BorderSide(
-        color: theme.colorScheme.outlineVariant.withOpacity(0.3),
-        width: 1,
-      );
-      overlayColor = theme.colorScheme.primary.withOpacity(0.1);
     } else if (isOutlined) {
       backgroundColor = Colors.transparent;
       foregroundColor = onPressed != null
@@ -171,7 +160,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
       decoration: BoxDecoration(
         borderRadius: AppRadius.buttonRadius,
         border: side != null ? Border.fromBorderSide(side) : null,
-        boxShadow: isGlass ? AppShadows.glass : null,
       ),
       child: Material(
         color: backgroundColor,

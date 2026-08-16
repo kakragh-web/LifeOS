@@ -1,6 +1,5 @@
 .git
 node_modules
-build
 *.log
 .DS_Store
 .idea

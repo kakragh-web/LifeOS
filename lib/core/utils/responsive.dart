@@ -15,7 +15,7 @@ abstract final class Breakpoints {
   /// Maximum content width used to keep forms and reading content from
   /// stretching uncomfortably wide on large screens.
   static const double maxContentWidth = 480;
-  static const double maxWideContentWidth = 720;
+  static const double maxWideContentWidth = 1200;
 }
 
 enum ScreenSize { compact, medium, expanded }

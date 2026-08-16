@@ -25,7 +25,7 @@ class AppTheme {
 
       // ─── App Bar ─────────────────────────────────────────────────────
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.surface.withOpacity(0.9),
+        backgroundColor: AppColors.surface,
         foregroundColor: AppColors.onSurface,
         elevation: 0,
         centerTitle: false,
@@ -37,7 +37,7 @@ class AppTheme {
 
       // ─── Cards ───────────────────────────────────────────────────────
       cardTheme: CardTheme(
-        color: AppColors.surfaceContainer,
+        color: AppColors.surfaceContainerHighest,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.cardRadius,
@@ -48,7 +48,7 @@ class AppTheme {
         ),
       ),
 
-      // ─── Inputs ──────────────────────────────────────────────────────
+      // ─── Inputs ──────────────────────────────────────────────
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surfaceContainerHighest,
@@ -122,7 +122,7 @@ class AppTheme {
 
       // ─── Navigation Bar ──────────────────────────────────────────────
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.surface.withOpacity(0.9),
+        backgroundColor: AppColors.surface,
         elevation: 0,
         indicatorColor: AppColors.primaryContainer,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
@@ -242,7 +242,7 @@ class AppTheme {
 
       // ─── Dialog ──────────────────────────────────────────────────────
       dialogTheme: DialogTheme(
-        backgroundColor: AppColors.surface.withOpacity(0.95),
+        backgroundColor: AppColors.surface,
         elevation: 8,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.dialogRadius,
@@ -276,7 +276,7 @@ class AppTheme {
 
       // ─── App Bar ─────────────────────────────────────────────────────
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.inverseSurface.withOpacity(0.9),
+        backgroundColor: AppColors.inverseSurface,
         foregroundColor: AppColors.onInverseSurface,
         elevation: 0,
         centerTitle: false,
@@ -288,7 +288,7 @@ class AppTheme {
 
       // ─── Cards ───────────────────────────────────────────────────────
       cardTheme: CardTheme(
-        color: AppColors.surfaceContainerHighest.withOpacity(0.1),
+        color: AppColors.surfaceContainerHighest,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.cardRadius,
@@ -302,7 +302,7 @@ class AppTheme {
       // ─── Inputs ──────────────────────────────────────────────────────
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surfaceContainerHighest.withOpacity(0.2),
+        fillColor: AppColors.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderRadius: AppRadius.textFieldRadius,
           borderSide: BorderSide.none,
@@ -373,7 +373,7 @@ class AppTheme {
 
       // ─── Navigation Bar ──────────────────────────────────────────────
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.inverseSurface.withOpacity(0.9),
+        backgroundColor: AppColors.inverseSurface,
         elevation: 0,
         indicatorColor: AppColors.primaryContainer.withOpacity(0.3),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
@@ -481,10 +481,10 @@ class AppTheme {
       ),
 
       // ─── Bottom Sheet ────────────────────────────────────────────────
-      bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: AppColors.inverseSurface.withOpacity(0.95),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: AppColors.inverseSurface,
         elevation: 8,
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(AppRadius.bottomSheet),
           ),
@@ -493,7 +493,7 @@ class AppTheme {
 
       // ─── Dialog ──────────────────────────────────────────────────────
       dialogTheme: DialogTheme(
-        backgroundColor: AppColors.inverseSurface.withOpacity(0.95),
+        backgroundColor: AppColors.inverseSurface,
         elevation: 8,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.dialogRadius,

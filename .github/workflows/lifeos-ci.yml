@@ -12,24 +12,24 @@ jobs:
   analyze-and-test:
     name: Analyze & Test
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.0'
           channel: 'stable'
-      
+
       - name: Install dependencies
         run: flutter pub get
-      
+
       - name: Verify formatting
         run: dart format lib/ test/ --set-exit-if-changed
-      
+
       - name: Analyze code
         run: flutter analyze --no-pub
-      
+
       - name: Run tests
         run: flutter test --no-pub
 
@@ -37,21 +37,21 @@ jobs:
     name: Build Android
     needs: analyze-and-test
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.19.0'
           channel: 'stable'
-      
+
       - name: Install dependencies
         run: flutter pub get
-      
+
       - name: Build APK
         run: flutter build apk --release
-      
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
@@ -63,21 +63,21 @@ jobs:
     name: Build Web
     needs: analyze-and-test
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.19.0'
           channel: 'stable'
-      
+
       - name: Install dependencies
         run: flutter pub get
-      
+
       - name: Build web
         run: flutter build web --release
-      
+
       - name: Upload web build
         uses: actions/upload-artifact@v4
         with:
@@ -90,26 +90,25 @@ jobs:
     needs: build-web
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Download web build
         uses: actions/download-artifact@v4
         with:
           name: web-build
           path: build/web
-      
+
       - name: Install Vercel CLI
         run: npm install -g vercel
-      
-      - name: Pull Vercel Environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      
-      - name: Deploy prebuilt web
+
+      - name: Prepare Vercel output
+        run: |
+          mkdir -p .vercel/output/static
+          cp -r build/web/* .vercel/output/static/
+
+      - name: Deploy to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

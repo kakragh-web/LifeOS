@@ -1,12 +1,9 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lifeos_ai/core/theme/app_colors.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
-import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
 
-/// Premium dialog with glass effect and smooth animations.
 class AppDialog {
   AppDialog._();
 
@@ -17,60 +14,49 @@ class AppDialog {
     required List<DialogAction> actions,
     bool barrierDismissible = true,
     Color? backgroundColor,
-    double blur = 20.0,
   }) {
     HapticFeedback.lightImpact();
 
     final theme = Theme.of(context);
     final effectiveBackgroundColor =
-        backgroundColor ?? theme.colorScheme.surface.withOpacity(0.95);
+        backgroundColor ?? theme.colorScheme.surface;
 
     return showDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
       barrierColor: AppColors.scrim,
       builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
+        backgroundColor: effectiveBackgroundColor,
         elevation: 0,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: AppRadius.dialogRadius,
-            color: effectiveBackgroundColor,
-            boxShadow: AppShadows.elevation8,
-          ),
-          child: ClipRRect(
-            borderRadius: AppRadius.dialogRadius,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.xl),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.headlineSmall,
-                      textAlign: TextAlign.center,
-                    ),
-                    if (message != null) ...[
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        message,
-                        style: theme.textTheme.bodyMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                    const SizedBox(height: AppSpacing.xl),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: actions.map((action) {
-                        return _DialogActionButton(action: action);
-                      }).toList(),
-                    ),
-                  ],
-                ),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.dialogRadius,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title,
+                style: theme.textTheme.headlineSmall,
+                textAlign: TextAlign.center,
               ),
-            ),
+              if (message != null) ...[
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  message,
+                  style: theme.textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+              const SizedBox(height: AppSpacing.xl),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: actions.map((action) {
+                  return _DialogActionButton(action: action);
+                }).toList(),
+              ),
+            ],
           ),
         ),
       ),

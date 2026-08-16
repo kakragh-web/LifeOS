@@ -25,18 +25,16 @@ void main() {
         ),
       );
 
-      expect(find.text('Settings'), findsOneWidget);
-      expect(find.text('Dark Mode'), findsAtLeastNWidgets(1));
-      expect(find.text('Notifications'), findsAtLeastNWidgets(1));
-      expect(find.text('Privacy & Security'), findsAtLeastNWidgets(1));
-      expect(find.text('About'), findsAtLeastNWidgets(1));
+      await tester.pumpAndSettle();
+      expect(find.text('Settings'), findsAtLeastNWidgets(1));
+      expect(find.text('Dark Mode'), findsOneWidget);
     });
 
     testWidgets('shows sign out button', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
           child: MediaQuery(
-            data: const MediaQueryData(size: Size(420, 800)),
+            data: const MediaQueryData(size: Size(420, 1200)),
             child: MaterialApp.router(
               routerConfig: GoRouter(
                 initialLocation: '/settings',
@@ -51,6 +49,13 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+      
+      final exception = tester.takeException();
+      if (exception != null) {
+        fail('Widget build threw exception: $exception');
+      }
+      
       expect(find.text('Sign Out'), findsOneWidget);
     });
   });

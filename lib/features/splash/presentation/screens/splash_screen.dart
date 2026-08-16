@@ -119,8 +119,8 @@ class _LogoImage extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
-          AppShadows.primaryGlow(),
-          AppShadows.elevation4,
+          ...AppShadows.primaryGlow(),
+          ...AppShadows.elevation4,
         ],
       ),
       child: ClipRRect(

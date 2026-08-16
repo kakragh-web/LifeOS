@@ -5,7 +5,6 @@ import 'package:lifeos_ai/core/theme/app_radius.dart';
 import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
 
-/// Animated text field with focus animations and glass effect.
 class AnimatedTextField extends StatefulWidget {
   const AnimatedTextField({
     super.key,
@@ -21,7 +20,6 @@ class AnimatedTextField extends StatefulWidget {
     this.onFieldSubmitted,
     this.enabled = true,
     this.maxLines = 1,
-    this.isGlass = false,
     this.autofillHints,
     this.inputFormatters,
     this.onChanged,
@@ -39,7 +37,6 @@ class AnimatedTextField extends StatefulWidget {
   final void Function(String)? onFieldSubmitted;
   final bool enabled;
   final int maxLines;
-  final bool isGlass;
   final Iterable<String>? autofillHints;
   final List<TextInputFormatter>? inputFormatters;
   final ValueChanged<String>? onChanged;
@@ -86,10 +83,6 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
             : colorScheme.outline
                 .withOpacity(0.3 + 0.4 * (1 - _focusAnimation.value));
 
-        final containerColor = widget.isGlass
-            ? AppColors.glass.withOpacity(0.1 + 0.1 * _focusAnimation.value)
-            : colorScheme.surfaceContainerHighest.withOpacity(0.6);
-
         return Container(
           decoration: BoxDecoration(
             borderRadius: AppRadius.textFieldRadius,
@@ -126,7 +119,7 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
                   : null,
               suffixIcon: widget.suffixIcon,
               filled: true,
-              fillColor: containerColor,
+              fillColor: AppColors.surfaceContainerHighest,
               border: OutlineInputBorder(
                 borderRadius: AppRadius.textFieldRadius,
                 borderSide: BorderSide.none,
@@ -137,7 +130,7 @@ class _AnimatedTextFieldState extends State<AnimatedTextField>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: AppRadius.textFieldRadius,
-                borderSide: BorderSide.none,
+                borderSide: const BorderSide(color: AppColors.primary, width: 2),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: AppRadius.textFieldRadius,

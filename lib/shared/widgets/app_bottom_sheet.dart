@@ -1,11 +1,9 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
 import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
 
-/// Premium bottom sheet with glass effect and smooth animations.
 class AppBottomSheet {
   AppBottomSheet._();
 
@@ -16,12 +14,11 @@ class AppBottomSheet {
     bool enableDrag = true,
     double? height,
     Color? backgroundColor,
-    double blur = 20.0,
   }) {
     HapticFeedback.lightImpact();
 
     final effectiveBackgroundColor = backgroundColor ??
-        Theme.of(context).colorScheme.surface.withOpacity(0.95);
+        Theme.of(context).colorScheme.surface;
 
     return showModalBottomSheet<T>(
       context: context,
@@ -37,23 +34,20 @@ class AppBottomSheet {
         ),
         child: ClipRRect(
           borderRadius: AppRadius.bottomSheetRadius,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                  borderRadius: BorderRadius.circular(2),
                 ),
-                Flexible(child: builder(context)),
-              ],
-            ),
+              ),
+              Flexible(child: builder(context)),
+            ],
           ),
         ),
       ),

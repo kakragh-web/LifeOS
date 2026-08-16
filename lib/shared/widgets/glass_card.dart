@@ -1,13 +1,8 @@
-import 'dart:ui';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lifeos_ai/core/theme/app_colors.dart';
 import 'package:lifeos_ai/core/theme/app_radius.dart';
-import 'package:lifeos_ai/core/theme/app_shadows.dart';
 import 'package:lifeos_ai/core/theme/app_spacing.dart';
 
-/// Premium frosted glass card with blur effect and layered shadows.
-/// On web, BackdropFilter is disabled for better performance and compatibility.
 class GlassCard extends StatelessWidget {
   const GlassCard({
     super.key,
@@ -17,12 +12,8 @@ class GlassCard extends StatelessWidget {
     this.width,
     this.height,
     this.borderRadius,
-    this.blur = 20.0,
-    this.opacity = 0.85,
     this.borderWidth = 1.0,
     this.borderColor,
-    this.gradient,
-    this.shadows,
     this.elevation = 2,
     this.clipBehavior = Clip.none,
     this.onTap,
@@ -36,12 +27,8 @@ class GlassCard extends StatelessWidget {
   final double? width;
   final double? height;
   final double? borderRadius;
-  final double blur;
-  final double opacity;
   final double borderWidth;
   final Color? borderColor;
-  final Gradient? gradient;
-  final List<BoxShadow>? shadows;
   final int elevation;
   final Clip clipBehavior;
   final VoidCallback? onTap;
@@ -53,66 +40,20 @@ class GlassCard extends StatelessWidget {
     final effectiveBorderRadius = borderRadius ?? AppRadius.card;
     final effectiveBorderColor = borderColor ??
         Theme.of(context).colorScheme.outlineVariant.withOpacity(0.3);
-    final effectiveShadows = shadows ??
-        switch (elevation) {
-          0 => AppShadows.elevation0,
-          1 => AppShadows.elevation1,
-          2 => AppShadows.elevation2,
-          3 => AppShadows.elevation3,
-          4 => AppShadows.elevation4,
-          5 || 6 => AppShadows.elevation6,
-          _ => AppShadows.elevation8,
-        };
 
-    const bool isWeb = kIsWeb;
-
-    Widget cardContent = Container(
-      padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(effectiveBorderRadius),
-        color: isWeb
-            ? Theme.of(context).colorScheme.surfaceContainerHighest
-            : AppColors.glass.withOpacity(opacity),
-        gradient: isWeb ? null : (gradient ?? AppColors.glassGradient),
-        border: Border.all(
-          color: effectiveBorderColor,
-          width: borderWidth,
-        ),
-      ),
-      child: child,
-    );
-
-    if (!isWeb) {
-      cardContent = BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(
-          padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(effectiveBorderRadius),
-            color: AppColors.glass.withOpacity(opacity),
-            gradient: gradient ?? AppColors.glassGradient,
-          ),
-          child: child,
-        ),
-      );
-    }
-
-    Widget card = AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-      width: width,
-      height: height,
+    Widget card = Card(
       margin: margin,
-      decoration: BoxDecoration(
+      elevation: elevation.toDouble(),
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(effectiveBorderRadius),
-        border: Border.all(
+        side: BorderSide(
           color: effectiveBorderColor,
           width: borderWidth,
         ),
-        boxShadow: effectiveShadows,
       ),
+      color: AppColors.surfaceContainerHighest,
       clipBehavior: clipBehavior,
-      child: cardContent,
+      child: child,
     );
 
     if (onTap != null || onLongPress != null) {
@@ -134,7 +75,6 @@ class GlassCard extends StatelessWidget {
     return card;
   }
 
-  /// Creates a glass card with image header.
   factory GlassCard.imageHeader({
     Key? key,
     required Widget image,
@@ -178,7 +118,6 @@ class GlassCard extends StatelessWidget {
     );
   }
 
-  /// Creates a tappable glass card with icon and label.
   factory GlassCard.feature({
     Key? key,
     required IconData icon,

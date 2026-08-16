@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/core/theme/design_system.dart';
 import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/features/tasks/domain/task.dart';
 import 'package:lifeos_ai/features/tasks/providers/task_providers.dart';
-import 'package:lifeos_ai/shared/widgets/animated_fab.dart';
 import 'package:lifeos_ai/shared/widgets/animated_text_field.dart';
 import 'package:lifeos_ai/shared/widgets/app_dialog.dart';
-import 'package:lifeos_ai/shared/widgets/glass_card.dart';
+import 'package:lifeos_ai/shared/widgets/responsive_scaffold.dart';
 import 'package:lifeos_ai/shared/widgets/status_chip.dart';
 
 class TasksScreen extends ConsumerStatefulWidget {
@@ -18,6 +19,15 @@ class TasksScreen extends ConsumerStatefulWidget {
 }
 
 class _TasksScreenState extends ConsumerState<TasksScreen> {
+  final _destinations = <({IconData icon, String label, String route})>[
+    (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
+    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
+    (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
+    (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
+    (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
+    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+  ];
+
   TaskPriority _filterPriority = TaskPriority.medium;
   TaskStatus _filterStatus = TaskStatus.todo;
   String? _filterCategory;
@@ -31,90 +41,37 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final tasksAsync = ref.watch(tasksProvider);
-    final categories = ref.watch(taskCategoriesProvider);
-
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface.withOpacity(0.9),
-        foregroundColor: cs.onSurface,
-        elevation: 0,
-        title: Text('Tasks',
-            style:
-                AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_rounded),
-            tooltip: 'Add task',
-            onPressed: () => _showTaskForm(context),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          _Filters(
-            cs: cs,
-            categories: categories,
-            filterPriority: _filterPriority,
-            filterStatus: _filterStatus,
-            filterCategory: _filterCategory,
-            searchCtrl: _searchCtrl,
-            onPriorityChanged: (p) => setState(() => _filterPriority = p),
-            onStatusChanged: (s) => setState(() => _filterStatus = s),
-            onCategoryChanged: (c) => setState(() => _filterCategory = c),
-            onSearchChanged: (_) => setState(() {}),
-          ),
-          Expanded(
-            child: tasksAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(
-                child: Text('Error: $e', style: AppTypography.bodyMedium),
-              ),
-              data: (tasks) {
-                final filtered = _filterTasks(tasks);
-                if (filtered.isEmpty) {
-                  return _EmptyTasks(
-                      cs: cs, onCreate: () => _showTaskForm(context));
-                }
-                return Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                        maxWidth: Breakpoints.maxWideContentWidth),
-                    child: ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: context.horizontalPagePadding,
-                          vertical: AppSpacing.sm),
-                      itemCount: filtered.length,
-                      itemBuilder: (_, i) {
-                        final task = filtered[i];
-                        return _TaskTile(
-                          task: task,
-                          onToggleStatus: () => _updateStatus(
-                              context, task, _nextStatus(task.status)),
-                          onEdit: () => _showTaskForm(context, task: task),
-                          onDelete: () => _confirmDelete(context, task),
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: AnimatedFAB(
-        icon: Icons.add_rounded,
-        label: 'Add Task',
-        isExtended: true,
-        onPressed: () => _showTaskForm(context),
+    return ResponsiveShell(
+      title: 'Tasks',
+      currentIndex: 1,
+      onDestinationSelected: (index) {
+        final route = _destinations[index].route;
+        context.push(route);
+      },
+      destinations: _destinations,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add_rounded),
+          tooltip: 'Add task',
+          onPressed: () => _showTaskForm(context),
+        ),
+      ],
+      body: _TasksBody(
+        filterPriority: _filterPriority,
+        filterStatus: _filterStatus,
+        filterCategory: _filterCategory,
+        searchCtrl: _searchCtrl,
+        onPriorityChanged: (p) => setState(() => _filterPriority = p),
+        onStatusChanged: (s) => setState(() => _filterStatus = s),
+        onCategoryChanged: (c) => setState(() => _filterCategory = c),
+        onShowTaskForm: _showTaskForm,
+        onUpdateStatus: _updateStatus,
+        onConfirmDelete: _confirmDelete,
       ),
     );
   }
 
-  TaskStatus _nextStatus(TaskStatus s) {
+  TaskStatus _nextStatusLocal(TaskStatus s) {
     switch (s) {
       case TaskStatus.todo:
         return TaskStatus.inProgress;
@@ -123,30 +80,6 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
       case TaskStatus.done:
         return TaskStatus.todo;
     }
-  }
-
-  List<Task> _filterTasks(List<Task> tasks) {
-    final query = _searchCtrl.text.trim().toLowerCase();
-    return tasks.where((t) {
-      if (_filterPriority != TaskPriority.medium &&
-          t.priority != _filterPriority) {
-        return false;
-      }
-      if (_filterStatus != TaskStatus.todo && t.status != _filterStatus) {
-        return false;
-      }
-      if (_filterCategory != null &&
-          _filterCategory!.isNotEmpty &&
-          t.category != _filterCategory) {
-        return false;
-      }
-      if (query.isNotEmpty &&
-          !t.title.toLowerCase().contains(query) &&
-          !(t.description ?? '').toLowerCase().contains(query)) {
-        return false;
-      }
-      return true;
-    }).toList();
   }
 
   void _showTaskForm(BuildContext context, {Task? task}) {
@@ -218,8 +151,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     );
   }
 
-  void _updateStatus(
-      BuildContext context, Task task, TaskStatus newStatus) async {
+  void _updateStatus(BuildContext context, Task task, TaskStatus newStatus) async {
     final messenger = ScaffoldMessenger.of(context);
     await ref.read(taskRepositoryProvider).updateTask(
         task.copyWith(status: newStatus, updatedAt: DateTime.now()));
@@ -244,6 +176,129 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
   }
 }
 
+class _TasksBody extends ConsumerWidget {
+  const _TasksBody({
+    required this.filterPriority,
+    required this.filterStatus,
+    required this.filterCategory,
+    required this.searchCtrl,
+    required this.onPriorityChanged,
+    required this.onStatusChanged,
+    required this.onCategoryChanged,
+    required this.onShowTaskForm,
+    required this.onUpdateStatus,
+    required this.onConfirmDelete,
+  });
+
+  final TaskPriority filterPriority;
+  final TaskStatus filterStatus;
+  final String? filterCategory;
+  final TextEditingController searchCtrl;
+  final ValueChanged<TaskPriority> onPriorityChanged;
+  final ValueChanged<TaskStatus> onStatusChanged;
+  final ValueChanged<String?> onCategoryChanged;
+  final void Function(BuildContext, {Task? task}) onShowTaskForm;
+  final void Function(BuildContext, Task, TaskStatus) onUpdateStatus;
+  final void Function(BuildContext, Task) onConfirmDelete;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
+    final tasksAsync = ref.watch(tasksProvider);
+    final categories = ref.watch(taskCategoriesProvider);
+
+    return Column(
+      children: [
+        _Filters(
+          cs: cs,
+          categories: categories,
+          filterPriority: filterPriority,
+          filterStatus: filterStatus,
+          filterCategory: filterCategory,
+          searchCtrl: searchCtrl,
+          onPriorityChanged: onPriorityChanged,
+          onStatusChanged: onStatusChanged,
+          onCategoryChanged: onCategoryChanged,
+          onSearchChanged: (_) {},
+        ),
+        Expanded(
+          child: tasksAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, _) => Center(
+              child: Text('Unable to load tasks. Please try again.',
+                  style: AppTypography.bodyMedium),
+            ),
+            data: (tasks) {
+              final filtered = _filterTasks(tasks);
+              if (filtered.isEmpty) {
+                return _EmptyTasks(
+                    cs: cs, onCreate: () => onShowTaskForm(context));
+              }
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                      maxWidth: Breakpoints.maxWideContentWidth),
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: context.horizontalPagePadding,
+                        vertical: AppSpacing.sm),
+                    itemCount: filtered.length,
+                    itemBuilder: (_, i) {
+                      final task = filtered[i];
+                      return _TaskTile(
+                        task: task,
+                        onToggleStatus: () => onUpdateStatus(
+                            context, task, _nextStatusLocal(task.status)),
+                        onEdit: () => onShowTaskForm(context, task: task),
+                        onDelete: () => onConfirmDelete(context, task),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Task> _filterTasks(List<Task> tasks) {
+    final query = searchCtrl.text.trim().toLowerCase();
+    return tasks.where((t) {
+      if (filterPriority != TaskPriority.medium &&
+          t.priority != filterPriority) {
+        return false;
+      }
+      if (filterStatus != TaskStatus.todo && t.status != filterStatus) {
+        return false;
+      }
+      if (filterCategory != null &&
+          filterCategory!.isNotEmpty &&
+          t.category != filterCategory) {
+        return false;
+      }
+      if (query.isNotEmpty &&
+          !t.title.toLowerCase().contains(query) &&
+          !(t.description ?? '').toLowerCase().contains(query)) {
+        return false;
+      }
+      return true;
+    }).toList();
+  }
+
+  TaskStatus _nextStatusLocal(TaskStatus s) {
+    switch (s) {
+      case TaskStatus.todo:
+        return TaskStatus.inProgress;
+      case TaskStatus.inProgress:
+        return TaskStatus.done;
+      case TaskStatus.done:
+        return TaskStatus.todo;
+    }
+  }
+}
+
 class _EmptyTasks extends StatelessWidget {
   const _EmptyTasks({required this.cs, required this.onCreate});
 
@@ -256,27 +311,27 @@ class _EmptyTasks extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: AppShadows.primaryGlow(),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Image.asset(
-                      'assets/images/lifeos_logo.png',
-                      fit: BoxFit.contain,
-                      filterQuality: FilterQuality.high,
-                    ),
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: AppShadows.primaryGlow(),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Image.asset(
+                  'assets/images/lifeos_logo.png',
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
                 ),
-                const SizedBox(height: AppSpacing.md),
-                const Text('No tasks yet', style: AppTypography.titleMedium),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            const Text('No tasks yet', style: AppTypography.titleMedium),
             const SizedBox(height: AppSpacing.sm),
             TextButton.icon(
               onPressed: onCreate,
@@ -361,14 +416,13 @@ class _Filters extends StatelessWidget {
               AppSpacing.md, context.horizontalPagePadding, AppSpacing.sm),
           child: Column(
             children: [
-              AnimatedTextField(
-                controller: searchCtrl,
-                label: 'Search',
-                hint: 'Search tasks...',
-                prefixIcon: Icons.search_rounded,
-                isGlass: true,
-                onChanged: onSearchChanged,
-              ),
+                AnimatedTextField(
+                  controller: searchCtrl,
+                  label: 'Search',
+                  hint: 'Search tasks...',
+                  prefixIcon: Icons.search_rounded,
+                  onChanged: onSearchChanged,
+                ),
               const SizedBox(height: AppSpacing.sm),
               if (context.isCompact)
                 Column(
@@ -424,9 +478,17 @@ class _TaskTile extends StatelessWidget {
       TaskPriority.high => cs.error,
     };
 
-    return GlassCard(
+    return Card(
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.card),
+        side: BorderSide(
+          color: cs.outlineVariant.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      color: AppColors.surfaceContainerHighest,
       child: ListTile(
         leading: Checkbox(
           value: task.status == TaskStatus.done,

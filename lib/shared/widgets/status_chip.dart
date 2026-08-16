@@ -38,7 +38,7 @@ class StatusChip extends StatelessWidget {
           (isSelected ? colorScheme.primary : colorScheme.secondaryContainer),
       ChipVariant.outlined => Colors.transparent,
       ChipVariant.elevated =>
-        backgroundColor ?? colorScheme.surfaceContainerHighest,
+        backgroundColor ?? AppColors.surfaceContainerHighest,
     };
 
     final effectiveBorderColor = switch (variant) {

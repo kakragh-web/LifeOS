@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lifeos_ai/features/tasks/domain/task.dart';
 import 'package:lifeos_ai/features/tasks/providers/task_providers.dart';
 import 'package:lifeos_ai/features/tasks/presentation/screens/tasks_screen.dart';
@@ -20,16 +21,21 @@ void main() {
   });
 
   Widget buildApp() => ProviderScope(
-        // The in-memory repo emits its initial value synchronously before the
-        // StreamProvider subscribes, so override with a clean empty stream.
         overrides: [
           tasksProvider.overrideWith((ref) => Stream.value(<Task>[])),
         ],
         child: MediaQuery(
           data: const MediaQueryData(size: Size(800, 1200)),
-          child: MaterialApp(
+          child: MaterialApp.router(
             theme: ThemeData(useMaterial3: true),
-            home: const Scaffold(body: TasksScreen()),
+            routerConfig: GoRouter(
+              initialLocation: '/tasks',
+              routes: [
+                GoRoute(
+                    path: '/tasks',
+                    builder: (_, __) => const TasksScreen()),
+              ],
+            ),
           ),
         ),
       );
@@ -45,13 +51,12 @@ void main() {
     testWidgets('shows the app bar title', (tester) async {
       await tester.pumpWidget(buildApp());
       await pumpSettle(tester);
-      expect(find.text('Tasks'), findsOneWidget);
+      expect(find.text('Tasks'), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('has an add (FAB) action in the app bar', (tester) async {
+    testWidgets('has an add action in the app bar', (tester) async {
       await tester.pumpWidget(buildApp());
       await pumpSettle(tester);
-      // AppBar action is the add IconButton.
       expect(
         find.widgetWithIcon(IconButton, Icons.add_rounded),
         findsOneWidget,

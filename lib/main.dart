@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lifeos_ai/core/firebase/firebase_options.dart';
+import 'package:lifeos_ai/firebase_options.dart';
 import 'package:lifeos_ai/core/router/app_router.dart';
 import 'package:lifeos_ai/core/services/storage_service.dart';
 import 'package:lifeos_ai/core/theme/app_theme.dart';

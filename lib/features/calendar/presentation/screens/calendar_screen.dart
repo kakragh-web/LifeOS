@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lifeos_ai/core/constants/app_constants.dart';
 import 'package:lifeos_ai/core/theme/design_system.dart';
 import 'package:lifeos_ai/core/utils/responsive.dart';
 import 'package:lifeos_ai/features/calendar/domain/calendar_event.dart';
 import 'package:lifeos_ai/features/calendar/providers/calendar_providers.dart';
-import 'package:lifeos_ai/shared/widgets/animated_fab.dart';
 import 'package:lifeos_ai/shared/widgets/app_dialog.dart';
-import 'package:lifeos_ai/shared/widgets/glass_card.dart';
+import 'package:lifeos_ai/shared/widgets/responsive_scaffold.dart';
 
 class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
@@ -16,6 +17,15 @@ class CalendarScreen extends ConsumerStatefulWidget {
 }
 
 class _CalendarScreenState extends ConsumerState<CalendarScreen> {
+  final _destinations = <({IconData icon, String label, String route})>[
+    (icon: Icons.dashboard_outlined, label: 'Home', route: AppRoutes.dashboard),
+    (icon: Icons.check_circle_outline_rounded, label: 'Tasks', route: AppRoutes.tasks),
+    (icon: Icons.event_outlined, label: 'Calendar', route: AppRoutes.calendar),
+    (icon: Icons.note_outlined, label: 'Notes', route: AppRoutes.notes),
+    (icon: Icons.smart_toy_outlined, label: 'AI Chat', route: AppRoutes.chat),
+    (icon: Icons.settings_outlined, label: 'Settings', route: AppRoutes.settings),
+  ];
+
   late DateTime _focusedMonth;
 
   @override
@@ -26,152 +36,29 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final eventsAsync = ref.watch(calendarEventsProvider);
-    final selectedDate = ref.watch(selectedDateProvider);
-
-    final daysInMonth =
-        DateUtils.getDaysInMonth(_focusedMonth.year, _focusedMonth.month);
-    final firstDayOffset =
-        DateTime(_focusedMonth.year, _focusedMonth.month, 1).weekday % 7;
-
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface.withOpacity(0.9),
-        foregroundColor: cs.onSurface,
-        elevation: 0,
-        title: Text('Calendar',
-            style:
-                AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_rounded),
-            tooltip: 'Add event',
-            onPressed: () => _showEventForm(context),
-          ),
-        ],
-      ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints:
-              const BoxConstraints(maxWidth: Breakpoints.maxWideContentWidth),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: context.horizontalPagePadding,
-                    vertical: AppSpacing.md),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.chevron_left_rounded),
-                      tooltip: 'Previous month',
-                      onPressed: () => setState(() {
-                        _focusedMonth = DateTime(
-                            _focusedMonth.year, _focusedMonth.month - 1);
-                      }),
-                    ),
-                    Flexible(
-                      child: Text(
-                        '${_monthName(_focusedMonth.month)} ${_focusedMonth.year}',
-                        style: AppTypography.titleMedium
-                            .copyWith(fontWeight: FontWeight.w600),
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.chevron_right_rounded),
-                      tooltip: 'Next month',
-                      onPressed: () => setState(() {
-                        _focusedMonth = DateTime(
-                            _focusedMonth.year, _focusedMonth.month + 1);
-                      }),
-                    ),
-                  ],
-                ),
-              ),
-              _WeekdayHeader(cs: cs),
-              _MonthGrid(
-                cs: cs,
-                daysInMonth: daysInMonth,
-                firstDayOffset: firstDayOffset,
-                focusedMonth: _focusedMonth,
-                selectedDate: selectedDate,
-                onDateSelected: (d) {
-                  ref.read(selectedDateProvider.notifier).state = d;
-                  setState(() {});
-                },
-              ),
-              const Divider(height: 24),
-              Expanded(
-                child: eventsAsync.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => Center(
-                    child: Text('Error: $e', style: AppTypography.bodyMedium),
-                  ),
-                  data: (events) {
-                    final dayEvents = events.where((e) {
-                      return e.start.year == selectedDate.year &&
-                          e.start.month == selectedDate.month &&
-                          e.start.day == selectedDate.day;
-                    }).toList()
-                      ..sort((a, b) => a.start.compareTo(b.start));
-
-                    if (dayEvents.isEmpty) {
-                      return _EmptyDay(
-                        cs: cs,
-                        onAdd: () =>
-                            _showEventForm(context, date: selectedDate),
-                      );
-                    }
-                    return ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: context.horizontalPagePadding,
-                          vertical: AppSpacing.sm),
-                      itemCount: dayEvents.length,
-                      itemBuilder: (_, i) {
-                        final event = dayEvents[i];
-                        return _EventTile(
-                          event: event,
-                          onEdit: () => _showEventForm(context, event: event),
-                          onDelete: () => _confirmDelete(context, event),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+    return ResponsiveShell(
+      title: 'Calendar',
+      currentIndex: 2,
+      onDestinationSelected: (index) {
+        final route = _destinations[index].route;
+        context.push(route);
+      },
+      destinations: _destinations,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add_rounded),
+          tooltip: 'Add event',
+          onPressed: () => _showEventForm(context),
         ),
-      ),
-      floatingActionButton: AnimatedFAB(
-        icon: Icons.add_rounded,
-        label: 'Add Event',
-        isExtended: true,
-        onPressed: () => _showEventForm(context, date: selectedDate),
+      ],
+      body: _CalendarBody(
+        focusedMonth: _focusedMonth,
+        onFocusedMonthChanged: (d) => setState(() => _focusedMonth = d),
+        onShowEventForm: _showEventForm,
+        onConfirmDelete: _confirmDelete,
       ),
     );
   }
-
-  String _monthName(int m) => const [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-      ][m - 1];
 
   void _showEventForm(BuildContext context,
       {CalendarEvent? event, DateTime? date}) {
@@ -282,6 +169,134 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     return DateTime(date.year, date.month, date.day, int.parse(timeParts[0]),
         int.parse(timeParts[1]));
   }
+}
+
+class _CalendarBody extends ConsumerWidget {
+  const _CalendarBody({
+    required this.focusedMonth,
+    required this.onFocusedMonthChanged,
+    required this.onShowEventForm,
+    required this.onConfirmDelete,
+  });
+
+  final DateTime focusedMonth;
+  final ValueChanged<DateTime> onFocusedMonthChanged;
+  final void Function(BuildContext, {CalendarEvent? event, DateTime? date}) onShowEventForm;
+  final void Function(BuildContext, CalendarEvent) onConfirmDelete;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
+    final eventsAsync = ref.watch(calendarEventsProvider);
+    final selectedDate = ref.watch(selectedDateProvider);
+
+    final daysInMonth =
+        DateUtils.getDaysInMonth(focusedMonth.year, focusedMonth.month);
+    final firstDayOffset =
+        DateTime(focusedMonth.year, focusedMonth.month, 1).weekday % 7;
+
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: context.horizontalPagePadding,
+              vertical: AppSpacing.md),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.chevron_left_rounded),
+                tooltip: 'Previous month',
+                onPressed: () => onFocusedMonthChanged(DateTime(
+                    focusedMonth.year, focusedMonth.month - 1)),
+              ),
+              Flexible(
+                child: Text(
+                  '${_monthName(focusedMonth.month)} ${focusedMonth.year}',
+                  style: AppTypography.titleMedium
+                      .copyWith(fontWeight: FontWeight.w600),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.chevron_right_rounded),
+                tooltip: 'Next month',
+                onPressed: () => onFocusedMonthChanged(DateTime(
+                    focusedMonth.year, focusedMonth.month + 1)),
+              ),
+            ],
+          ),
+        ),
+        _WeekdayHeader(cs: cs),
+        _MonthGrid(
+          cs: cs,
+          daysInMonth: daysInMonth,
+          firstDayOffset: firstDayOffset,
+          focusedMonth: focusedMonth,
+          selectedDate: selectedDate,
+          onDateSelected: (d) {
+            ref.read(selectedDateProvider.notifier).state = d;
+          },
+        ),
+        const Divider(height: 24),
+        Expanded(
+          child: eventsAsync.when(
+            loading: () =>
+                const Center(child: CircularProgressIndicator()),
+            error: (e, _) => Center(
+              child: Text('Unable to load events. Please try again.',
+                  style: AppTypography.bodyMedium),
+            ),
+            data: (events) {
+              final dayEvents = events.where((e) {
+                return e.start.year == selectedDate.year &&
+                    e.start.month == selectedDate.month &&
+                    e.start.day == selectedDate.day;
+              }).toList()
+                ..sort((a, b) => a.start.compareTo(b.start));
+
+              if (dayEvents.isEmpty) {
+                return _EmptyDay(
+                  cs: cs,
+                  onAdd: () => onShowEventForm(context, date: selectedDate),
+                );
+              }
+              return ListView.builder(
+                padding: EdgeInsets.symmetric(
+                    horizontal: context.horizontalPagePadding,
+                    vertical: AppSpacing.sm),
+                itemCount: dayEvents.length,
+                itemBuilder: (_, i) {
+                  final event = dayEvents[i];
+                  return _EventTile(
+                    event: event,
+                    onEdit: () => onShowEventForm(context, event: event),
+                    onDelete: () => onConfirmDelete(context, event),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _monthName(int m) => const [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+      ][m - 1];
 }
 
 class _WeekdayHeader extends StatelessWidget {
@@ -435,28 +450,28 @@ class _EmptyDay extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: AppShadows.primaryGlow(),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Image.asset(
-                            'assets/images/lifeos_logo.png',
-                            fit: BoxFit.contain,
-                            filterQuality: FilterQuality.high,
-                          ),
-                        ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: AppShadows.primaryGlow(),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Image.asset(
+                        'assets/images/lifeos_logo.png',
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.high,
                       ),
-                      const SizedBox(height: AppSpacing.md),
-                      const Text('No events on this day',
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  const Text('No events on this day',
                       style: AppTypography.titleMedium),
                   const SizedBox(height: AppSpacing.sm),
                   TextButton.icon(
@@ -488,9 +503,17 @@ class _EventTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return GlassCard(
+    return Card(
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.card),
+        side: BorderSide(
+          color: cs.outlineVariant.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      color: AppColors.surfaceContainerHighest,
       child: ListTile(
         leading: Container(
           width: 4,

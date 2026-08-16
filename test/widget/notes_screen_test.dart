@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lifeos_ai/features/notes/domain/note.dart';
 import 'package:lifeos_ai/features/notes/providers/note_providers.dart';
 import 'package:lifeos_ai/features/notes/presentation/screens/notes_screen.dart';
-import 'package:lifeos_ai/shared/widgets/animated_fab.dart';
 import '../helpers/asset_mocks.dart';
 
 void main() {
@@ -20,9 +20,16 @@ void main() {
         ],
         child: MediaQuery(
           data: const MediaQueryData(size: Size(800, 1200)),
-          child: MaterialApp(
+          child: MaterialApp.router(
             theme: ThemeData(useMaterial3: true),
-            home: const Scaffold(body: NotesScreen()),
+            routerConfig: GoRouter(
+              initialLocation: '/notes',
+              routes: [
+                GoRoute(
+                    path: '/notes',
+                    builder: (_, __) => const NotesScreen()),
+              ],
+            ),
           ),
         ),
       );
@@ -38,14 +45,16 @@ void main() {
     testWidgets('shows the app bar title', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
-      expect(find.text('Notes'), findsOneWidget);
+      expect(find.text('Notes'), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('has a New Note FAB', (tester) async {
+    testWidgets('has an add note action in the app bar', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
-      expect(find.text('New Note'), findsOneWidget);
-      expect(find.byType(AnimatedFAB), findsOneWidget);
+      expect(
+        find.widgetWithIcon(IconButton, Icons.add_rounded),
+        findsOneWidget,
+      );
     });
   });
 }

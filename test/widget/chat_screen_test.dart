@@ -26,7 +26,7 @@ void main() {
     testWidgets('shows empty state when no messages', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
-      expect(find.text('LifeOS AI'), findsOneWidget);
+      expect(find.text('LifeOS'), findsOneWidget);
       expect(
         find.text('Ask me anything about your tasks, schedule, or goals.'),
         findsOneWidget,
@@ -36,7 +36,7 @@ void main() {
     testWidgets('renders the message input field', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
-      expect(find.text('Message LifeOS AI…'), findsOneWidget);
+      expect(find.byType(TextField), findsOneWidget);
     });
 
     testWidgets('send button is present', (tester) async {

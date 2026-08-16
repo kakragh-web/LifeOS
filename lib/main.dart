@@ -23,7 +23,8 @@ Future<void> main() async {
     );
     firebaseReady = true;
     debugPrint('[LifeOS] Firebase initialized successfully');
-    debugPrint('[LifeOS] Firebase apps: ${Firebase.apps.map((a) => a.name).toList()}');
+    debugPrint(
+        '[LifeOS] Firebase apps: ${Firebase.apps.map((a) => a.name).toList()}');
   } catch (e) {
     debugPrint('[LifeOS] Firebase initialization failed: $e');
     debugPrint(

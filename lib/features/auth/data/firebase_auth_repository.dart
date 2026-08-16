@@ -28,7 +28,8 @@ class FirebaseAuthRepository implements IAuthRepository {
       developer.log('[AUTH] login success uid=${cred.user?.uid}');
       return _requireUser(cred.user);
     } on FirebaseAuthException catch (e) {
-      developer.log('[AUTH] operation=login code=${e.code} message=${e.message}');
+      developer
+          .log('[AUTH] operation=login code=${e.code} message=${e.message}');
       rethrow;
     } catch (e) {
       developer.log('[AUTH] operation=login error=$e');
@@ -43,7 +44,8 @@ class FirebaseAuthRepository implements IAuthRepository {
     String displayName,
   ) async {
     try {
-      developer.log('[AUTH] operation=register email=$email displayName=$displayName');
+      developer.log(
+          '[AUTH] operation=register email=$email displayName=$displayName');
       final cred = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -53,7 +55,8 @@ class FirebaseAuthRepository implements IAuthRepository {
       developer.log('[AUTH] register success uid=${cred.user?.uid}');
       return _requireUser(_auth.currentUser);
     } on FirebaseAuthException catch (e) {
-      developer.log('[AUTH] operation=register code=${e.code} message=${e.message}');
+      developer
+          .log('[AUTH] operation=register code=${e.code} message=${e.message}');
       rethrow;
     } catch (e) {
       developer.log('[AUTH] operation=register error=$e');
@@ -77,10 +80,12 @@ class FirebaseAuthRepository implements IAuthRepository {
         accessToken: googleAuth.accessToken,
       );
       final userCredential = await _auth.signInWithCredential(credential);
-      developer.log('[AUTH] googleSignIn success uid=${userCredential.user?.uid}');
+      developer
+          .log('[AUTH] googleSignIn success uid=${userCredential.user?.uid}');
       return _requireUser(userCredential.user);
     } on FirebaseAuthException catch (e) {
-      developer.log('[AUTH] operation=googleSignIn code=${e.code} message=${e.message}');
+      developer.log(
+          '[AUTH] operation=googleSignIn code=${e.code} message=${e.message}');
       rethrow;
     } catch (e) {
       developer.log('[AUTH] operation=googleSignIn error=$e');

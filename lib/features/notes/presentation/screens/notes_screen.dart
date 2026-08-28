@@ -221,7 +221,7 @@ class _NotesBody extends ConsumerWidget {
         Expanded(
           child: notesAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(
+            error: (e, _) => const Center(
                 child: Text('Unable to load notes. Please try again.',
                     style: AppTypography.bodyMedium)),
             data: (notes) {

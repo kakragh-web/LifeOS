@@ -37,11 +37,14 @@ dependencies:
   # Navigation
   go_router: ^14.2.7
   # Firebase
-  firebase_core: 2.15.0
-  firebase_auth: 4.7.2
-  google_sign_in: 6.2.1
+  firebase_core: ^2.24.0
+  firebase_auth: ^4.20.0
+  google_sign_in: 6.1.0
   # Storage
   shared_preferences: ^2.2.3
+
+dependency_overrides:
+  google_sign_in_ios: 5.8.0
 
 dev_dependencies:
   flutter_test:

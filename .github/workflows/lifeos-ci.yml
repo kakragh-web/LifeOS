@@ -106,6 +106,15 @@ jobs:
       - name: Prepare Vercel output
         run: |
           mkdir -p .vercel/output/static
+          cat > .vercel/output/config.json <<'EOF'
+          {
+            "version": 3,
+            "routes": [
+              { "handle": "filesystem" },
+              { "src": "/(.*)", "dest": "/index.html" }
+            ]
+          }
+          EOF
           cp -r build/web/* .vercel/output/static/
 
       - name: Deploy to Vercel

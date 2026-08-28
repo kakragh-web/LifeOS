@@ -79,17 +79,6 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     );
   }
 
-  TaskStatus _nextStatusLocal(TaskStatus s) {
-    switch (s) {
-      case TaskStatus.todo:
-        return TaskStatus.inProgress;
-      case TaskStatus.inProgress:
-        return TaskStatus.done;
-      case TaskStatus.done:
-        return TaskStatus.todo;
-    }
-  }
-
   void _showTaskForm(BuildContext context, {Task? task}) {
     final isEdit = task != null;
     final titleCtrl = TextEditingController(text: task?.title ?? '');
@@ -233,7 +222,7 @@ class _TasksBody extends ConsumerWidget {
         Expanded(
           child: tasksAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(
+            error: (e, _) => const Center(
               child: Text('Unable to load tasks. Please try again.',
                   style: AppTypography.bodyMedium),
             ),

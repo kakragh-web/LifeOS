@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -204,9 +205,11 @@ class _CalendarBody extends ConsumerWidget {
     final firstDayOffset =
         DateTime(focusedMonth.year, focusedMonth.month, 1).weekday % 7;
 
-    return Column(
-      children: [
-        Padding(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < Breakpoints.compact;
+
+        final monthHeader = Padding(
           padding: EdgeInsets.symmetric(
               horizontal: context.horizontalPagePadding,
               vertical: AppSpacing.md),
@@ -236,9 +239,10 @@ class _CalendarBody extends ConsumerWidget {
               ),
             ],
           ),
-        ),
-        _WeekdayHeader(cs: cs),
-        _MonthGrid(
+        );
+
+        final weekdayHeader = _WeekdayHeader(cs: cs);
+        final monthGrid = _MonthGrid(
           cs: cs,
           daysInMonth: daysInMonth,
           firstDayOffset: firstDayOffset,
@@ -247,47 +251,100 @@ class _CalendarBody extends ConsumerWidget {
           onDateSelected: (d) {
             ref.read(selectedDateProvider.notifier).state = d;
           },
-        ),
-        const Divider(height: 24),
-        Expanded(
-          child: eventsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(
-              child: Text('Unable to load events. Please try again.',
-                  style: AppTypography.bodyMedium),
-            ),
-            data: (events) {
-              final dayEvents = events.where((e) {
-                return e.start.year == selectedDate.year &&
-                    e.start.month == selectedDate.month &&
-                    e.start.day == selectedDate.day;
-              }).toList()
-                ..sort((a, b) => a.start.compareTo(b.start));
+        );
+        const divider = Divider(height: 24);
 
-              if (dayEvents.isEmpty) {
-                return _EmptyDay(
-                  cs: cs,
-                  onAdd: () => onShowEventForm(context, date: selectedDate),
-                );
-              }
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(
-                    horizontal: context.horizontalPagePadding,
-                    vertical: AppSpacing.sm),
-                itemCount: dayEvents.length,
-                itemBuilder: (_, i) {
-                  final event = dayEvents[i];
-                  return _EventTile(
-                    event: event,
-                    onEdit: () => onShowEventForm(context, event: event),
-                    onDelete: () => onConfirmDelete(context, event),
-                  );
-                },
-              );
-            },
+        final eventsContent = eventsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => const Center(
+            child: Text('Unable to load events. Please try again.',
+                style: AppTypography.bodyMedium),
           ),
-        ),
-      ],
+          data: (events) {
+            final dayEvents = events.where((e) {
+              return e.start.year == selectedDate.year &&
+                  e.start.month == selectedDate.month &&
+                  e.start.day == selectedDate.day;
+            }).toList()
+              ..sort((a, b) => a.start.compareTo(b.start));
+
+            if (dayEvents.isEmpty) {
+              return _EmptyDay(
+                cs: cs,
+                onAdd: () => onShowEventForm(context, date: selectedDate),
+              );
+            }
+
+            if (isCompact) {
+              return Column(
+                children: dayEvents.map((event) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                    child: _EventTile(
+                      event: event,
+                      onEdit: () => onShowEventForm(context, event: event),
+                      onDelete: () => onConfirmDelete(context, event),
+                    ),
+                  );
+                }).toList(),
+              );
+            }
+
+            return ListView.builder(
+              padding: EdgeInsets.symmetric(
+                  horizontal: context.horizontalPagePadding,
+                  vertical: AppSpacing.sm),
+              itemCount: dayEvents.length,
+              itemBuilder: (_, i) {
+                final event = dayEvents[i];
+                return _EventTile(
+                  event: event,
+                  onEdit: () => onShowEventForm(context, event: event),
+                  onDelete: () => onConfirmDelete(context, event),
+                );
+              },
+            );
+          },
+        );
+
+        if (isCompact) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                monthHeader,
+                weekdayHeader,
+                const SizedBox(height: AppSpacing.md),
+                monthGrid,
+                divider,
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: context.horizontalPagePadding),
+                  child: eventsContent,
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+            ),
+          );
+        }
+
+        final constrainedGrid = ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: math.min(280.0, constraints.maxHeight * 0.35),
+          ),
+          child: monthGrid,
+        );
+
+        return Column(
+          children: [
+            monthHeader,
+            weekdayHeader,
+            constrainedGrid,
+            divider,
+            Expanded(child: eventsContent),
+          ],
+        );
+      },
     );
   }
 

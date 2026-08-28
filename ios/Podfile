@@ -4,8 +4,6 @@ platform :ios, '14.0'
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-$FirebaseSDKVersion = '10.24.0'
-
 project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,
@@ -47,7 +45,7 @@ post_install do |installer|
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
     end
   end
-  
+
   installer.pods_project.targets.each do |target|
     if target.name == 'GoogleUtilities'
       target.build_configurations.each do |config|
